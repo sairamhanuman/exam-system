@@ -1,0 +1,413 @@
+/* ==================================================
+   STUDENT MANAGEMENT – PROFESSIONAL ERP UI
+================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+/* ---------- PAGE ---------- */
+
+#studentManagement {
+  background: #f4f6fb;
+  min-height: 100vh;
+  padding: 16px;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  color: #111827;
+}
+
+/* ---------- HEADER ---------- */
+
+#studentManagement h2 {
+  background: #1f3a8a;
+  color: #ffffff;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+/* ---------- ACTION BUTTONS ---------- */
+
+#editBtn,
+#saveBtn {
+  padding: 6px 16px;
+  border-radius: 4px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  margin-right: 6px;
+}
+
+#editBtn {
+  background: #2563eb;
+  color: #fff;
+}
+
+#editBtn:hover {
+  background: #1d4ed8;
+}
+
+#saveBtn {
+  background: #16a34a;
+  color: #fff;
+}
+
+#saveBtn:hover {
+  background: #15803d;
+}
+
+/* ---------- FILTER BAR ---------- */
+
+.top-bar {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.top-bar select,
+.top-bar input[type="file"] {
+  height: 34px;
+  border-radius: 4px;
+  border: 1px solid #d1d5db;
+  padding: 4px 6px;
+}
+
+.top-bar button {
+  height: 34px;
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.top-bar button:hover {
+  background: #1d4ed8;
+}
+
+/* ---------- PHOTO BULK ---------- */
+
+.photo-box {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+/* ---------- MAIN LAYOUT ---------- */
+
+.student-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr 240px;
+  gap: 12px;
+}
+
+/* ---------- LEFT PANEL (STUDENT LIST) ---------- */
+
+.student-left {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  height: 520px;
+  overflow-y: auto;
+}
+
+.list-header {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  background: #f1f5f9;
+  padding: 8px;
+  font-weight: 600;
+  border-bottom: 1px solid #d1d5db;
+}
+
+#rollList .roll-row {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  padding: 7px 8px;
+  border-bottom: 1px solid #e5e7eb;
+  cursor: pointer;
+}
+
+#rollList .roll-row:hover {
+  background: #e0e7ff;
+}
+
+/* ---------- CENTER PANEL (DETAILS FORM) ---------- */
+
+.student-center {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.student-center h3 {
+  margin-bottom: 10px;
+  font-size: 15px;
+  color: #1f2937;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 6px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 10px;
+}
+
+.details-grid div {
+  font-weight: 500;
+  color: #374151;
+  align-self: center;
+}
+
+.details-grid input,
+.details-grid select {
+  height: 34px;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #d1d5db;
+  padding: 4px 6px;
+}
+
+.details-grid input:disabled,
+.details-grid select:disabled {
+  background: #f3f4f6;
+}
+
+/* ---------- RIGHT PANEL (PHOTO) ---------- */
+
+.student-photo-panel {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 10px;
+  text-align: center;
+}
+
+.student-photo-panel img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #d1d5db;
+  background: #f1f5f9;
+  margin-bottom: 8px;
+}
+
+.student-photo-panel input[type="file"] {
+  width: 100%;
+  margin-bottom: 6px;
+}
+
+.student-photo-panel button {
+  width: 100%;
+  height: 34px;
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.student-photo-panel button:hover {
+  background: #1d4ed8;
+}
+
+/* ---------- SCROLLBAR ---------- */
+
+.student-left::-webkit-scrollbar {
+  width: 8px;
+}
+
+.student-left::-webkit-scrollbar-thumb {
+  background: #9ca3af;
+  border-radius: 4px;
+}
+
+.student-left::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+
+
+
+<!-- ================= STUDENT MANAGEMENT ================= -->
+
+<div id="studentManagement" class="screen">
+
+  <h2>Student Management</h2>
+
+  <!-- ACTION BUTTONS -->
+  <button id="editBtn" onclick="enableEdit()">Edit</button>
+  <button id="saveBtn" onclick="saveStudent()" style="display:none">
+    Save
+  </button>
+
+  <!-- ================= FILTER BAR ================= -->
+
+  <div class="top-bar">
+
+    Batch:
+    <select id="batch"></select>
+
+    Programme:
+    <select id="programme"></select>
+
+    Branch:
+    <select id="branch"></select>
+
+    Semester:
+    <select id="semester"></select>
+
+    Regulation:
+    <select id="regulation"></select>
+
+    Status:
+    <select id="statusFilter">
+      <option value="">All</option>
+      <option value="On Roll">On Roll</option>
+      <option value="Detained">Detained</option>
+      <option value="Left Out">Left Out</option>
+    </select>
+
+    <button onclick="loadStudentList()">Show Students</button>
+
+    <button onclick="generateExcel()">Generate Excel</button>
+
+    <input
+      type="file"
+      id="excelFile"
+      accept=".xlsx"
+      style="margin-left:10px"
+    />
+
+    <button onclick="uploadExcel()">Upload Excel</button>
+
+  </div>
+
+  <!-- ================= PHOTO BULK ================= -->
+
+  <div class="photo-box">
+
+    <input
+      type="file"
+      id="bulkPhotoUpload"
+      webkitdirectory
+      multiple
+    />
+
+    <button onclick="uploadBulkPhotos()">
+      Upload Folder Photos
+    </button>
+
+  </div>
+
+  <!-- ================= MAIN LAYOUT ================= -->
+
+  <div class="student-layout">
+
+    <!-- ================= LEFT PANEL ================= -->
+
+    <div class="student-left">
+
+      <div class="list-header">
+        <span>Sl No</span>
+        <span>HT No</span>
+      </div>
+
+      <div id="rollList"></div>
+
+    </div>
+
+    <!-- ================= CENTER PANEL ================= -->
+
+    <div class="student-center">
+
+      <h3>Student Details</h3>
+
+   <div class="details-grid">
+
+  <div>Hall Ticket No</div>
+  <div id="d_htno"></div>
+
+  <div>Admission No</div>
+  <input id="e_admno">
+
+  <div>Student Name</div>
+  <input id="e_name">
+
+  <div>Father Name</div>
+  <input id="e_father">
+
+  <div>Mother Name</div>
+  <input id="e_mother">
+
+  <div>Gender</div>
+  <select id="e_sex">
+    <option value="0">Male</option>
+    <option value="1">Female</option>
+  </select>
+
+  <div>Date of Birth</div>
+  <input type="date" id="e_dob">
+
+  <div>Age</div>
+  <input id="e_age">
+
+  <div>Aadhar No</div>
+  <input id="e_aadhar">
+
+  <div>Student Mobile</div>
+  <input id="e_mobile">
+
+  <div>Parent Mobile</div>
+  <input id="e_parent">
+
+  <div>Date of Joining</div>
+  <input type="date" id="e_doj">
+
+  <div>Section</div>
+  <input id="e_section">
+
+  <div>Status</div>
+  <select id="e_status">
+    <option>On Roll</option>
+    <option>Detained</option>
+    <option>Left Out</option>
+  </select>
+
+</div>
+
+    </div>
+
+    <!-- ================= RIGHT PHOTO PANEL ================= -->
+
+ <div class="student-photo-panel">
+
+  <img
+    id="studentPhoto"
+    src="uploads/students/no-photo.png"
+  />
+
+  <input type="file" id="photoUpload" accept="image/*">
+
+  <button onclick="uploadPhoto()">GET PHOTO</button>
+
+</div>
+
+
+  </div>
+
+</div>

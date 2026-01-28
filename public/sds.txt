@@ -1,0 +1,31 @@
+Create two buttons
+
+Pre-Examinations
+Post Examinations
+
+----
+Pre Examinations 
+
+Create A Button Name Master
+when i click Master 
+
+1 Programme_master: in which i create the programe entry from fron entry
+2 Branches Entry : in the 
+   User will enter under which programme the
+ Branch will enter 
+ CE - CIVLI ENGINEERING
+like this basedon the programmme 
+
+3 Semesters 
+
+4 Regulation
+
+5 Batches
+
+CREATE TABLE batch_master (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  batch_name VARCHAR(20) UNIQUE,
+  status TINYINT DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+

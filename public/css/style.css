@@ -1,0 +1,72 @@
+body {
+  margin: 0;
+  font-family: Segoe UI;
+  background: linear-gradient(135deg,#0f172a,#1e3a8a);
+  color: white;
+  text-align: center;
+}
+
+.title {
+  margin-top: 25px;
+  font-size: 32px;
+}
+
+.screen {
+  margin-top: 80px;
+}
+
+.btn {
+  padding: 22px 60px;
+  font-size: 20px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  margin: 20px;
+  color: white;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+}
+
+.blue {
+  background: linear-gradient(45deg,#2563eb,#1d4ed8);
+}
+
+.green {
+  background: linear-gradient(45deg,#16a34a,#15803d);
+}
+
+.purple {
+  background: linear-gradient(45deg,#7c3aed,#6d28d9);
+}
+
+.red {
+  background: linear-gradient(45deg,#dc2626,#b91c1c);
+}
+
+.card {
+  background: linear-gradient(45deg,#0ea5e9,#0284c7);
+  width: 220px;
+}
+
+.grid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 25px;
+}
+/* ===== Master Input Large Size ===== */
+
+input[type="text"],
+select {
+  width: 380px;
+  height: 48px;
+  font-size: 18px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: none;
+  margin: 10px;
+}
