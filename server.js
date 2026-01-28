@@ -1,3 +1,8 @@
+app.get("/", (req, res) => {
+  res.send("Exam System Backend is running 🚀");
+});
+
+
 require("dotenv").config();
 console.log("ENV CHECK:", process.env.MYSQL_USER);
 
