@@ -1,4 +1,5 @@
-require("dotenv").config();
+// server.js
+require("dotenv").config(); // Load environment variables first
 
 const express = require("express");
 const cors = require("cors");
@@ -6,23 +7,23 @@ const bodyParser = require("body-parser");
 
 const db = require("./config/db");
 
-const app = express();   // ✅ app created FIRST
+const app = express();
 
-// ✅ middleware
+// Middleware
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-// ✅ attach db AFTER app exists
+// Attach db pool to app locals (optional)
 app.locals.db = db;
 
-// ✅ root route
+// Root route
 app.get("/", (req, res) => {
   res.send("Exam System Backend is running 🚀");
 });
 
-// ✅ routes
+// Routes
 app.use("/api/programme", require("./routes/programme"));
 app.use("/api/branch", require("./routes/branch"));
 app.use("/api/semester", require("./routes/semester"));
@@ -31,7 +32,7 @@ app.use("/api/batch", require("./routes/batch"));
 app.use("/api/section", require("./routes/section"));
 app.use("/api/students", require("./routes/studentmanagement"));
 
-// ✅ port (Railway safe)
+// Port (Railway safe)
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
