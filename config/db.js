@@ -5,16 +5,13 @@ const pool = mysql.createPool({
   user: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DATABASE,
-  port: process.env.MYSQL_PORT || 3306,
+  port: process.env.MYSQL_PORT,
+
+  ssl: {
+    rejectUnauthorized: false
+  },
 
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
 });
-
-// test connection
-pool.getConnection((err, connection) => {
-  if (err) {
-    console.error("❌ MySQL connection failed:", err);
-  } else {
-    console.log("✅ MySQL connected su
