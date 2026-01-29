@@ -1,70 +1,62 @@
-
-console.log("MYSQLHOST:", process.env.MYSQLHOST);
-console.log("MYSQLUSER:", process.env.MYSQLUSER);
-console.log("MYSQLDATABASE:", process.env.MYSQLDATABASE);
-console.log("MYSQLPORT:", process.env.MYSQLPORT);
-// Load modules
 require("dotenv").config();
+
+console.log("MYSQL_HOST:", process.env.MYSQL_HOST);
+console.log("MYSQL_USER:", process.env.MYSQL_USER);
+console.log("MYSQL_DATABASE:", process.env.MYSQL_DATABASE);
+console.log("MYSQL_PORT:", process.env.MYSQL_PORT);
+
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const mysql = require("mysql2");
 
-// Initialize Express app
 const app = express();
 
-// Middleware
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-// Root route
 app.get("/", (req, res) => {
   res.send("Exam System Backend is running 🚀");
 });
 
-// ✅ MySQL connection (RAILWAY SAFE)
+// ✅ Railway MySQL connection
 const db = mysql.createPool({
-  host: process.env.MYSQLHOST,
-  port: process.env.MYSQLPORT,
-  user: process.env.MYSQLUSER,
-  password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQLDATABASE,
+  host: process.env.MYSQL_HOST,
+  port: process.env.MYSQL_PORT,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
 
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
 });
 
-// ✅ Test DB connection on startup
+// Test DB
 db.getConnection((err, connection) => {
   if (err) {
     console.error("❌ MySQL connection failed:", err.message);
   } else {
-    console.log("✅ Connected to MySQL database!");
+    console.log("✅ MySQL connected successfully");
     connection.release();
   }
 });
 
-// Make `db` available in routes
 app.locals.db = db;
 
 // Routes
-try {
-  app.use("/api/programme", require("./routes/programme"));
-  app.use("/api/branch", require("./routes/branch"));
-  app.use("/api/semester", require("./routes/semester"));
-  app.use("/api/regulation", require("./routes/regulation"));
-  app.use("/api/batch", require("./routes/batch"));
-  app.use("/api/section", require("./routes/section"));
-  app.use("/api/students", require("./routes/studentmanagement"));
-} catch (err) {
-  console.warn("⚠️ Route loading issue:", err.message);
-}
+app.use("/api/programme", require("./routes/programme"));
+app.use("/api/branch", require("./routes/branch"));
+app.use("/api/semester", require("./routes/semester"));
+app.use("/api/regulation", require("./routes/regulation"));
+app.use("/api/batch", require("./routes/batch"));
+app.use("/api/section", require("./routes/section"));
+app.use("/api/students", require("./routes/studentmanagement"));
 
-// Start the server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
+
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
