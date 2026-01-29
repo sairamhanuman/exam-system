@@ -1,0 +1,22 @@
+﻿version: "3.8"
+
+services:
+  app:
+    build: .
+    container_name: exam_app
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    container_name: exam_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: exam_system
+    ports:
+      - "3306:3306"
