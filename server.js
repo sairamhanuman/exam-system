@@ -1,6 +1,5 @@
-
-
 // Load modules
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -20,21 +19,26 @@ app.get("/", (req, res) => {
   res.send("Exam System Backend is running 🚀");
 });
 
-// MySQL connection
-const db = mysql.createConnection({
-  host: process.env.DB_HOST || "localhost",
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "",
-  database: process.env.DB_NAME || "exam_system",
-  port: process.env.DB_PORT || 3306
+// ✅ MySQL connection (RAILWAY SAFE)
+const db = mysql.createPool({
+  host: process.env.MYSQLHOST,
+  port: process.env.MYSQLPORT,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE,
+
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
-// Connect to MySQL with error handling
-db.connect((err) => {
+// ✅ Test DB connection on startup
+db.getConnection((err, connection) => {
   if (err) {
     console.error("❌ MySQL connection failed:", err.message);
   } else {
     console.log("✅ Connected to MySQL database!");
+    connection.release();
   }
 });
 
@@ -43,32 +47,19 @@ app.locals.db = db;
 
 // Routes
 try {
-  const programmeRoutes = require("./routes/programme");
-  app.use("/api/programme", programmeRoutes);
-
-  const branchRoutes = require("./routes/branch");
-  app.use("/api/branch", branchRoutes);
-
-  const semesterRoutes = require("./routes/semester");
-  app.use("/api/semester", semesterRoutes);
-
-  const regulationRoutes = require("./routes/regulation");
-  app.use("/api/regulation", regulationRoutes);
-
-  const batchRoutes = require("./routes/batch");
-  app.use("/api/batch", batchRoutes);
-
-  const sectionRoutes = require("./routes/section");
-  app.use("/api/section", sectionRoutes);
-
-  const studentManagementRoutes = require("./routes/studentmanagement");
-  app.use("/api/students", studentManagementRoutes);
+  app.use("/api/programme", require("./routes/programme"));
+  app.use("/api/branch", require("./routes/branch"));
+  app.use("/api/semester", require("./routes/semester"));
+  app.use("/api/regulation", require("./routes/regulation"));
+  app.use("/api/batch", require("./routes/batch"));
+  app.use("/api/section", require("./routes/section"));
+  app.use("/api/students", require("./routes/studentmanagement"));
 } catch (err) {
-  console.warn("⚠️ One or more route files are missing or failed to load:", err.message);
+  console.warn("⚠️ Route loading issue:", err.message);
 }
 
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
