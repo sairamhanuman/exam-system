@@ -16,7 +16,7 @@ pool.getConnection((err, connection) => {
   if (err) {
     console.error("❌ MySQL connection failed:", err.message);
   } else {
-    console.log("✅ MySQL connected successfully");
+    console.log("✅ MySQL connected (Railway)");
     connection.release();
   }
 });
