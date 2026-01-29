@@ -1,3 +1,4 @@
+require("dotenv").config();
 const mysql = require("mysql2");
 
 const pool = mysql.createPool({
@@ -6,19 +7,20 @@ const pool = mysql.createPool({
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DATABASE,
   port: process.env.MYSQL_PORT || 3306,
-
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
-});
+}).promise(); // enable async/await
 
-pool.getConnection((err, connection) => {
-  if (err) {
+// Test connection
+(async () => {
+  try {
+    const [rows] = await pool.query("SELECT NOW() AS now");
+    console.log("✅ MySQL connected, current time:", rows[0].now);
+  } catch (err) {
     console.error("❌ MySQL connection failed:", err.message);
-  } else {
-    console.log("✅ MySQL connected (Railway)");
-    connection.release();
+    process.exit(1);
   }
-});
+})();
 
 module.exports = pool;
