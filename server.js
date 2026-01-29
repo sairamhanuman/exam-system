@@ -8,18 +8,18 @@ const db = require("./config/db");
 
 const app = express();
 
-// ================= MIDDLEWARE =================
+// middleware
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-// ================= TEST ROUTE =================
+// test route
 app.get("/", (req, res) => {
-  res.send("✅ Exam System Backend Running on localhost");
+  res.send("✅ Exam System Backend Running");
 });
 
-// ================= ROUTES =================
+// routes
 app.use("/api/programme", require("./routes/programme"));
 app.use("/api/branch", require("./routes/branch"));
 app.use("/api/semester", require("./routes/semester"));
@@ -28,7 +28,7 @@ app.use("/api/batch", require("./routes/batch"));
 app.use("/api/section", require("./routes/section"));
 app.use("/api/students", require("./routes/studentmanagement"));
 
-// ================= SERVER =================
+// server
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
