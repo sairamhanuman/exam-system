@@ -157,7 +157,7 @@ async function loadStudentList() {
   console.log({ batch, programme, branch, semester, regulation, status });
 
   // 🔒 validation
-   / ✅ ADD THIS BLOCK
+ 
   if (!batch || !programme || !branch || !semester || !regulation) {
     document.getElementById("rollList").innerHTML = "";
     return; // ⛔ stop API call
