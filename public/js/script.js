@@ -85,24 +85,32 @@ function loadProgrammes() {
       tbody.innerHTML = "";
 
       data.forEach((row, i) => {
-        tbody.innerHTML += `
-          <tr>
-            <td>${i + 1}</td>
-            <td>${row.programme_name}</td>
-            <td>
-              <button class="btn purple"
-                onclick="editProgramme(${row.id}, '${row.programme_name}')">
-                Edit
-              </button>
-            </td>
-            <td>
-              <button class="btn red"
-                onclick="deleteProgramme(${row.id})">
-                Delete
-              </button>
-            </td>
-          </tr>
-        `;
+      tbody.innerHTML += `
+<tr>
+  <td>${i + 1}</td>
+  <td>${s.emp_id}</td>
+  <td>${s.staff_name}</td>
+  <td>${s.department}</td>
+  <td>${s.designation}</td>
+  <td>
+    <img src="/uploads/staff/${s.photo || 'no-photo.png'}"
+         class="staff-photo"
+         onerror="this.src='/uploads/staff/no-photo.png'">
+  </td>
+  <td>
+    <button class="btn purple" onclick='editStaff(${JSON.stringify(s)})'>
+      Edit
+    </button>
+  </td>
+  <td>
+    <button class="btn red" onclick="deleteStaff(${s.id})">
+      Delete
+    </button>
+  </td>
+</tr>
+`;
+
+
       });
     });
 }
