@@ -15,25 +15,19 @@ function openStudentManagement() {
 /* =====================================================
    LOAD ALL DROPDOWNS
 ===================================================== */
-
 function loadFilters() {
-
   fetch("/api/students/filters")
     .then(res => res.json())
     .then(data => {
+      console.log("Filters API full response:", data);
 
-
-        // 🔍 DEBUG — see what backend sends
-  console.log("Filters API data:", data)
-
-       
-      fill("batch", data.batch, "batch_name");
-      fill("programme", data.programme, "programme_name");
-      fill("branch", data.branch, "branch_name");
-      fill("semester", data.semester, "semester_name");
-      fill("regulation", data.regulation, "regulation_name");
-      fill("section", data.section, "section_name");
-
+      // ✅ Safe way: check if each key exists and is an array
+      fill("batch", Array.isArray(data.batch) ? data.batch : [], "batch_name");
+      fill("programme", Array.isArray(data.programme) ? data.programme : [], "programme_name");
+      fill("branch", Array.isArray(data.branch) ? data.branch : [], "branch_name");
+      fill("semester", Array.isArray(data.semester) ? data.semester : [], "semester_name");
+      fill("regulation", Array.isArray(data.regulation) ? data.regulation : [], "regulation_name");
+      fill("section", Array.isArray(data.section) ? data.section : [], "section_name");
     })
     .catch(err => {
       console.error("Dropdown load error:", err);
@@ -41,22 +35,23 @@ function loadFilters() {
     });
 }
 
+// Modified fill function with extra safety logging
 function fill(id, rows, col) {
-
   const sel = document.getElementById(id);
-  if (!sel) return;
-
-  sel.innerHTML = "<option value=''>Select</option>";
-
-  // ✅ SAFETY CHECK
-  if (!Array.isArray(rows)) {
-    console.warn(`Dropdown '${id}' data is not array:`, rows);
+  if (!sel) {
+    console.warn(`Dropdown element '${id}' not found`);
     return;
   }
 
+  if (!Array.isArray(rows)) {
+    console.warn(`Dropdown '${id}' data is not array:`, rows);
+    rows = [];
+  }
+
+  sel.innerHTML = "<option value=''>Select</option>";
+
   rows.forEach(r => {
-    sel.innerHTML +=
-      `<option value="${r[col]}">${r[col]}</option>`;
+    sel.innerHTML += `<option value="${r[col]}">${r[col]}</option>`;
   });
 }
 
