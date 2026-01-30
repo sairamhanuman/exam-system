@@ -8,33 +8,32 @@ const fs = require("fs");
 const path = require("path");
 
 /* ================= UPLOAD FOLDER ================= */
+// Use path.resolve to make sure it's always relative to project root
+const uploadDir = path.resolve("public/uploads/staff");
 
-const uploadDir = path.join(__dirname, "../public/uploads/staff");
-
+// Create folder if it doesn't exist
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-/* ================= MULTER ================= */
-
+/* ================= MULTER STORAGE ================= */
 const storage = multer.diskStorage({
   destination: uploadDir,
-filename: (req, file, cb) => {
-  const cleanName = file.originalname.replace(/\s+/g, "_");
-  cb(null, Date.now() + "_" + cleanName);
-}
-
+  filename: (req, file, cb) => {
+    const cleanName = file.originalname.replace(/\s+/g, "_");
+    cb(null, Date.now() + "_" + cleanName);
+  }
 });
 
 const upload = multer({ storage });
 
-/* ================= ADD ================= */
-
+/* ================= ADD STAFF ================= */
 router.post("/add", upload.single("photo"), async (req, res) => {
   try {
-
     const photo = req.file ? req.file.filename : null;
     const status = req.body.status || "Working";
+
+    console.log("Uploaded file path:", req.file?.path); // Debug log
 
     await db.query(
       `INSERT INTO staff_master
@@ -64,22 +63,19 @@ router.post("/add", upload.single("photo"), async (req, res) => {
     );
 
     res.json({ success: true });
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false });
   }
 });
 
-/* ================= UPDATE ================= */
-
+/* ================= UPDATE STAFF ================= */
 router.post("/update/:id", upload.single("photo"), async (req, res) => {
   try {
-
     const id = req.params.id;
 
+    // Use old photo if no new photo uploaded
     let photo = req.body.old_photo || null;
-
     if (req.file) {
       photo = req.file.filename;
     }
@@ -88,22 +84,10 @@ router.post("/update/:id", upload.single("photo"), async (req, res) => {
 
     await db.query(
       `UPDATE staff_master SET
-        emp_id=?,
-        staff_name=?,
-        department=?,
-        designation=?,
-        experience=?,
-        mobile=?,
-        email=?,
-        gender=?,
-        doj=?,
-        bank_name=?,
-        bank_branch=?,
-        account_no=?,
-        ifsc_code=?,
-        pan_no=?,
-        photo=?,
-        status=?
+        emp_id=?, staff_name=?, department=?, designation=?, experience=?,
+        mobile=?, email=?, gender=?, doj=?,
+        bank_name=?, bank_branch=?, account_no=?, ifsc_code=?,
+        pan_no=?, photo=?, status=?
       WHERE id=?`,
       [
         req.body.emp_id,
@@ -126,30 +110,37 @@ router.post("/update/:id", upload.single("photo"), async (req, res) => {
       ]
     );
 
-    res.json({ success: true });
+    console.log("Updated staff:", id, "Photo:", photo);
 
+    res.json({ success: true });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false });
   }
 });
 
-/* ================= LIST ================= */
-
+/* ================= LIST STAFF ================= */
 router.get("/list", async (req, res) => {
-  const [rows] = await db.query(
-    "SELECT * FROM staff_master ORDER BY staff_name"
-  );
-  res.json(rows);
+  try {
+    const [rows] = await db.query(
+      "SELECT * FROM staff_master ORDER BY staff_name"
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false });
+  }
 });
 
-/* ================= DELETE ================= */
-
+/* ================= DELETE STAFF ================= */
 router.delete("/delete/:id", async (req, res) => {
-  await db.query("DELETE FROM staff_master WHERE id=?", [
-    req.params.id
-  ]);
-  res.json({ success: true });
+  try {
+    await db.query("DELETE FROM staff_master WHERE id=?", [req.params.id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false });
+  }
 });
 
 module.exports = router;
