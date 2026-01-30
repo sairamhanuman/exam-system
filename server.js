@@ -8,6 +8,18 @@ const db = require("./config/db");
 
 const app = express();
 
+
+// DEBUG route to check MySQL env variables
+app.get("/env", (req, res) => {
+  res.json({
+    MYSQLHOST: process.env.MYSQLHOST,
+    MYSQLUSER: process.env.MYSQLUSER,
+    MYSQLPASSWORD_EXISTS: !!process.env.MYSQLPASSWORD,
+    MYSQLDATABASE: process.env.MYSQLDATABASE,
+    MYSQLPORT: process.env.MYSQLPORT
+  });
+});
+
 // middleware
 app.use(cors());
 app.use(bodyParser.json());
