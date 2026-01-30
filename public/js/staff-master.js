@@ -60,27 +60,22 @@ function saveStaff() {
 }
 
 /* ================= LOAD ================= */
-
 function loadStaff() {
   fetch("/api/staff/list")
     .then(res => res.json())
     .then(data => {
 
+      console.log("STAFF DATA:", data);
+
       const tbody = document.querySelector("#staffTable tbody");
       tbody.innerHTML = "";
 
-     if (!Array.isArray(data)) {
-  console.error("Staff list error:", data);
-  return;
-}
+      if (!Array.isArray(data)) {
+        console.error("Staff list error:", data);
+        return;
+      }
 
-
-data.forEach((s, i) => {
-
-        const img = s.photo
-          ? `/uploads/staff/${s.photo}`
-          : `/uploads/students/no-photo.png`;
-
+      data.forEach((s, i) => {
         tbody.innerHTML += `
           <tr>
             <td>${i + 1}</td>
@@ -88,18 +83,14 @@ data.forEach((s, i) => {
             <td>${s.staff_name}</td>
             <td>${s.department}</td>
             <td>${s.designation}</td>
-  <td>
-  <img
-    src="/uploads/staff/${s.photo || 'no-photo.png'}"
-    class="staff-photo"
-    onerror="this.src='/uploads/staff/no-photo.png'"
-  >
-</td>
-
-
+            <td>
+              <img src="/uploads/staff/${s.photo || 'no-photo.png'}"
+                   class="staff-photo"
+                   onerror="this.src='/uploads/staff/no-photo.png'">
+            </td>
             <td>
               <button class="btn purple"
-                onclick='editStaff(${JSON.stringify(s)})'>
+                onclick="editStaff(${s.id})">
                 Edit
               </button>
             </td>
@@ -109,10 +100,13 @@ data.forEach((s, i) => {
                 Delete
               </button>
             </td>
-          </tr>`;
+          </tr>
+        `;
       });
-    });
+    })
+    .catch(err => console.error("Fetch error:", err));
 }
+
 
 /* ================= EDIT ================= */
 
