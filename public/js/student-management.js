@@ -27,7 +27,7 @@ function loadFilters() {
       fill("branch", Array.isArray(data.branch) ? data.branch : [], "branch_name");
       fill("semester", Array.isArray(data.semester) ? data.semester : [], "semester_name");
       fill("regulation", Array.isArray(data.regulation) ? data.regulation : [], "regulation_name");
-      fill("section", Array.isArray(data.section) ? data.section : [], "section_name");
+     
     })
     .catch(err => {
       console.error("Dropdown load error:", err);
