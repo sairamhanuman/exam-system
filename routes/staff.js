@@ -5,11 +5,18 @@ const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
 
+/* ================= CREATE FOLDER ================= */
+
+const uploadDir = path.join(__dirname, "../public/uploads/staff");
+
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 /* ================= PHOTO STORAGE ================= */
 
 const storage = multer.diskStorage({
-  destination: "public/uploads/staff",
+  destination: uploadDir,
   filename: (req, file, cb) => {
     cb(null, Date.now() + "_" + file.originalname);
   }
@@ -17,7 +24,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-/* ================= ADD / UPDATE ================= */
+/* ================= ADD STAFF ================= */
+
 router.post("/add", upload.single("photo"), async (req, res) => {
   try {
 
@@ -40,12 +48,10 @@ router.post("/add", upload.single("photo"), async (req, res) => {
         req.body.email,
         req.body.gender,
         req.body.doj,
-
         req.body.bank_name,
         req.body.bank_branch,
         req.body.account_no,
         req.body.ifsc_code,
-
         req.body.pan_no,
         photo,
         req.body.status
@@ -55,10 +61,10 @@ router.post("/add", upload.single("photo"), async (req, res) => {
     res.json({ success: true });
 
   } catch (err) {
-    console.error("STAFF ADD ERROR:", err);
+    console.error("STAFF INSERT ERROR:", err);
     res.status(500).json({
       success: false,
-      error: err.message
+      message: err.message
     });
   }
 });
