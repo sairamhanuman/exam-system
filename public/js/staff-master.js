@@ -105,7 +105,6 @@ function loadStaff() {
 }
 
 /* ================= EDIT ================= */
-
 function editStaff(s) {
   editStaffId = s.id;
 
@@ -117,7 +116,7 @@ function editStaff(s) {
   mobile.value = s.mobile;
   email.value = s.email;
   gender.value = s.gender;
-  doj.value = s.doj?.substring(0,10);
+  doj.value = s.doj?.substring(0, 10);
 
   bank_name.value = s.bank_name;
   bank_branch.value = s.bank_branch;
@@ -126,7 +125,11 @@ function editStaff(s) {
 
   pan_no.value = s.pan_no;
   status.value = s.status;
+
+  // ✅ THIS LINE WAS MISSING
+  document.getElementById("photo").dataset.old = s.photo;
 }
+
 
 
 /* ================= DELETE ================= */
