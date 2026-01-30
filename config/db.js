@@ -6,6 +6,7 @@ const MYSQL_USER = process.env.MYSQLUSER;
 const MYSQL_PASSWORD = process.env.MYSQLPASSWORD;
 const MYSQL_DATABASE = process.env.MYSQLDATABASE;
 const MYSQL_PORT = Number(process.env.MYSQLPORT) || 3306; // default to 3306 if not set
+console.log("All env vars:", process.env);
 
 // Debug environment variables
 console.log("====== MYSQL DEBUG ======");
