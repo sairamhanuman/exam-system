@@ -1,44 +1,23 @@
 const mysql = require("mysql2");
 
-// Convert env variables and check them
+// read environment variables
 const MYSQL_HOST = process.env.MYSQLHOST;
 const MYSQL_USER = process.env.MYSQLUSER;
 const MYSQL_PASSWORD = process.env.MYSQLPASSWORD;
 const MYSQL_DATABASE = process.env.MYSQLDATABASE;
-const MYSQL_PORT = Number(process.env.MYSQLPORT) || 3306; // default to 3306 if not set
-console.log("All env vars:", process.env);
+const MYSQL_PORT = Number(process.env.MYSQLPORT) || 3306;
 
-// Debug environment variables
-console.log("====== MYSQL DEBUG ======");
-console.log("HOST:", MYSQL_HOST);
-console.log("USER:", MYSQL_USER);
-console.log("DB:", MYSQL_DATABASE);
-console.log("PORT:", MYSQL_PORT);
-console.log("PASSWORD EXISTS:", !!MYSQL_PASSWORD);
-console.log("=========================");
-
-// Create MySQL pool
+// create a pool
 const pool = mysql.createPool({
   host: MYSQL_HOST,
   user: MYSQL_USER,
   password: MYSQL_PASSWORD,
   database: MYSQL_DATABASE,
   port: MYSQL_PORT,
-  ssl: false
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
-// Test connection
-pool.getConnection((err, connection) => {
-  if (err) {
-    console.error("❌ MYSQL ERROR MESSAGE:");
-    console.error(err.message);
-    console.error("❌ FULL ERROR:");
-    console.error(err);
-  } else {
-    console.log("✅ MYSQL CONNECTED SUCCESSFULLY");
-    connection.release(); // release back to pool
-    console.log("🔄 Connection released back to pool");
-  }
-});
-
-module.exports = pool; // export pool for reuse in other files
+// **IMPORTANT:** export a `promise()` pool so you can use `.query()` easily
+module.exports = pool.promise();
