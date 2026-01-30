@@ -14,8 +14,7 @@ function openStudentManagement() {
 
 /* =====================================================
    LOAD ALL DROPDOWNS
-===================================================== */
-function loadFilters() {
+===================================================== */function loadFilters() {
   fetch("/api/students/filters")
     .then(res => res.json())
     .then(data => {
@@ -47,6 +46,14 @@ function fill(id, rows, col) {
     console.warn(`Dropdown '${id}' data is not array:`, rows);
     rows = [];
   }
+
+  sel.innerHTML = "<option value=''>Select</option>";
+
+  rows.forEach(r => {
+    sel.innerHTML += `<option value="${r[col]}">${r[col]}</option>`;
+  });
+}
+
 
   sel.innerHTML = "<option value=''>Select</option>";
 
