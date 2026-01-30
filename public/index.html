@@ -39,6 +39,7 @@
 <button class="btn card" onclick="openSection()">Section</button>
 <button class="btn card" onclick="openStudentManagement()">  Student Management</button>
 
+<button class="btn card" onclick="openStaffMaster()">  👨‍🏫 Staff Master</button>
 
   <button class="btn red" onclick="backToPreExam()">Quit</button>
 </div>
@@ -403,6 +404,89 @@
 </div>
 <!-- ================= END STUDENT MANAGEMENT ================= -->
 
+
+<!-- ================= STAFF MASTER ================= -->
+
+<div id="staffMaster" class="screen" style="display:none">
+
+  <h2>Staff Master</h2>
+
+  <input id="emp_id" placeholder="Employee ID">
+  <input id="staff_name" placeholder="Staff Name">
+
+  <input id="department" placeholder="Department">
+  <input id="designation" placeholder="Designation">
+
+  <input type="number" id="experience" placeholder="Years of Experience">
+
+  <input id="mobile" placeholder="Mobile Number">
+  <input id="email" placeholder="Email">
+
+  <select id="gender">
+    <option>Male</option>
+    <option>Female</option>
+    <option>Other</option>
+  </select>
+
+  <input type="date" id="doj">
+
+  <hr>
+
+  <h3>Bank Details</h3>
+
+  <input id="bank_name" placeholder="Bank Name">
+  <input id="bank_branch" placeholder="Branch Name">
+  <input id="account_no" placeholder="Account Number">
+  <input id="ifsc_code" placeholder="IFSC Code">
+
+  <hr>
+
+  <h3>Identity</h3>
+
+  <input id="pan_no" placeholder="PAN Card Number">
+
+  <input type="file" id="photo">
+
+  <select id="status">
+    <option>Working</option>
+    <option>Relieved</option>
+  </select>
+
+  <br><br>
+
+  <button class="btn blue" onclick="saveStaff()">Save</button>
+  <button class="btn red" onclick="openMaster()">Quit</button>
+
+  <br><br>
+
+  <table id="staffTable">
+    <thead>
+      <tr>
+        <th>S.No</th>
+        <th>Emp ID</th>
+        <th>Name</th>
+        <th>Dept</th>
+        <th>Designation</th>
+        <th>Photo</th>
+        <th>Edit</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+  
 <script src="js/script.js"></script>
 <!-- STUDENT MANAGEMENT JS -->
 <script src="js/student-management.js"></script>
