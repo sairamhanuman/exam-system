@@ -14,7 +14,8 @@ function openStudentManagement() {
 
 /* =====================================================
    LOAD ALL DROPDOWNS
-===================================================== */function loadFilters() {
+===================================================== */
+function loadFilters() {
   fetch("/api/students/filters")
     .then(res => res.json())
     .then(data => {
