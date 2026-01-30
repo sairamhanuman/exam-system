@@ -153,6 +153,10 @@ async function loadStudentList() {
   const regulation = getVal("regulation");
   const status = document.getElementById("statusFilter").value;
 
+   // 🔍 ADD THIS LINE EXACTLY HERE
+  console.log({ batch, programme, branch, semester, regulation, status });
+
+  // 🔒 validation
    / ✅ ADD THIS BLOCK
   if (!batch || !programme || !branch || !semester || !regulation) {
     document.getElementById("rollList").innerHTML = "";
