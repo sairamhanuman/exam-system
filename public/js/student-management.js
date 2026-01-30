@@ -22,6 +22,11 @@ function loadFilters() {
     .then(res => res.json())
     .then(data => {
 
+
+        // 🔍 DEBUG — see what backend sends
+  console.log("Filters API data:", data)
+
+       
       fill("batch", data.batch, "batch_name");
       fill("programme", data.programme, "programme_name");
       fill("branch", data.branch, "branch_name");
@@ -43,11 +48,18 @@ function fill(id, rows, col) {
 
   sel.innerHTML = "<option value=''>Select</option>";
 
+  // ✅ SAFETY CHECK
+  if (!Array.isArray(rows)) {
+    console.warn(`Dropdown '${id}' data is not array:`, rows);
+    return;
+  }
+
   rows.forEach(r => {
     sel.innerHTML +=
       `<option value="${r[col]}">${r[col]}</option>`;
   });
 }
+
 
 /* =====================================================
    GENERATE EXCEL TEMPLATE
