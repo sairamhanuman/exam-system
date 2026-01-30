@@ -37,31 +37,22 @@ function loadFilters() {
 
 // Modified fill function with extra safety logging
 function fill(id, rows, col) {
-  const sel = document.getElementById(id);
-  if (!sel) {
-    console.warn(`Dropdown element '${id}' not found`);
-    return;
-  }
-
-  if (!Array.isArray(rows)) {
-    console.warn(`Dropdown '${id}' data is not array:`, rows);
-    rows = [];
-  }
-
-  sel.innerHTML = "<option value=''>Select</option>";
-
-  rows.forEach(r => {
-    sel.innerHTML += `<option value="${r[col]}">${r[col]}</option>`;
-  });
+    const sel = document.getElementById(id);
+    if (!sel) {
+        console.warn(`Dropdown element '${id}' not found`);
+        return;
+    }
+    if (!Array.isArray(rows)) {
+        console.warn(`Dropdown '${id}' data is not array:`, rows);
+        rows = [];
+    }
+    sel.innerHTML = "<option value=''>Select</option>";
+    rows.forEach(r => {
+        sel.innerHTML += `<option value="${r[col]}">${r[col]}</option>`;
+    });
 }
 
 
-  sel.innerHTML = "<option value=''>Select</option>";
-
-  rows.forEach(r => {
-    sel.innerHTML += `<option value="${r[col]}">${r[col]}</option>`;
-  });
-}
 
 
 /* =====================================================
