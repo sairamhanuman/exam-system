@@ -1,9 +1,13 @@
 const express = require("express");
 const router = express.Router();
+console.log("✅ staff routes loaded");
+
 const db = require("../config/db");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
+
+
 
 /* ================= CREATE FOLDER ================= */
 
