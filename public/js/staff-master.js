@@ -63,7 +63,13 @@ function loadStaff() {
     .then(res => res.json())
     .then(data => {
 
-      const tbody = document.querySelector("#staffTable tbody");
+   const tbody = document.querySelector("#staffTable tbody");
+
+if (!tbody) {
+  console.error("❌ staffTable tbody not found");
+  return;
+}
+
       tbody.innerHTML = "";
 
       data.forEach((s, i) => {
