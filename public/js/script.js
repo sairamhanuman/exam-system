@@ -681,10 +681,7 @@ function deleteSection(id) {
   .then(() => loadSections());
 }
 /* ================= OPEN STUDENT MANAGEMENT ================= */
-function hideAll() {
-  document.querySelectorAll(".screen")
-    .forEach(s => s.style.display = "none");
-}
+
 
 function openStudentManagement() {
   hideAll();
