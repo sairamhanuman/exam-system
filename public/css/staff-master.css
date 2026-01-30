@@ -10,23 +10,41 @@
   margin-top: 20px;
   color: #2563eb;
 }
-
+/* Staff Table Styling */
 #staffTable {
   width: 95%;
-  margin: auto;
+  margin: 20px auto;       /* centered with some top/bottom spacing */
   border-collapse: collapse;
-  background: #fff;
+  background-color: #ffffff; /* table background white */
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #333333;           /* default text color for table cells */
 }
 
-#staffTable th,
-#staffTable td {
-  border: 1px solid #ccc;
-  padding: 8px;
-}
-
+/* Table Header */
 #staffTable th {
-  background: #1d4ed8;
-  color: #fff;
+  background-color: #1d4ed8; /* dark blue header */
+  color: #ffffff;            /* white text */
+  font-weight: bold;
+  padding: 10px 8px;
+  text-align: left;
+  border: 1px solid #ccc;
+}
+
+/* Table Cells */
+#staffTable td {
+  padding: 8px;
+  border: 1px solid #ccc;
+}
+
+/* Optional: Stripe effect for rows */
+#staffTable tr:nth-child(even) {
+  background-color: #f9f9f9; /* light gray alternate rows */
+}
+
+/* Optional: Hover effect */
+#staffTable tr:hover {
+  background-color: #e0f0ff; /* light blue on hover */
 }
 
 .staff-photo {
