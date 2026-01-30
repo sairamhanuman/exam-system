@@ -1,10 +1,12 @@
 let editStaffId = null;
 
+console.log("staff js loaded");
+
 function openStaffMaster() {
   hideAll();
-  staffMaster.style.display = "block";
-  loadStaff();
+  document.getElementById("staffMaster").style.display = "block";
 }
+
 
 /* ================= SAVE ================= */
 
