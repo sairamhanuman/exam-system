@@ -74,10 +74,6 @@ function loadStaff() {
   return;
 }
 
-if (!Array.isArray(data)) {
-  console.error("Staff list error:", data);
-  return;
-}
 
 data.forEach((s, i) => {
 
