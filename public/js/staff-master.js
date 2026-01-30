@@ -8,9 +8,7 @@ function openStaffMaster() {
   loadStaff();
 }
 
-
 /* ================= SAVE ================= */
-
 
 function saveStaff() {
 
@@ -32,14 +30,17 @@ function saveStaff() {
   formData.append("ifsc_code", ifsc_code.value);
 
   formData.append("pan_no", pan_no.value);
- formData.append(
-  "status",
-  status.value ? status.value : "Working"
-);
+  formData.append("status", status.value || "Working");
 
+  // ✅ send old photo if edit
+  if (editStaffId && !photo.files[0]) {
+    formData.append("old_photo", photo.dataset.old);
+  }
 
-  if (photo.files[0])
+  // ✅ new photo
+  if (photo.files[0]) {
     formData.append("photo", photo.files[0]);
+  }
 
   const url = editStaffId
     ? "/api/staff/update/" + editStaffId
@@ -54,6 +55,7 @@ function saveStaff() {
       clearStaff();
       loadStaff();
       editStaffId = null;
+      photo.dataset.old = "";
     });
 }
 
@@ -64,12 +66,15 @@ function loadStaff() {
     .then(res => res.json())
     .then(data => {
 
-   const tbody = document.querySelector("#staffTable tbody");
-
-
+      const tbody = document.querySelector("#staffTable tbody");
       tbody.innerHTML = "";
 
       data.forEach((s, i) => {
+
+        const img = s.photo
+          ? `/uploads/staff/${s.photo}`
+          : `/uploads/students/no-photo.png`;
+
         tbody.innerHTML += `
           <tr>
             <td>${i + 1}</td>
@@ -78,15 +83,8 @@ function loadStaff() {
             <td>${s.department}</td>
             <td>${s.designation}</td>
             <td>
-  <img
-    src="${s.photo
-      ? '/uploads/staff/' + s.photo
-      : '/uploads/students/no-photo.png'}"
-    class="staff-photo"
-    onerror="this.src='/uploads/students/no-photo.png'"
-  >
-</td>
-
+              <img src="${img}" class="staff-photo">
+            </td>
             <td>
               <button class="btn purple"
                 onclick='editStaff(${JSON.stringify(s)})'>
@@ -105,7 +103,9 @@ function loadStaff() {
 }
 
 /* ================= EDIT ================= */
+
 function editStaff(s) {
+
   editStaffId = s.id;
 
   emp_id.value = s.emp_id;
@@ -126,11 +126,9 @@ function editStaff(s) {
   pan_no.value = s.pan_no;
   status.value = s.status;
 
-  // ✅ THIS LINE WAS MISSING
-  document.getElementById("photo").dataset.old = s.photo;
+  // ✅ store old photo
+  photo.dataset.old = s.photo || "";
 }
-
-
 
 /* ================= DELETE ================= */
 
