@@ -69,7 +69,17 @@ function loadStaff() {
       const tbody = document.querySelector("#staffTable tbody");
       tbody.innerHTML = "";
 
-      data.forEach((s, i) => {
+     if (!Array.isArray(data)) {
+  console.error("Staff list error:", data);
+  return;
+}
+
+if (!Array.isArray(data)) {
+  console.error("Staff list error:", data);
+  return;
+}
+
+data.forEach((s, i) => {
 
         const img = s.photo
           ? `/uploads/staff/${s.photo}`
@@ -82,13 +92,14 @@ function loadStaff() {
             <td>${s.staff_name}</td>
             <td>${s.department}</td>
             <td>${s.designation}</td>
-       <td>
+  <td>
   <img
-    src="/uploads/staff/${s.photo ? s.photo : 'no-photo.png'}"
+    src="/uploads/staff/${s.photo || 'no-photo.png'}"
     class="staff-photo"
     onerror="this.src='/uploads/staff/no-photo.png'"
   >
 </td>
+
 
             <td>
               <button class="btn purple"
