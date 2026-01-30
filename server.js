@@ -43,10 +43,8 @@ app.use("/api/staff", require("./routes/staff"));
 
 
 app.use(express.static("public"));
-app.use(
-  "/uploads",
-  express.static(path.join(__dirname, "public/uploads"))
-);
+
+app.use("/uploads/staff", express.static(path.resolve("public/uploads/staff")));
 
 // server
 
