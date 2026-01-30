@@ -8,285 +8,213 @@ const path = require("path");
 /* ==================================================
    DROPDOWN FILTERS
 ================================================== */
+router.get("/filters", async (req, res) => {
+  try {
+    const result = {};
 
-router.get("/filters", (req, res) => {
-
-  const result = {};
-
-  db.query("SELECT * FROM batch_master WHERE status=1", (e, batch) => {
+    const [batch] = await db.query("SELECT * FROM batch_master WHERE status=1");
     result.batch = batch;
 
-    db.query("SELECT * FROM programme_master WHERE status=1", (e, programme) => {
-      result.programme = programme;
+    const [programme] = await db.query("SELECT * FROM programme_master WHERE status=1");
+    result.programme = programme;
 
-      db.query("SELECT * FROM branch_master WHERE status=1", (e, branch) => {
-        result.branch = branch;
+    const [branch] = await db.query("SELECT * FROM branch_master WHERE status=1");
+    result.branch = branch;
 
-        db.query("SELECT * FROM semester_master WHERE status=1", (e, semester) => {
-          result.semester = semester;
+    const [semester] = await db.query("SELECT * FROM semester_master WHERE status=1");
+    result.semester = semester;
 
-          db.query("SELECT * FROM regulation_master WHERE status=1", (e, regulation) => {
-            result.regulation = regulation;
+    const [regulation] = await db.query("SELECT * FROM regulation_master WHERE status=1");
+    result.regulation = regulation;
 
-            db.query("SELECT * FROM section_master WHERE status=1", (e, section) => {
-              result.section = section;
-              res.json(result);
-            });
-          });
-        });
-      });
-    });
-  });
+    const [section] = await db.query("SELECT * FROM section_master WHERE status=1");
+    result.section = section;
+
+    res.json(result);
+  } catch (err) {
+    console.error(err);
+    res.json({});
+  }
 });
 
 /* ==================================================
    GENERATE EXCEL TEMPLATE
 ================================================== */
-
 router.post("/generate-excel", async (req, res) => {
+  try {
+    const { batch, programme, branch, semester, regulation } = req.body;
 
-  const { batch, programme, branch, semester, regulation } = req.body;
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet("Students");
 
-  const workbook = new ExcelJS.Workbook();
-  const sheet = workbook.addWorksheet("Students");
+    sheet.addRow(["Batch", batch]);
+    sheet.addRow(["Programme", programme]);
+    sheet.addRow(["Branch", branch]);
+    sheet.addRow(["Semester", semester]);
+    sheet.addRow(["Regulation", regulation]);
+    sheet.addRow([]);
+    sheet.addRow([
+      "Ht.No",
+      "Student Name",
+      "Father Name",
+      "Mother Name",
+      "Age",
+      "Sex (0=Male 1=Female)",
+      "DOB (DD/MM/YYYY)",
+      "Aadhar No",
+      "Student Mobile",
+      "Parent Mobile",
+      "DOJ (DD/MM/YYYY)",
+      "Section"
+    ]);
 
-  sheet.addRow(["Batch", batch]);
-  sheet.addRow(["Programme", programme]);
-  sheet.addRow(["Branch", branch]);
-  sheet.addRow(["Semester", semester]);
-  sheet.addRow(["Regulation", regulation]);
-  sheet.addRow([]);
+    sheet.getRow(7).font = { bold: true };
 
-  sheet.addRow([
-    "Ht.No",
-    "Student Name",
-    "Father Name",
-    "Mother Name",
-    "Age",
-    "Sex (0=Male 1=Female)",
-    "DOB (DD/MM/YYYY)",
-    "Aadhar No",
-    "Student Mobile",
-    "Parent Mobile",
-    "DOJ (DD/MM/YYYY)",
-    "Section"
-  ]);
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=StudentTemplate.xlsx"
+    );
 
-  sheet.getRow(7).font = { bold: true };
-
-  res.setHeader(
-    "Content-Type",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-  );
-
-  res.setHeader(
-    "Content-Disposition",
-    "attachment; filename=StudentTemplate.xlsx"
-  );
-
-  await workbook.xlsx.write(res);
-  res.end();
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: err.message });
+  }
 });
 
 /* ==================================================
    EXCEL UPLOAD CONFIG
 ================================================== */
-
-const excelUpload = multer({
-  storage: multer.memoryStorage()
-});
+const excelUpload = multer({ storage: multer.memoryStorage() });
 
 /* ==================================================
    DATE CONVERSION
 ================================================== */
-
 function excelDateToJS(v) {
-
   if (!v) return null;
-
   if (v instanceof Date) return v;
-
-  if (typeof v === "number") {
-    return new Date(Math.round((v - 25569) * 86400 * 1000));
-  }
-
+  if (typeof v === "number") return new Date(Math.round((v - 25569) * 86400 * 1000));
   if (typeof v === "string") {
     const p = v.split("/");
-    if (p.length === 3)
-      return new Date(`${p[2]}-${p[1]}-${p[0]}`);
+    if (p.length === 3) return new Date(`${p[2]}-${p[1]}-${p[0]}`);
   }
-
   return null;
 }
 
 /* ==================================================
    UPLOAD EXCEL
 ================================================== */
+router.post("/upload-excel", excelUpload.single("file"), async (req, res) => {
+  try {
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.load(req.file.buffer);
+    const sheet = workbook.getWorksheet(1);
+    const students = [];
 
-router.post(
-  "/upload-excel",
-  excelUpload.single("file"),
-  async (req, res) => {
+    sheet.eachRow((row, i) => {
+      if (i <= 7) return; // skip header rows
+      const v = row.values;
+      if (!v[1]) return;
 
-    try {
+      students.push([
+        req.body.batch,
+        req.body.programme,
+        req.body.branch,
+        req.body.semester,
+        req.body.regulation,
+        v[1], // htno
+        v[2], // student_name
+        v[3], // father_name
+        v[4], // mother_name
+        v[5], // age
+        v[6], // sex
+        excelDateToJS(v[7]), // dob
+        v[8], // aadhar_no
+        v[9], // student_mobile
+        v[10], // parent_mobile
+        excelDateToJS(v[11]), // doj
+        v[12], // section
+        "On Roll"
+      ]);
+    });
 
-      const workbook = new ExcelJS.Workbook();
-      await workbook.xlsx.load(req.file.buffer);
+    const sql = `
+      INSERT IGNORE INTO students
+      (batch, programme, branch, semester, regulation,
+       htno, student_name, father_name, mother_name, age,
+       sex, dob, aadhar_no, student_mobile, parent_mobile,
+       doj, section, status)
+      VALUES ?
+    `;
 
-      const sheet = workbook.getWorksheet(1);
-      const students = [];
-
-      sheet.eachRow((row, i) => {
-
-        if (i <= 7) return;
-
-        const v = row.values;
-        if (!v[1]) return;
-
-        students.push([
-          req.body.batch,
-          req.body.programme,
-          req.body.branch,
-          req.body.semester,
-          req.body.regulation,
-
-          v[1],
-          v[2],
-          v[3],
-          v[4],
-          v[5],
-          v[6],
-          excelDateToJS(v[7]),
-          v[8],
-          v[9],
-          v[10],
-          excelDateToJS(v[11]),
-          v[12],
-          "On Roll"
-        ]);
-      });
-
-      const sql = `
-        INSERT IGNORE INTO students
-        (batch, programme, branch, semester, regulation,
-         htno, student_name, father_name, mother_name, age,
-         sex, dob, aadhar_no, student_mobile, parent_mobile,
-         doj, section, status)
-        VALUES ?
-      `;
-
-      db.query(sql, [students], err => {
-
-        if (err)
-          return res.json({ success: false, message: err.message });
-
-        res.json({ success: true });
-      });
-
-    } catch (err) {
-      res.json({ success: false, message: err.message });
-    }
+    await db.query(sql, [students]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.json({ success: false, message: err.message });
   }
-);
+});
 
 /* ==================================================
    LEFT PANEL LIST (SLNO + HTNO)
 ================================================== */
+router.get("/list", async (req, res) => {
+  try {
+    const { batch, programme, branch, semester, regulation, status } = req.query;
 
-router.get("/list", (req, res) => {
+    let sql = `
+      SELECT id AS slno, htno
+      FROM students
+      WHERE batch=? AND programme=? AND branch=? AND semester=? AND regulation=?
+    `;
+    const params = [batch, programme, branch, semester, regulation];
 
-  const {
-    batch,
-    programme,
-    branch,
-    semester,
-    regulation,
-    status
-  } = req.query;
-
-  let sql = `
-    SELECT id AS slno, htno
-    FROM students
-    WHERE batch=?
-      AND programme=?
-      AND branch=?
-      AND semester=?
-      AND regulation=?
-  `;
-
-  const params = [
-    batch,
-    programme,
-    branch,
-    semester,
-    regulation
-  ];
-
-  // ✅ STATUS FILTER
-  if (status && status !== "") {
-    sql += " AND status=?";
-    params.push(status);
-  }
-
-  sql += " ORDER BY htno";
-
-  db.query(sql, params, (err, rows) => {
-    if (err) {
-      console.error(err);
-      return res.json([]);
+    if (status && status !== "") {
+      sql += " AND status=?";
+      params.push(status);
     }
-    res.json(rows);
-  });
-});
+    sql += " ORDER BY htno";
 
+    const [rows] = await db.query(sql, params);
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.json([]);
+  }
+});
 
 /* ==================================================
    STUDENT DETAILS
 ================================================== */
-
-router.get("/details/:htno", (req, res) => {
-
-  db.query(
-    "SELECT * FROM students WHERE htno=?",
-    [req.params.htno],
-    (err, rows) => {
-
-      if (err || rows.length === 0)
-        return res.json(null);
-
-      res.json(rows[0]);
-    }
-  );
+router.get("/details/:htno", async (req, res) => {
+  try {
+    const [rows] = await db.query("SELECT * FROM students WHERE htno=?", [req.params.htno]);
+    res.json(rows[0] || null);
+  } catch (err) {
+    console.error(err);
+    res.json(null);
+  }
 });
 
 /* ==================================================
    UPDATE STUDENT DETAILS
 ================================================== */
-router.put("/update/:htno", (req, res) => {
-
-  const d = req.body;
-
-  const sql = `
-    UPDATE students SET
-      admno=?,
-      student_name=?,
-      father_name=?,
-      mother_name=?,
-      sex=?,
-      dob=?,
-      age=?,
-      aadhar_no=?,
-      student_mobile=?,
-      parent_mobile=?,
-      doj=?,
-      section=?,
-      status=?
-    WHERE htno=?
-  `;
-
-  db.query(
-    sql,
-    [
+router.put("/update/:htno", async (req, res) => {
+  try {
+    const d = req.body;
+    const sql = `
+      UPDATE students SET
+        admno=?, student_name=?, father_name=?, mother_name=?,
+        sex=?, dob=?, age=?, aadhar_no=?,
+        student_mobile=?, parent_mobile=?, doj=?, section=?, status=?
+      WHERE htno=?
+    `;
+    await db.query(sql, [
       d.admno,
       d.student_name,
       d.father_name,
@@ -301,97 +229,56 @@ router.put("/update/:htno", (req, res) => {
       d.section,
       d.status,
       req.params.htno
-    ],
-    err => {
-
-      if (err) {
-        console.error(err);
-        return res.json({ success: false });
-      }
-
-      res.json({ success: true });
-    }
-  );
+    ]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.json({ success: false, message: err.message });
+  }
 });
 
 /* ==================================================
    PHOTO UPLOAD CONFIG
 ================================================== */
-
-/* ============================================
-   BULK PHOTO UPLOAD
-============================================ */
-
 const photoStorage = multer.diskStorage({
-
-  destination: (req, file, cb) => {
-    cb(null, "public/uploads/students");
-  },
-
-  filename: (req, file, cb) => {
-    cb(null, file.originalname); 
-    // filename must be HTNO.jpg
-  }
+  destination: (req, file, cb) => cb(null, "public/uploads/students"),
+  filename: (req, file, cb) => cb(null, file.originalname) // must be HTNO.jpg
 });
 
 const bulkUpload = multer({ storage: photoStorage });
-
-router.post(
-  "/upload-photos",
-  bulkUpload.array("photos"),
-  (req, res) => {
-
-    let count = 0;
-
-    req.files.forEach(file => {
-
-      const htno = path.parse(file.originalname).name;
-
-      const photoPath =
-        "uploads/students/" + file.filename;
-
-      db.query(
-        "UPDATE students SET photo=? WHERE htno=?",
-        [photoPath, htno]
-      );
-
-      count++;
-    });
-
-    res.json({
-      success: true,
-      uploaded: count
-    });
-  }
-);
-/* ============================================
-   SINGLE PHOTO UPLOAD
-============================================ */
-
 const singleUpload = multer({ storage: photoStorage });
 
-router.post(
-  "/upload-photo/:htno",
-  singleUpload.single("photo"),
-  (req, res) => {
-
-    const photoPath =
-      "uploads/students/" + req.file.filename;
-
-    db.query(
-      "UPDATE students SET photo=? WHERE htno=?",
-      [photoPath, req.params.htno],
-      err => {
-
-        if (err) {
-          console.error(err);
-          return res.json({ success: false });
-        }
-
-        res.json({ success: true });
-      }
-    );
+/* ==================================================
+   BULK PHOTO UPLOAD
+================================================== */
+router.post("/upload-photos", bulkUpload.array("photos"), async (req, res) => {
+  try {
+    let count = 0;
+    for (const file of req.files) {
+      const htno = path.parse(file.originalname).name;
+      const photoPath = "uploads/students/" + file.filename;
+      await db.query("UPDATE students SET photo=? WHERE htno=?", [photoPath, htno]);
+      count++;
+    }
+    res.json({ success: true, uploaded: count });
+  } catch (err) {
+    console.error(err);
+    res.json({ success: false, message: err.message });
   }
-);
+});
+
+/* ==================================================
+   SINGLE PHOTO UPLOAD
+================================================== */
+router.post("/upload-photo/:htno", singleUpload.single("photo"), async (req, res) => {
+  try {
+    const photoPath = "uploads/students/" + req.file.filename;
+    await db.query("UPDATE students SET photo=? WHERE htno=?", [photoPath, req.params.htno]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.json({ success: false, message: err.message });
+  }
+});
 
 module.exports = router;
