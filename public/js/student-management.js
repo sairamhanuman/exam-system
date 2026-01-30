@@ -153,6 +153,12 @@ async function loadStudentList() {
   const regulation = getVal("regulation");
   const status = document.getElementById("statusFilter").value;
 
+   / ✅ ADD THIS BLOCK
+  if (!batch || !programme || !branch || !semester || !regulation) {
+    document.getElementById("rollList").innerHTML = "";
+    return; // ⛔ stop API call
+  }
+
   const res = await fetch(
     `/api/students/list?batch=${batch}` +
     `&programme=${programme}` +
