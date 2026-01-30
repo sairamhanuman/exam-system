@@ -5,37 +5,54 @@ const db = require("../config/db");
 /* ============================
    ADD STUDENT
 ============================ */
+router.post("/add", async (req, res) => {
+  try {
+    const {
+      batch,
+      programme,
+      branch,
+      semester,
+      regulation,
 
-router.post("/add", (req, res) => {
+      htno,
+      admno,
 
-  const {
-    batch,
-    programme,
-    branch,
-    semester,
-    regulation,
+      student_name,
+      father_name,
+      mother_name,
 
-    htno,
-    admno,
+      age,
+      sex,
+      dob,
 
-    student_name,
-    father_name,
-    mother_name,
+      aadhar_no,
+      student_mobile,
+      parent_mobile,
 
-    age,
-    sex,
-    dob,
+      doj,
+      section
+    } = req.body;
 
-    aadhar_no,
-    student_mobile,
-    parent_mobile,
+    const sql = `
+      INSERT INTO students (
+        batch, programme, branch, semester, regulation,
+        htno, admno,
+        student_name, father_name, mother_name,
+        age, sex, dob,
+        aadhar_no,
+        student_mobile, parent_mobile,
+        doj, section
+      )
+      VALUES (?,?,?,?,?,
+              ?,?,
+              ?,?,?,
+              ?,?,?,
+              ?,
+              ?,?,
+              ?,?)
+    `;
 
-    doj,
-    section
-  } = req.body;
-
-  const sql = `
-    INSERT INTO students (
+    await db.query(sql, [
       batch, programme, branch, semester, regulation,
       htno, admno,
       student_name, father_name, mother_name,
@@ -43,45 +60,27 @@ router.post("/add", (req, res) => {
       aadhar_no,
       student_mobile, parent_mobile,
       doj, section
-    )
-    VALUES (?,?,?,?,?,
-            ?,?,
-            ?,?,?,
-            ?,?,?,
-            ?,
-            ?,?,
-            ?,?)
-  `;
-
-  db.query(sql, [
-    batch, programme, branch, semester, regulation,
-    htno, admno,
-    student_name, father_name, mother_name,
-    age, sex, dob,
-    aadhar_no,
-    student_mobile, parent_mobile,
-    doj, section
-  ], (err) => {
-
-    if (err) {
-      if (err.code === "ER_DUP_ENTRY") {
-        return res.json({
-          success: false,
-          message: "Hall Ticket already exists"
-        });
-      }
-
-      return res.json({
-        success: false,
-        message: err.message
-      });
-    }
+    ]);
 
     res.json({
       success: true,
       message: "Student saved successfully"
     });
-  });
+
+  } catch (err) {
+    if (err.code === "ER_DUP_ENTRY") {
+      return res.json({
+        success: false,
+        message: "Hall Ticket already exists"
+      });
+    }
+
+    console.error(err);
+    res.json({
+      success: false,
+      message: err.message
+    });
+  }
 });
 
 module.exports = router;
