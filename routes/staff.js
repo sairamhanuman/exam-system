@@ -15,42 +15,51 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 /* ================= ADD / UPDATE ================= */
-
 router.post("/add", upload.single("photo"), async (req, res) => {
+  try {
 
-  const photo = req.file ? req.file.filename : null;
+    const photo = req.file ? req.file.filename : null;
 
-  await db.query(
-    `INSERT INTO staff_master
-     (emp_id, staff_name, department, designation, experience,
-      mobile, email, gender, doj,
-      bank_name, bank_branch, account_no, ifsc_code,
-      pan_no, photo, status)
-     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
-    [
-      req.body.emp_id,
-      req.body.staff_name,
-      req.body.department,
-      req.body.designation,
-      req.body.experience,
-      req.body.mobile,
-      req.body.email,
-      req.body.gender,
-      req.body.doj,
+    await db.query(
+      `INSERT INTO staff_master
+      (emp_id, staff_name, department, designation, experience,
+       mobile, email, gender, doj,
+       bank_name, bank_branch, account_no, ifsc_code,
+       pan_no, photo, status)
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+      [
+        req.body.emp_id,
+        req.body.staff_name,
+        req.body.department,
+        req.body.designation,
+        req.body.experience,
+        req.body.mobile,
+        req.body.email,
+        req.body.gender,
+        req.body.doj,
 
-      req.body.bank_name,
-      req.body.bank_branch,
-      req.body.account_no,
-      req.body.ifsc_code,
+        req.body.bank_name,
+        req.body.bank_branch,
+        req.body.account_no,
+        req.body.ifsc_code,
 
-      req.body.pan_no,
-      photo,
-      req.body.status
-    ]
-  );
+        req.body.pan_no,
+        photo,
+        req.body.status
+      ]
+    );
 
-  res.json({ success: true });
+    res.json({ success: true });
+
+  } catch (err) {
+    console.error("STAFF ADD ERROR:", err);
+    res.status(500).json({
+      success: false,
+      error: err.message
+    });
+  }
 });
+
 
 /* ================= LIST ================= */
 
