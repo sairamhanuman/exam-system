@@ -1,27 +1,19 @@
 const express = require("express");
 const router = express.Router();
+const multer = require("multer");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("../config/cloudinary"); // Cloudinary config
+const db = require("../config/db");
+
 console.log("✅ staff routes loaded");
 
-const db = require("../config/db");
-const multer = require("multer");
-const fs = require("fs");
-const path = require("path");
-
-/* ================= UPLOAD FOLDER ================= */
-// Use path.resolve to make sure it's always relative to project root
-const uploadDir = path.resolve("public/uploads/staff");
-
-// Create folder if it doesn't exist
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-/* ================= MULTER STORAGE ================= */
-const storage = multer.diskStorage({
-  destination: uploadDir,
-  filename: (req, file, cb) => {
-    const cleanName = file.originalname.replace(/\s+/g, "_");
-    cb(null, Date.now() + "_" + cleanName);
+/* ================= CLOUDINARY STORAGE ================= */
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "staff_photos",           // Folder name in Cloudinary
+    allowed_formats: ["jpg", "jpeg", "png"],
+    transformation: [{ width: 500, height: 500, crop: "limit" }]
   }
 });
 
@@ -30,10 +22,8 @@ const upload = multer({ storage });
 /* ================= ADD STAFF ================= */
 router.post("/add", upload.single("photo"), async (req, res) => {
   try {
-    const photo = req.file ? req.file.filename : null;
+    const photoUrl = req.file?.path || null; // Cloudinary URL
     const status = req.body.status || "Working";
-
-    console.log("Uploaded file path:", req.file?.path); // Debug log
 
     await db.query(
       `INSERT INTO staff_master
@@ -57,14 +47,14 @@ router.post("/add", upload.single("photo"), async (req, res) => {
         req.body.account_no,
         req.body.ifsc_code,
         req.body.pan_no,
-        photo,
+        photoUrl, // save Cloudinary URL
         status
       ]
     );
 
     res.json({ success: true });
   } catch (err) {
-    console.error(err);
+    console.error("ADD STAFF ERROR:", err);
     res.status(500).json({ success: false });
   }
 });
@@ -73,11 +63,10 @@ router.post("/add", upload.single("photo"), async (req, res) => {
 router.post("/update/:id", upload.single("photo"), async (req, res) => {
   try {
     const id = req.params.id;
+    let photoUrl = req.body.old_photo || null;
 
-    // Use old photo if no new photo uploaded
-    let photo = req.body.old_photo || null;
     if (req.file) {
-      photo = req.file.filename;
+      photoUrl = req.file.path; // new Cloudinary URL
     }
 
     const status = req.body.status || "Working";
@@ -104,17 +93,15 @@ router.post("/update/:id", upload.single("photo"), async (req, res) => {
         req.body.account_no,
         req.body.ifsc_code,
         req.body.pan_no,
-        photo,
+        photoUrl,
         status,
         id
       ]
     );
 
-    console.log("Updated staff:", id, "Photo:", photo);
-
     res.json({ success: true });
   } catch (err) {
-    console.error(err);
+    console.error("UPDATE STAFF ERROR:", err);
     res.status(500).json({ success: false });
   }
 });
@@ -127,7 +114,7 @@ router.get("/list", async (req, res) => {
     );
     res.json(rows);
   } catch (err) {
-    console.error(err);
+    console.error("LIST STAFF ERROR:", err);
     res.status(500).json({ success: false });
   }
 });
@@ -138,7 +125,7 @@ router.delete("/delete/:id", async (req, res) => {
     await db.query("DELETE FROM staff_master WHERE id=?", [req.params.id]);
     res.json({ success: true });
   } catch (err) {
-    console.error(err);
+    console.error("DELETE STAFF ERROR:", err);
     res.status(500).json({ success: false });
   }
 });
