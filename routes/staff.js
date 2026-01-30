@@ -29,19 +29,12 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 /* ================= ADD STAFF ================= */
-/* ================= UPDATE STAFF ================= */
+/* ================= ADD STAFF ================= */
 
-router.post("/update/:id", upload.single("photo"), async (req, res) => {
+router.post("/add", upload.single("photo"), async (req, res) => {
   try {
 
-    const id = req.params.id;
-
-    // if new photo uploaded
-    let photo = req.body.old_photo;
-
-    if (req.file) {
-      photo = req.file.filename;
-    }
+    const photo = req.file ? req.file.filename : null;
 
     const status =
       req.body.status === "undefined" || !req.body.status
@@ -49,24 +42,12 @@ router.post("/update/:id", upload.single("photo"), async (req, res) => {
         : req.body.status;
 
     await db.query(
-      `UPDATE staff_master SET
-        emp_id=?,
-        staff_name=?,
-        department=?,
-        designation=?,
-        experience=?,
-        mobile=?,
-        email=?,
-        gender=?,
-        doj=?,
-        bank_name=?,
-        bank_branch=?,
-        account_no=?,
-        ifsc_code=?,
-        pan_no=?,
-        photo=?,
-        status=?
-      WHERE id=?`,
+      `INSERT INTO staff_master
+       (emp_id, staff_name, department, designation, experience,
+        mobile, email, gender, doj,
+        bank_name, bank_branch, account_no, ifsc_code,
+        pan_no, photo, status)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
       [
         req.body.emp_id,
         req.body.staff_name,
@@ -83,19 +64,15 @@ router.post("/update/:id", upload.single("photo"), async (req, res) => {
         req.body.ifsc_code,
         req.body.pan_no,
         photo,
-        status,
-        id
+        status
       ]
     );
 
     res.json({ success: true });
 
   } catch (err) {
-    console.error("STAFF UPDATE ERROR:", err);
-    res.status(500).json({
-      success: false,
-      message: err.message
-    });
+    console.error("STAFF INSERT ERROR:", err);
+    res.status(500).json({ success: false, message: err.message });
   }
 });
 
