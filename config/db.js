@@ -1,23 +1,26 @@
 const mysql = require("mysql2");
+require("dotenv").config();
 
-// read environment variables
-const MYSQL_HOST = process.env.MYSQLHOST;
-const MYSQL_USER = process.env.MYSQLUSER;
-const MYSQL_PASSWORD = process.env.MYSQLPASSWORD;
-const MYSQL_DATABASE = process.env.MYSQLDATABASE;
-const MYSQL_PORT = Number(process.env.MYSQLPORT) || 3306;
-
-// create a pool
 const pool = mysql.createPool({
-  host: MYSQL_HOST,
-  user: MYSQL_USER,
-  password: MYSQL_PASSWORD,
-  database: MYSQL_DATABASE,
-  port: MYSQL_PORT,
+  host: process.env.MYSQLHOST,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE,
+  port: Number(process.env.MYSQLPORT) || 3306,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
 });
 
-// **IMPORTANT:** export a `promise()` pool so you can use `.query()` easily
+pool.getConnection((err, connection) => {
+  if (err) {
+    console.error("❌ MySQL Connection Error:", err);
+    // This will crash the container immediately if DB is unreachable
+    process.exit(1);
+  } else {
+    console.log("✅ MySQL Connected!");
+    connection.release();
+  }
+});
+
 module.exports = pool.promise();
