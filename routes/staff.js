@@ -58,7 +58,8 @@ router.post("/add", upload.single("photo"), async (req, res) => {
         req.body.ifsc_code,
         req.body.pan_no,
         photo,
-        req.body.status
+     req.body.status || "Working"
+
       ]
     );
 
