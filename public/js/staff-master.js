@@ -60,7 +60,6 @@ function saveStaff() {
 }
 
 /* ================= LOAD ================= */
-
 function loadStaff() {
   fetch("/api/staff/list")
     .then(res => res.json())
