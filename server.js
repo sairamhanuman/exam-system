@@ -41,8 +41,12 @@ app.use("/api/section", require("./routes/section"));
 app.use("/api/students", require("./routes/studentmanagement"));
 
 // server
+
+// server
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+// Bind to 0.0.0.0 so Railway can expose it
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Server running at http://0.0.0.0:${PORT}`);
 });
+
