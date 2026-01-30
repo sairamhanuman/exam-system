@@ -78,9 +78,15 @@ function loadStaff() {
             <td>${s.department}</td>
             <td>${s.designation}</td>
             <td>
-              <img src="/uploads/staff/${s.photo}"
-                   class="staff-photo">
-            </td>
+  <img
+    src="${s.photo
+      ? '/uploads/staff/' + s.photo
+      : '/uploads/students/no-photo.png'}"
+    class="staff-photo"
+    onerror="this.src='/uploads/students/no-photo.png'"
+  >
+</td>
+
             <td>
               <button class="btn purple"
                 onclick='editStaff(${JSON.stringify(s)})'>
