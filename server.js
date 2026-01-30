@@ -39,6 +39,7 @@ app.use("/api/regulation", require("./routes/regulation"));
 app.use("/api/batch", require("./routes/batch"));
 app.use("/api/section", require("./routes/section"));
 app.use("/api/students", require("./routes/studentmanagement"));
+app.use("/api/staff", require("./routes/staff"));
 
 // server
 
