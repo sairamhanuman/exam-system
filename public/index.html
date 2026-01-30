@@ -246,37 +246,47 @@
   <div class="filter-row">
     <div class="filter-item">
       <label>Batch</label>
-      <select id="batch"><option>Select</option></select>
+      <select id="batch" onchange="loadStudentList()">
+  <option value="">Select</option>
+</select>
     </div>
 
     <div class="filter-item">
       <label>Programme</label>
-      <select id="programme"><option>Select</option></select>
+      <select id="programme" onchange="loadStudentList()">
+  <option value="">Select</option>
+</select>
     </div>
 
     <div class="filter-item">
       <label>Branch</label>
-      <select id="branch"><option>Select</option></select>
+     <select id="branch" onchange="loadStudentList()">
+  <option value="">Select</option>
+</select>
     </div>
 
     <div class="filter-item">
       <label>Semester</label>
-      <select id="semester"><option>Select</option></select>
+     <select id="semester" onchange="loadStudentList()">
+  <option value="">Select</option>
+</select>
     </div>
 
     <div class="filter-item">
       <label>Regulation</label>
-      <select id="regulation"><option>Select</option></select>
+     <select id="regulation" onchange="loadStudentList()">
+  <option value="">Select</option>
+</select>
     </div>
 
     <div class="filter-item">
       <label>Status</label>
-      <select id="statusFilter">
-        <option value="">All</option>
-        <option>On Roll</option>
-        <option>Detained</option>
-        <option>Left Out</option>
-      </select>
+     <select id="statusFilter" onchange="loadStudentList()">
+  <option value="">All</option>
+  <option>On Roll</option>
+  <option>Detained</option>
+  <option>Left Out</option>
+</select>
     </div>
 
 
