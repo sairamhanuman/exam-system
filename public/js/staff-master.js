@@ -99,6 +99,7 @@ function loadStaff() {
 }
 
 /* ================= EDIT ================= */
+
 function editStaff(s) {
   editStaffId = s.id;
 
@@ -119,9 +120,6 @@ function editStaff(s) {
 
   pan_no.value = s.pan_no;
   status.value = s.status;
-
-  // ✅ keep old image
-  photo.dataset.old = s.photo;
 }
 
 
