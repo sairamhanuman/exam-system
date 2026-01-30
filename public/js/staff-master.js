@@ -76,33 +76,34 @@ function loadStaff() {
       }
 
       data.forEach((s, i) => {
-        tbody.innerHTML += `
-          <tr>
-            <td>${i + 1}</td>
-            <td>${s.emp_id}</td>
-            <td>${s.staff_name}</td>
-            <td>${s.department}</td>
-            <td>${s.designation}</td>
-            <td>
-              <img src="/uploads/staff/${s.photo || 'no-photo.png'}"
-                   class="staff-photo"
-                   onerror="this.src='/uploads/staff/no-photo.png'">
-            </td>
-            <td>
-              <button class="btn purple"
-                onclick="editStaff(${s.id})">
-                Edit
-              </button>
-            </td>
-            <td>
-              <button class="btn red"
-                onclick="deleteStaff(${s.id})">
-                Delete
-              </button>
-            </td>
-          </tr>
-        `;
-      });
+  // Escape single quotes in strings to avoid JS errors
+  const staffData = JSON.stringify(s).replace(/'/g, "\\'");
+  
+  tbody.innerHTML += `
+    <tr>
+      <td>${i + 1}</td>
+      <td>${s.emp_id}</td>
+      <td>${s.staff_name}</td>
+      <td>${s.department}</td>
+      <td>${s.designation}</td>
+      <td>
+        <img src="/uploads/staff/${s.photo || 'no-photo.png'}"
+             class="staff-photo"
+             onerror="this.src='/uploads/staff/no-photo.png'">
+      </td>
+      <td>
+        <button class="btn purple" onclick='editStaff(${staffData})'>
+          Edit
+        </button>
+      </td>
+      <td>
+        <button class="btn red" onclick="deleteStaff(${s.id})">
+          Delete
+        </button>
+      </td>
+    </tr>
+  `;
+});
     })
     .catch(err => console.error("Fetch error:", err));
 }
