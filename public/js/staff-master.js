@@ -31,7 +31,11 @@ function saveStaff() {
   formData.append("ifsc_code", ifsc_code.value);
 
   formData.append("pan_no", pan_no.value);
-  formData.append("status", status.value);
+ formData.append(
+  "status",
+  status.value ? status.value : "Working"
+);
+
 
   if (photo.files[0])
     formData.append("photo", photo.files[0]);
