@@ -684,10 +684,6 @@ function deleteSection(id) {
 /* ================= OPEN STUDENT MANAGEMENT ================= */
 
 
-function openStudentManagement() {
-  hideAll();
-  document.getElementById("studentManagement").style.display = "block";
-}
 function loadStudents() {
     alert("Next step backend will load students here");
 }
