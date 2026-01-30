@@ -311,23 +311,6 @@ async function saveStudent() {
 }
 
 
-/* ========== LEFT PANEL (SL NO + HTNO) ======================= */
-list.innerHTML = "";
-
-data.forEach((s, i) => {
-
-  const div = document.createElement("div");
-  div.className = "roll-row";
-
-  div.innerHTML = `
-    <span>${i + 1}</span>
-    <span>${s.htno}</span>
-  `;
-
-  div.onclick = () => loadStudentDetails(s.htno);
-
-  list.appendChild(div);
-});
 /* =====================================================
    UPLOAD PHOTO
 ===================================================== */
