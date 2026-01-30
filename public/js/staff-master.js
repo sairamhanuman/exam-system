@@ -65,15 +65,16 @@ function loadStaff() {
   fetch("/api/staff/list")
     .then(res => res.json())
     .then(data => {
+
       console.log("STAFF DATA:", data);
 
       const tbody = document.querySelector("#staffTable tbody");
-      if (!tbody) {
-        console.error("tbody NOT FOUND");
+      tbody.innerHTML = "";
+
+      if (!Array.isArray(data)) {
+        console.error("Staff list error:", data);
         return;
       }
-
-      tbody.innerHTML = "";
 
       data.forEach((s, i) => {
         tbody.innerHTML += `
@@ -85,16 +86,26 @@ function loadStaff() {
             <td>${s.designation}</td>
             <td>
               <img src="/uploads/staff/${s.photo || 'no-photo.png'}"
-                   onerror="this.src='/uploads/staff/no-photo.png'"
-                   style="width:50px">
+                   class="staff-photo"
+                   onerror="this.src='/uploads/staff/no-photo.png'">
             </td>
-            <td>Edit</td>
-            <td>Delete</td>
+            <td>
+              <button class="btn purple"
+                onclick="editStaff(${s.id})">
+                Edit
+              </button>
+            </td>
+            <td>
+              <button class="btn red"
+                onclick="deleteStaff(${s.id})">
+                Delete
+              </button>
+            </td>
           </tr>
         `;
       });
     })
-    .catch(err => console.error(err));
+    .catch(err => console.error("Fetch error:", err));
 }
 
 
