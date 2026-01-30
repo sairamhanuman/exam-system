@@ -5,6 +5,7 @@ console.log("staff js loaded");
 function openStaffMaster() {
   hideAll();
   document.getElementById("staffMaster").style.display = "block";
+  loadStaff();
 }
 
 
