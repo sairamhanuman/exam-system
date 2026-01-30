@@ -65,10 +65,6 @@ function loadStaff() {
 
    const tbody = document.querySelector("#staffTable tbody");
 
-if (!tbody) {
-  console.error("❌ staffTable tbody not found");
-  return;
-}
 
       tbody.innerHTML = "";
 
