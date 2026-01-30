@@ -5,7 +5,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 
 const db = require("./config/db");
-
+const path = require("path");
 const app = express();
 
 
@@ -43,7 +43,10 @@ app.use("/api/staff", require("./routes/staff"));
 
 
 app.use(express.static("public"));
-app.use("/uploads", express.static("public/uploads"));
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "public/uploads"))
+);
 
 // server
 
