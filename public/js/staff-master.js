@@ -11,6 +11,7 @@ function openStaffMaster() {
 
 /* ================= SAVE ================= */
 
+
 function saveStaff() {
 
   const formData = new FormData();
@@ -31,24 +32,14 @@ function saveStaff() {
   formData.append("ifsc_code", ifsc_code.value);
 
   formData.append("pan_no", pan_no.value);
+ formData.append(
+  "status",
+  status.value ? status.value : "Working"
+);
 
-  formData.append(
-    "status",
-    status.value ? status.value : "Working"
-  );
 
-  // ✅ new image
-  if (photo.files[0]) {
+  if (photo.files[0])
     formData.append("photo", photo.files[0]);
-  }
-
-  // ✅ keep old image while editing
-  if (editStaffId && !photo.files[0]) {
-    formData.append(
-      "old_photo",
-      document.getElementById("photo").dataset.old
-    );
-  }
 
   const url = editStaffId
     ? "/api/staff/update/" + editStaffId
