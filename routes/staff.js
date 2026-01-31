@@ -152,4 +152,21 @@ router.delete("/delete/:id", async (req, res) => {
   res.json({ success: true });
 });
 
+
+const upload = require("../middlewares/staffUpload");
+
+router.post("/add", upload.single("photo"), async (req, res) => {
+
+  const photoUrl = req.file
+    ? req.file.path        // 👈 Cloudinary URL
+    : "https://res.cloudinary.com/xxxx/image/upload/no-photo.png";
+
+  await db.query(
+    "INSERT INTO staff (name, photo) VALUES (?, ?)",
+    [req.body.name, photoUrl]
+  );
+
+  res.json({ success: true });
+});
+
 module.exports = router;
