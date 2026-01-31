@@ -1,11 +1,11 @@
-
-function hideAll() {
-  document.querySelectorAll(".screen")
-    .forEach(div => div.style.display = "none");
+function hideAllScreens() {
+  const screens = document.querySelectorAll('.screen');
+  screens.forEach(screen => (screen.style.display = 'none'));
 }
 
+
 window.onload = () => {
-  hideAll();
+  hideAllScreens();
   document.getElementById("home").style.display = "block";
 };
 
@@ -29,9 +29,21 @@ function backToPreExam() {
   document.getElementById("preExam").style.display = "block";
 }
 
+
+function toggleMastersSubmenu() {
+  const submenu = document.querySelector('.nav-sub');
+  if (submenu.style.display === 'block') {
+    submenu.style.display = 'none';
+    document.getElementById('mastersToggle').textContent = '▶ Masters';
+  } else {
+    submenu.style.display = 'block';
+    document.getElementById('mastersToggle').textContent = '▼ Masters';
+  }
+}
+
 /* ================= OPEN PROGRAMME MASTER ================= */
 function openProgramme() {
-  hideAll();
+  hideAllScreens();
   document.getElementById("programmeMaster").style.display = "block";
   loadProgrammes();
 }
@@ -130,7 +142,7 @@ function deleteProgramme(id) {
 let editBranchId = null;
 
 function openBranch() {
-  hideAll();
+  hideAllScreens();
   document.getElementById("branchMaster").style.display = "block";
   loadProgrammeDropdown();
   loadBranches();
@@ -244,7 +256,7 @@ let editSemesterId = null;
 
 /* ================= OPEN SEMESTER ================= */
 function openSemester() {
-  hideAll();
+  hideAllScreens();
   document.getElementById("semesterMaster").style.display = "block";
   loadSemesters();
 }
@@ -355,7 +367,7 @@ function deleteSemester(id) {
 let editRegulationId = null;
 
 function openRegulation() {
-  hideAll();
+  hideAllScreens();
   document.getElementById("regulationMaster").style.display = "block";
   loadRegulations();
 }
@@ -468,7 +480,7 @@ function deleteRegulation(id) {
 let editBatchId = null;
 
 function openBatch() {
-  hideAll();
+  hideAhideAllScreensll();
   document.getElementById("batchMaster").style.display = "block";
   loadBatches();
 }
@@ -578,7 +590,7 @@ function deleteBatch(id) {
 
 /* ================= OPEN SECTION ================= */
 function openSection() {
-  hideAll();
+  hideAllScreens();
   document.getElementById("sectionMaster").style.display = "block";
   loadSections();
 }
