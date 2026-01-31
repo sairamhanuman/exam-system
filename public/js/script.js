@@ -493,7 +493,7 @@ function deleteRegulation(id) {
 let editBatchId = null;
 
 function openBatch() {
-  hideAhideAllScreens();
+  hideAllScreens();
   document.getElementById("batchMaster").style.display = "block";
   loadBatches();
 }
