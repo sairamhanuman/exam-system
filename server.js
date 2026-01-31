@@ -44,6 +44,7 @@ app.use("/api/students", require("./routes/studentmanagement"));
 app.use("/api/staff", require("./routes/staff"));
 
 // server
+app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
 // server
 const PORT = process.env.PORT || 3000;
