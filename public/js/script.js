@@ -14,10 +14,6 @@ function openPreExam() {
   document.getElementById("preExam").style.display = "block";
 }
 
-function openMaster() {
-  hideAll();
-  document.getElementById("master").style.display = "block";
-}
 
 function goHome() {
   hideAll();
@@ -40,13 +36,22 @@ function toggleMastersSubmenu() {
     document.getElementById('mastersToggle').textContent = '▼ Masters';
   }
 }
-function toggleSubmenu(id) {
-  const submenu = document.getElementById(id);
-  if (submenu.classList.contains('active')) {
-    submenu.classList.remove('active');
-  } else {
-    submenu.classList.add('active');
-  }
+
+function openPage(el, page) {
+  // sidebar active highlight
+  document.querySelectorAll(".nav-item")
+    .forEach(i => i.classList.remove("active"));
+  el.classList.add("active");
+
+  // open screens
+  if (page === "programme") openProgramme();
+  if (page === "branch") openBranch();
+  if (page === "semester") openSemester();
+  if (page === "regulation") openRegulation();
+  if (page === "batch") openBatch();
+  if (page === "section") openSection();
+  if (page === "students") openStudentManagement();
+  if (page === "staff") openStaffMaster();
 }
 
 /* ================= OPEN PROGRAMME MASTER ================= */
@@ -488,7 +493,7 @@ function deleteRegulation(id) {
 let editBatchId = null;
 
 function openBatch() {
-  hideAhideAllScreensll();
+  hideAhideAllScreens();
   document.getElementById("batchMaster").style.display = "block";
   loadBatches();
 }
