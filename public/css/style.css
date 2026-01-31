@@ -18,7 +18,7 @@ body {
 }
   /* ===== COMMON MASTER TABLE STYLE ===== */
 table {
-  width: 90%;
+  width: 60%;
   margin: 30px auto;
   border-collapse: collapse;
   background: white;
@@ -36,7 +36,7 @@ table th,
 table td {
   padding: 12px 14px;
   text-align: left;
-  font-size: 14px;
+  font-size: 16px;
   border-bottom: 1px solid #e5e7eb;
 }
 
