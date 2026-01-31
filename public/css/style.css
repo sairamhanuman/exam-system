@@ -16,6 +16,72 @@ body {
 .screen {
   margin-top: 80px;
 }
+  /* ===== COMMON MASTER TABLE STYLE ===== */
+table {
+  width: 90%;
+  margin: 30px auto;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+table thead {
+  background: #1e293b;
+  color: white;
+}
+
+table th,
+table td {
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 14px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+table th {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+table tbody tr:hover {
+  background: #f1f5f9;
+}
+
+/* Center small columns */
+table th:first-child,
+table td:first-child {
+  width: 60px;
+  text-align: center;
+}
+/* ===== ACTION BUTTONS ===== */
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 13px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  transition: 0.2s;
+}
+
+.btn-edit {
+  background: #7c3aed;
+}
+
+.btn-edit:hover {
+  background: #6d28d9;
+}
+
+.btn-delete {
+  background: #dc2626;
+}
+
+.btn-delete:hover {
+  background: #b91c1c;
+}
 
 .btn {
   padding: 22px 60px;
@@ -190,4 +256,4 @@ select {
 .nav-sub.active {
   display: block;
 }
-
+   
