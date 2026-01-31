@@ -14,19 +14,65 @@
 <div class="app-container">
 
   <!-- LEFT NAVIGATION -->
+<!-- ===== SIDEBAR ===== -->
 <div class="sidebar">
-  <h3>PRE-EXAMINATIONS</h3>
-<div class="nav-sub">
-  <div class="nav-item sub-item" onclick="openProgramme()"> ▸ Programme </div>
-  <div class="nav-item sub-item" onclick="openBranch()"> ▸ Branch </div>
-  <div class="nav-item sub-item" onclick="openStudentManagement()"> ▸ Student </div>
-  <div class="nav-item sub-item" onclick="openSemester()"> ▸ Semester </div>
-  <div class="nav-item sub-item" onclick="openRegulation()"> ▸ Regulation </div>
-  <div class="nav-item sub-item" onclick="openBatch()"> ▸ Batch </div>
-  <div class="nav-item sub-item" onclick="openSection()"> ▸ Section </div>
-  <div class="nav-item sub-item" onclick="openStaffMaster()"> ▸ Staff Master </div>
-</div></div>
+  
+  <div class="nav-item" id="dashboard">
+    <span class="arrow">▸</span>
+    <span class="text">Dashboard</span>
+  </div>
 
+  <!-- Masters -->
+  <div class="nav-item" id="mastersToggle" onclick="toggleMasters()">
+    <span class="arrow">▾</span>
+    <span class="text">Masters</span>
+  </div>
+
+  <div class="nav-sub" id="mastersMenu">
+
+    <div class="nav-item sub-item" onclick="openPage(this,'programme')">
+      <span class="arrow">▸</span>
+      <span class="text">Programme</span>
+    </div>
+
+    <div class="nav-item sub-item" onclick="openPage(this,'branch')">
+      <span class="arrow">▸</span>
+      <span class="text">Branch</span>
+    </div>
+
+    <div class="nav-item sub-item" onclick="openPage(this,'semester')">
+      <span class="arrow">▸</span>
+      <span class="text">Semester</span>
+    </div>
+
+    <div class="nav-item sub-item" onclick="openPage(this,'regulation')">
+      <span class="arrow">▸</span>
+      <span class="text">Regulation</span>
+    </div>
+
+    <div class="nav-item sub-item" onclick="openPage(this,'batch')">
+      <span class="arrow">▸</span>
+      <span class="text">Batch</span>
+    </div>
+
+    <div class="nav-item sub-item" onclick="openPage(this,'section')">
+      <span class="arrow">▸</span>
+      <span class="text">Section</span>
+    </div>
+
+    <div class="nav-item sub-item" onclick="openPage(this,'students')">
+      <span class="arrow">▸</span>
+      <span class="text">Student Master</span>
+    </div>
+
+    <div class="nav-item sub-item" onclick="openPage(this,'staff')">
+      <span class="arrow">▸</span>
+      <span class="text">Staff Master</span>
+    </div>
+
+  </div>
+
+</div>
 
 
   <!-- RIGHT CONTENT -->
