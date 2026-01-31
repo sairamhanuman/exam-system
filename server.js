@@ -26,6 +26,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
+app.use(express.static(path.join(__dirname, "public")));
+
 // test route
 app.get("/", (req, res) => {
   res.send("✅ Exam System Backend Running");
@@ -40,11 +42,6 @@ app.use("/api/batch", require("./routes/batch"));
 app.use("/api/section", require("./routes/section"));
 app.use("/api/students", require("./routes/studentmanagement"));
 app.use("/api/staff", require("./routes/staff"));
-
-
-app.use(express.static("public"));
-
-app.use("/uploads/staff", express.static(path.resolve("public/uploads/staff")));
 
 // server
 
