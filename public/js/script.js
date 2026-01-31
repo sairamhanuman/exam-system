@@ -3,10 +3,15 @@ function hideAllScreens() {
   screens.forEach(screen => (screen.style.display = 'none'));
 }
 
-
 window.onload = () => {
   hideAllScreens();
-  document.getElementById("home").style.display = "block";
+
+  const home = document.getElementById("home");
+  if (home) {
+    home.style.display = "block";
+  } else {
+    console.error("❌ home element not found");
+  }
 };
 
 function openPreExam() {
