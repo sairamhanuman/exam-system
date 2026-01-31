@@ -138,3 +138,7 @@ select {
 .screen {
   display: none;
 }
+.nav-sub {
+  display: none;
+}
+
