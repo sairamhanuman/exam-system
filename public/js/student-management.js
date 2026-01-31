@@ -5,7 +5,7 @@ let currentHtno = "";
 ===================================================== */
 
 function openStudentManagement() {
-  hideAll();
+  hideAllScreens();
   document.getElementById("studentManagement").style.display = "block";
 
   // ✅ load dropdowns AFTER screen is visible
