@@ -14,30 +14,21 @@
 <div class="app-container">
 
   <!-- LEFT NAVIGATION -->
-  <div class="sidebar">
-
-    <h3>Pre-Examinations</h3>
-
-   <div class="nav-item" id="mastersToggle" onclick="toggleMastersSubmenu()">
-  ▶ Masters
+<div class="sidebar">
+  <h3>Menu</h3>
+  <div class="nav-item sub-head" onclick="toggleSubmenu('mastersSub')">▼ Masters</div>
+  <div id="mastersSub" class="nav-sub">
+    <div class="nav-item sub-item">Programme</div>
+    <div class="nav-item sub-item">Branch</div>
+    <div class="nav-item sub-item">Semester</div>
+    <div class="nav-item sub-item">Regulation</div>
+    <div class="nav-item sub-item">Batch</div>
+    <div class="nav-item sub-item">Section</div>
+    <div class="nav-item sub-item">Student Master</div>
+    <div class="nav-item sub-item">Staff Master</div>
+  </div>
 </div>
 
-    <div class="nav-sub">
-
-       <div class="nav-item sub-item" onclick="openProgramme()"> ▸ Programme  </div>
-  <div class="nav-item sub-item" onclick="openBranch()"> ▸ Branch </div>
-
-  <div class="nav-item sub-item" onclick="openSemester()"> ▸ Semester  </div>
-  <div class="nav-item sub-item" onclick="openRegulation()"> ▸ Regulation </div>
-  <div class="nav-item sub-item" onclick="openBatch()"> ▸ Batch </div>
-  <div class="nav-item sub-item" onclick="openSection()"> ▸ Section </div>
-        <div class="nav-item sub-item" onclick="openStudentManagement()"> ▸ Student Master </div>
-
-  <div class="nav-item sub-item" onclick="openStaffMaster()"> ▸ Staff Master </div>
-
-    </div>
-
-  </div>
 
   <!-- RIGHT CONTENT -->
   <div class="content">
