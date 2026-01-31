@@ -40,6 +40,14 @@ function toggleMastersSubmenu() {
     document.getElementById('mastersToggle').textContent = '▼ Masters';
   }
 }
+function toggleSubmenu(id) {
+  const submenu = document.getElementById(id);
+  if (submenu.classList.contains('active')) {
+    submenu.classList.remove('active');
+  } else {
+    submenu.classList.add('active');
+  }
+}
 
 /* ================= OPEN PROGRAMME MASTER ================= */
 function openProgramme() {
