@@ -92,14 +92,14 @@ function loadStaff() {
              onerror="this.src='/uploads/staff/no-photo.png'">
       </td>
       <td>
-        <button class="btn purple" onclick='editStaff(${staffData})'>
-          Edit
-        </button>
+       <button class="btn-sm btn-edit" onclick='editStaff(${staffData})'>
+  Edit
+</button>
       </td>
       <td>
-        <button class="btn red" onclick="deleteStaff(${s.id})">
-          Delete
-        </button>
+    <button class="btn-sm btn-delete" onclick="deleteStaff(${s.id})">
+  Delete
+</button>
       </td>
     </tr>
   `;
