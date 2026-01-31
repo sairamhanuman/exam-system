@@ -9,8 +9,39 @@
 </head>
 
 <body>
-
 <h1 class="title">🎓 Engineering College Examination System</h1>
+
+<div class="app-container">
+
+  <!-- LEFT NAVIGATION -->
+  <div class="sidebar">
+
+    <h3>Pre-Examinations</h3>
+
+    <div class="nav-item">
+      ▶ Masters
+    </div>
+
+    <div class="nav-sub">
+
+      <div class="nav-item sub-item" onclick="openProgramme()">
+        ▸ Programme
+      </div>
+
+      <div class="nav-item sub-item" onclick="openBranch()">
+        ▸ Branch
+      </div>
+
+      <div class="nav-item sub-item" onclick="openStudentManagement()">
+        ▸ Student
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- RIGHT CONTENT -->
+  <div class="content">
 
 <!-- HOME -->
 <div id="home" class="screen">
@@ -505,6 +536,8 @@
 <script src="js/student-management.js"></script>
 <script src="js/staff-master.js"></script>
   
+  </div> <!-- content -->
+</div> <!-- app-container -->
 
 </body>
 </html>
