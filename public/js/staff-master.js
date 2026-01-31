@@ -3,7 +3,7 @@ let editStaffId = null;
 console.log("staff js loaded");
 
 function openStaffMaster() {
-  hideAll();
+  hideAllScreens();
   document.getElementById("staffMaster").style.display = "block";
   loadStaff();
 }
