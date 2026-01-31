@@ -98,11 +98,13 @@ select {
 
 /* MENU ITEMS */
 .nav-item {
-  padding: 8px;
-  margin: 5px 0;
+  padding: 10px 12px;
+  margin: 8px 0;
   cursor: pointer;
   border-radius: 5px;
+  font-size: 16px; /* bigger font size */
 }
+
 
 .nav-item:hover {
   background: #374151;
@@ -116,17 +118,25 @@ select {
 .sub-head {
   font-weight: bold;
   color: #93c5fd;
-  cursor: default;
+  cursor: pointer; /* pointer since it toggles submenu */
+  font-size: 18px;
+  margin-bottom: 5px;
 }
 
+
 .sub-item {
-  margin-left: 15px;
-  font-size: 14px;
+  margin-left: 20px;
+  font-size: 15px;
+  padding-left: 10px;
+  border-left: 2px solid transparent; /* for subtle line effect */
 }
+
 
 .sub-item:hover {
   background: #1e40af;
+  border-left-color: #93c5fd;
 }
+
 
 /* RIGHT SIDE CONTENT */
 .content {
@@ -140,5 +150,9 @@ select {
 }
 .nav-sub {
   display: none;
+}
+/* Show submenu when active */
+.nav-sub.active {
+  display: block;
 }
 
