@@ -69,3 +69,66 @@ select {
   border: none;
   margin: 10px;
 }
+
+
+/* ================= APP LAYOUT ================= */
+
+.app-container {
+  display: flex;
+  height: calc(100vh - 70px);
+}
+
+/* LEFT SIDE MENU */
+.sidebar {
+  width: 250px;
+  background: #1f2937;
+  color: white;
+  padding: 15px;
+}
+
+.sidebar h3 {
+  margin-top: 0;
+  font-size: 18px;
+  border-bottom: 1px solid #374151;
+  padding-bottom: 8px;
+}
+
+/* MENU ITEMS */
+.nav-item {
+  padding: 8px;
+  margin: 5px 0;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.nav-item:hover {
+  background: #374151;
+}
+
+/* TREE STYLE */
+.nav-sub {
+  margin-left: 15px;
+}
+
+.sub-head {
+  font-weight: bold;
+  color: #93c5fd;
+  cursor: default;
+}
+
+.sub-item {
+  margin-left: 15px;
+  font-size: 14px;
+}
+
+.sub-item:hover {
+  background: #1e40af;
+}
+
+/* RIGHT SIDE CONTENT */
+.content {
+  flex: 1;
+  background: #f4f6fb;
+  padding: 10px;
+  overflow-y: auto;
+}
