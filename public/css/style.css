@@ -4,7 +4,7 @@
 body {
   margin: 0;
   font-family: Segoe UI;
-  color: rgb(228, 50, 50);
+  color: rgb(15, 1, 1);
   text-align: center;
 }
 
@@ -174,7 +174,7 @@ select {
 /* ===== SIDEBAR STYLE ===== */
 .sidebar {
   width: 230px;
-  background: #0f172a;
+  background: #a3a5a900;
   color: #e5e7eb;
   height: 100vh;
   padding: 10px;
