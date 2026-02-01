@@ -5,9 +5,10 @@
 
 .filter-box {
   display: flex;
-  gap: 14px;
+  gap: 12px;
   align-items: flex-end;
-  flex-wrap: wrap;
+  padding: 12px;
+   flex-wrap: wrap;
 }
 
 .filter-row {
@@ -16,9 +17,9 @@
 }
 
 .filter-row label {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: bold;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .filter-row select {
@@ -46,7 +47,7 @@
 
 /* Row 1 – main info */
 .entry-row.row-1 {
-  grid-template-columns: 80px 130px 220px 160px 120px 130px 180px;
+  grid-template-columns: 80px 220px 500px 160px 120px 130px 180px;
 }
 
 /* Row 2 – marks info */
@@ -63,7 +64,7 @@
   border-radius: 4px;
   font-size: 16px;
   font-weight: bold;
-  width: 50%;
+  
 }
 
 /* Labels */
