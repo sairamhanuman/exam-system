@@ -168,30 +168,23 @@ async function deleteCourse(id) {
 }
 
 function generateCourseExcel() {
-  const programmeId = document.getElementById("programme").value;
-  const branchId = document.getElementById("branch").value;
-  const semesterId = document.getElementById("semester").value;
-  const regulationId = document.getElementById("regulation").value;
+  const programmeId = document.getElementById("courseProgramme").value;
+  const branchId = document.getElementById("courseBranch").value;
+  const semesterId = document.getElementById("courseSemester").value;
+  const regulationId = document.getElementById("courseRegulation").value;
 
-  const url = `/api/course/generate-excel?programme_id=${programmeId}&branch_id=${branchId}&semester_id=${semesterId}&regulation_id=${regulationId}`;
+  if (!programmeId || !branchId || !semesterId || !regulationId) {
+    alert("Please select Programme, Branch, Semester and Regulation");
+    return;
+  }
 
-  window.location.href = url; // triggers download
+  const url =
+    `/api/course/generate-excel` +
+    `?programme_id=${programmeId}` +
+    `&branch_id=${branchId}` +
+    `&semester_id=${semesterId}` +
+    `&regulation_id=${regulationId}`;
+
+  window.location.href = url;
 }
 
-function uploadCourseExcel() {
-  const file = document.getElementById("courseFile").files[0];
-  const formData = new FormData();
-
-  formData.append("file", file);
-  formData.append("programme_id", programmeId);
-  formData.append("branch_id", branchId);
-  formData.append("semester_id", semesterId);
-  formData.append("regulation_id", regulationId);
-
-  fetch("/api/course/upload-excel", {
-    method: "POST",
-    body: formData
-  })
-    .then(res => res.json())
-    .then(data => alert(JSON.stringify(data)));
-}
