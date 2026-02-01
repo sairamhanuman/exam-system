@@ -179,7 +179,7 @@ select:focus {
 /* LEFT SIDE MENU */
 /* ===== SIDEBAR STYLE ===== */
 .sidebar {
-  width: 230px;
+  width: 250px;
   background: #001212e5;
   color: #e5ebf7;
   height: 100vh;
@@ -236,7 +236,7 @@ select:focus {
 .arrow {
   width: 16px;
   text-align: left;
-  color: #000205;
+  color: rgb(242, 243, 244);
   flex-shrink: 0;
 }
 
