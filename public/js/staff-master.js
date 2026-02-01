@@ -133,7 +133,7 @@ function editStaff(s) {
   ifsc_code.value = s.ifsc_code;
 
   pan_no.value = s.pan_no;
-  s.value = s.status;
+  status.value = s.status;
 
   // ✅ store old photo
   photo.dataset.old = s.photo || "";
@@ -162,10 +162,8 @@ function loadBranches(selected = "") {
         const opt = document.createElement("option");
 
         // store branch_name in staff table
-        opt.value = b.branch_name;
-
-        // show Programme + Branch
-        opt.textContent = `${b.programme_name} - ${b.branch_name}`;
+        opt.value = b.branch_name;  // saved in staff table
+        opt.textContent = b.branch_name; // shown in dropdown
 
         if (b.branch_name === selected) {
           opt.selected = true;
