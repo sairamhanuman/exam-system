@@ -59,6 +59,19 @@ function openPage(el, page) {
   if (page === "staff") openStaffMaster();
 }
 
+function toggleCourseSubmenu() {
+  const menu = document.getElementById("courseMenu");
+  const arrow = document.getElementById("courseArrow");
+
+  if (menu.style.display === "block") {
+    menu.style.display = "none";
+    arrow.textContent = "▶";
+  } else {
+    menu.style.display = "block";
+    arrow.textContent = "▼";
+  }
+}
+
 /* ================= OPEN PROGRAMME MASTER ================= */
 function openProgramme() {
   hideAllScreens();
