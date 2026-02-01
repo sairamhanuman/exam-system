@@ -5,7 +5,7 @@ body {
   margin: 0;
   font-family: Segoe UI;
   color: rgb(15, 1, 1);
-  text-align: center;
+  
 }
 
 .title {
@@ -186,6 +186,7 @@ select:focus {
   padding: 10px;
   border-right: 2px solid #334155;
   font-family: system-ui, sans-serif;
+    text-align: left;
 }
 .sidebar h3 {
   margin-top: 0;
@@ -212,10 +213,7 @@ select:focus {
   border-left: 4px solid #3b82f6;
 }
 
-/* TREE STYLE */
-.nav-sub {
-  margin-left: 15px;
-}
+
 #mastersToggle {
   font-weight: 600;
   font-size: 15px;
@@ -223,14 +221,12 @@ select:focus {
 }
 /* Sub menu */
 .nav-sub {
-  margin-left: 8px;
+  margin-left: 12px;
   padding-left: 12px;
   border-left: 1px dashed #475569;
 }
 
-.sub-item {
-  font-size: 14px;
-}
+
 
 /* Arrow column */
 .arrow {
@@ -256,9 +252,9 @@ select:focus {
 
 
 .sub-item {
-  margin-left: 20px;
+ margin-left: 0;
   font-size: 15px;
-  padding-left: 10px;
+  padding-left: 8px;
   border-left: 2px solid transparent; /* for subtle line effect */
 }
 
