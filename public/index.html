@@ -608,39 +608,85 @@
   </div>
 
   <!-- ENTRY AREA (SINGLE ROW) -->
-  <div class="entry-box">
+<!-- ENTRY AREA (SINGLE ROW) -->
+<div class="entry-box">
 
-    <input type="hidden" id="courseId">
+  <input type="hidden" id="courseId">
 
+  <div>
+    <label>Order</label>
     <input id="course_order" placeholder="Order">
-    <input id="course_code" placeholder="Course Code">
-    <input id="course_name" placeholder="Course Name">
+  </div>
 
+  <div>
+    <label>Course Code</label>
+    <input id="course_code" placeholder="Code">
+  </div>
+
+  <div>
+    <label>Course Name</label>
+    <input id="course_name" placeholder="Course Name">
+  </div>
+
+
+  <div>
+    <label>Course Short Title</label>
+    <input id="short_name" placeholder="Short Name">
+  </div>
+
+
+  <div>
+    <label>Course Type</label>
     <select id="exam_type">
       <option value="Theory">Theory</option>
       <option value="Practical">Practical</option>
       <option value="Project">Project</option>
       <option value="Others">Others</option>
     </select>
-
-    <select id="elective">
-      <option value="No">Elective No</option>
-      <option value="Yes">Elective Yes</option>
-    </select>
-
-    <input id="elective_name" placeholder="Elective Name">
-
-    <select id="replacement">
-      <option value="No">Replacement No</option>
-      <option value="Yes">Replacement Yes</option>
-    </select>
-
-    <input id="credits" placeholder="Credits">
-    <input id="ta" placeholder="TA">
-    <input id="internal_marks" placeholder="Internal">
-    <input id="external_marks" placeholder="External">
-
   </div>
+
+  <div>
+    <label>Elective Status</label>
+    <select id="elective">
+      <option value="No">No</option>
+      <option value="Yes">Yes</option>
+    </select>
+  </div>
+
+  <div>
+    <label>Elective Name</label>
+    <input id="elective_name" placeholder="If elective">
+  </div>
+
+  <div>
+    <label>Replacement</label>
+    <select id="replacement">
+      <option value="No">No</option>
+      <option value="Yes">Yes</option>
+    </select>
+  </div>
+
+  <div>
+    <label>Credits</label>
+    <input id="credits" placeholder="Cr">
+  </div>
+
+  <div>
+    <label>TA</label>
+    <input id="ta" placeholder="TA">
+  </div>
+
+  <div>
+    <label>Internal</label>
+    <input id="internal_marks" placeholder="Internal">
+  </div>
+
+  <div>
+    <label>External</label>
+    <input id="external_marks" placeholder="External">
+  </div>
+
+</div>
 
   <!-- VIEW TABLE -->
   <table id="courseTable">
@@ -649,6 +695,7 @@
         <th>Sl</th>
         <th>Code</th>
         <th>Name</th>
+        <th>Short Name</th>
         <th>Type</th>
         <th>Credits</th>
         <th>Internal</th>

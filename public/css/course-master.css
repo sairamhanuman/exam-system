@@ -1,34 +1,86 @@
-.filter-box, .entry-box {
+/* ================= COURSE ENTRY / FILTER BOX ================= */
+
+.filter-box,
+.entry-box {
+  border: 2px solid #111;          /* strong black border */
+  border-radius: 8px;
+  padding: 12px;
   margin: 15px 0;
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+  background: #fff;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
 }
 
-.filter-box select,
+/* Labels */
+.entry-box label,
+.filter-box label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+/* Inputs & selects */
 .entry-box input,
-.entry-box select {
-  padding: 6px;
-  min-width: 140px;
+.entry-box select,
+.filter-box select {
+  height: 36px;
+  padding: 4px 8px;
+  font-size: 14px;
+  border: 1px solid #333;
+  border-radius: 4px;
 }
 
+/* Focus effect */
+.entry-box input:focus,
+.entry-box select:focus,
+.filter-box select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
+}
+
+/* Buttons */
 .btn {
-  padding: 6px 12px;
+  height: 36px;
+  padding: 0 14px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: none;
   cursor: pointer;
+  font-weight: 600;
 }
 
-.blue { background:#3498db; color:#fff; }
-.green { background:#2ecc71; color:#fff; }
-.orange { background:#f39c12; color:#fff; }
+.blue   { background:#2563eb; color:#fff; }
+.green  { background:#16a34a; color:#fff; }
+.orange { background:#f59e0b; color:#fff; }
+.red    { background:#dc2626; color:#fff; }
+
+/* ================= TABLE ================= */
 
 table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 15px;
+  background: #fff;
 }
 
-table th, table td {
-  border: 1px solid #ccc;
-  padding: 6px;
+table th {
+  background: #1e3a8a;
+  color: #fff;
+  font-size: 13px;
+  padding: 8px;
   text-align: center;
+}
+
+table td {
+  border: 1px solid #cbd5e1;
+  padding: 6px;
+  font-size: 14px;
+  text-align: center;
+}
+
+table tbody tr:hover {
+  background: #f1f5f9;
 }
