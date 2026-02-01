@@ -15,18 +15,18 @@ window.onload = () => {
 };
 
 function openPreExam() {
-  hideAll();
+  hideAllScreens();
   document.getElementById("preExam").style.display = "block";
 }
 
 
 function goHome() {
-  hideAll();
+  hideAllScreens();
   document.getElementById("home").style.display = "block";
 }
 
 function backToPreExam() {
-  hideAll();
+  hideAllScreens();
   document.getElementById("preExam").style.display = "block";
 }
 
@@ -178,9 +178,7 @@ function openBranch() {
   loadProgrammeDropdown();
   loadBranches();
 }
-function openBranchMaster() {
-  openBranch();
-}
+
 
 function loadProgrammeDropdown() {
   fetch("/api/programme/list")
