@@ -3,7 +3,32 @@
   box-sizing: border-box;
 }
 
-.filter-box,
+.filter-box {
+  display: flex;
+  gap: 14px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.filter-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-row label {
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.filter-row select {
+  width: 150px;       /* 🔥 adjust here */
+  height: 34px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
 .entry-box {
   border: 2px solid #000;
   border-radius: 8px;
