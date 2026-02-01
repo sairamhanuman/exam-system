@@ -97,122 +97,124 @@ router.delete("/delete/:id", async (req, res) => {
   }
 });
 
-/* ======================
-   download excel COURSE
-====================== */
-router.post("/add", (req, res) => {
-  const {
-    programme_id,
-    branch_id,
-    semester_id,
-    regulation_id,
-    course_code,
-    course_name,
-    course_short,
-    order_no,
-    exam_type,
-    credits
-  } = req.body;
+// ===============================
+// GENERATE COURSE EXCEL TEMPLATE
+// ===============================
+router.get("/generate-excel", async (req, res) => {
+  try {
+    const { programme_id, branch_id, semester_id, regulation_id } = req.query;
 
-  const sql = `
-    INSERT INTO course_master
-    (programme_id, branch_id, semester_id, regulation_id,
-     course_code, course_name, course_short, order_no,
-     exam_type, credits)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `;
-
-  db.query(
-    sql,
-    [
-      programme_id,
-      branch_id,
-      semester_id,
-      regulation_id,
-      course_code,
-      course_name,
-      course_short,
-      order_no,
-      exam_type,
-      credits
-    ],
-    (err, result) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ message: "Insert failed" });
-      }
-      res.json({ message: "Course added successfully" });
+    if (!programme_id || !branch_id || !semester_id || !regulation_id) {
+      return res.status(400).json({ message: "Missing dropdown values" });
     }
-  );
+
+    // Excel header (ORDER MATTERS)
+    const data = [
+      [
+        "Course Code",
+        "Course Name",
+        "Course Short",
+        "Exam Type",
+        "Elective (Yes/No)",
+        "Elective Name",
+        "Credits",
+        "TA",
+        "Internal Marks",
+        "External Marks",
+        "Order No"
+      ]
+    ];
+
+    const worksheet = XLSX.utils.aoa_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Courses");
+
+    const buffer = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
+
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=course_template.xlsx"
+    );
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+
+    res.send(buffer);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Excel generation failed" });
+  }
 });
 
-/* ======================
-    upload COURSE
-====================== */
-
+// ===============================
+// UPLOAD COURSE EXCEL
+// ===============================
 router.post("/upload-excel", upload.single("file"), async (req, res) => {
   try {
-    const workbook = XLSX.read(req.file.buffer);
-    const sheet = workbook.Sheets["Courses"];
-    const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+    const { programme_id, branch_id, semester_id, regulation_id } = req.body;
 
-    // Remove header info (first 5 rows)
-    const courses = rows.slice(5);
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
 
-    for (let row of courses) {
-      // DUPLICATE CHECK (order_no within branch+sem+reg)
-      const [dup] = await db.query(
-        `SELECT id FROM course_master
-         WHERE programme_id=? AND branch_id=? AND semester_id=? AND regulation_id=?
-         AND order_no=? AND status=1`,
-        [
-          req.body.programme_id,
-          req.body.branch_id,
-          req.body.semester_id,
-          req.body.regulation_id,
-          row.order_no
-        ]
+    const workbook = XLSX.read(req.file.buffer, { type: "buffer" });
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(sheet);
+
+    let inserted = 0;
+    let skipped = 0;
+
+    for (let row of rows) {
+      // DUPLICATE CHECK (within same branch + semester + regulation)
+      const [exists] = await db.query(
+        `SELECT id FROM course_master 
+         WHERE course_code=? AND branch_id=? AND semester_id=? AND regulation_id=?`,
+        [row["Course Code"], branch_id, semester_id, regulation_id]
       );
 
-      if (dup.length > 0) {
-        return res.json({
-          success: false,
-          message: `Duplicate order_no: ${row.order_no}`
-        });
+      if (exists.length > 0) {
+        skipped++;
+        continue;
       }
 
       await db.query(
         `INSERT INTO course_master
         (programme_id, branch_id, semester_id, regulation_id,
-         order_no, course_code, course_name, course_short,
-         exam_type, elective, elective_name, replacement,
-         credits, ta, internal_marks, external_marks)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         course_code, course_name, course_short,
+         exam_type, elective, elective_name,
+         credits, ta, internal_marks, external_marks, order_no)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
         [
-          req.body.programme_id,
-          req.body.branch_id,
-          req.body.semester_id,
-          req.body.regulation_id,
-          row.order_no,
-          row.course_code,
-          row.course_name,
-          row.course_short,
-          row.exam_type,
-          row.elective,
-          row.elective_name,
-          row.replacement,
-          row.credits,
-          row.ta,
-          row.internal_marks,
-          row.external_marks
+          programme_id,
+          branch_id,
+          semester_id,
+          regulation_id,
+          row["Course Code"],
+          row["Course Name"],
+          row["Course Short"],
+          row["Exam Type"],
+          row["Elective (Yes/No)"] || "No",
+          row["Elective Name"] || null,
+          row["Credits"] || 0,
+          row["TA"] || 0,
+          row["Internal Marks"] || 0,
+          row["External Marks"] || 0,
+          row["Order No"] || 0
         ]
       );
+
+      inserted++;
     }
 
-    res.json({ success: true, message: "Courses uploaded successfully" });
+    res.json({
+      message: "Upload completed",
+      inserted,
+      skipped
+    });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({ message: "Upload failed" });
   }
 });
 
