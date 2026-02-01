@@ -174,8 +174,8 @@ select {
 /* ===== SIDEBAR STYLE ===== */
 .sidebar {
   width: 230px;
-  background: #9a9ca0de;
-  color: #c1d1f1;
+  background: #c8ecece5;
+  color: #010713;
   height: 100vh;
   padding: 10px;
   border-right: 2px solid #334155;
