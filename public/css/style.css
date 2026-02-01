@@ -202,7 +202,7 @@ select {
 }
 
 .nav-item:hover {
-  background: #1e293b;
+  background: #aeb9cb;
   border-left: 4px solid #3b82f6;
 }
 
@@ -229,8 +229,8 @@ select {
 /* Arrow column */
 .arrow {
   width: 16px;
-  text-align: center;
-  color: #93c5fd;
+  text-align: left;
+  color: #000205;
   flex-shrink: 0;
 }
 
@@ -241,7 +241,8 @@ select {
 
 .sub-head {
   font-weight: bold;
-  color: #93c5fd;
+  color: #0872eb;
+  background-color: #0ea5e9;
   cursor: pointer; /* pointer since it toggles submenu */
   font-size: 18px;
   margin-bottom: 5px;
@@ -257,7 +258,7 @@ select {
 
 
 .sub-item:hover {
-  background: #1e40af;
+  background: #0e43f0;
   border-left-color: #93c5fd;
 }
 
