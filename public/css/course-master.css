@@ -5,14 +5,11 @@
 
 .filter-box {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   align-items: flex-end;
-  border: 2px solid #000;
-  border-radius: 8px;
   padding: 12px;
-  background: #fff;
+   flex-wrap: wrap;
 }
-
 
 .filter-row {
   display: flex;
@@ -25,16 +22,13 @@
   margin-bottom: 2px;
 }
 
-.filter-item select {
+.filter-row select {
+  width: 50px;       /* 🔥 adjust here */
   height: 36px;
-  padding: 6px 10px;
-  border: 2px solid #000;
-  border-radius: 6px;
-  font-size: 15px;
+  border: 1px solid #000;
+  border-radius: 2px;
   font-weight: bold;
-  min-width: 140px;
 }
-
 
 .entry-box {
   border: 2px solid #000;
@@ -80,7 +74,7 @@
   display: block;
   margin-bottom: 3px;
   font-weight: bold;
-} 
+}
 /* Focus effect */
 .entry-box input:focus,
 .entry-box select:focus,
