@@ -3,7 +3,7 @@
   box-sizing: border-box;
 }
 
-.filter-box {
+.filter-box-course {
   display: flex;
   gap: 12px;
   align-items: flex-end;
@@ -11,19 +11,19 @@
    flex-wrap: wrap;
 }
 
-.filter-row {
+.filter-row-course {
   display: flex;
   flex-direction: column;
 }
 
-.filter-row label {
+.filter-row-course label {
   font-size: 14px;
   font-weight: bold;
   margin-bottom: 2px;
 }
 
-.filter-row select {
-  width: 50px;       /* 🔥 adjust here */
+.filter-row-course select {
+  width: 120px;       /* 🔥 adjust here */
   height: 36px;
   border: 1px solid #000;
   border-radius: 2px;
