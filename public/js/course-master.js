@@ -168,9 +168,16 @@ async function deleteCourse(id) {
 }
 
 function generateCourseExcel() {
+  const programmeId = document.getElementById("programme").value;
+  const branchId = document.getElementById("branch").value;
+  const semesterId = document.getElementById("semester").value;
+  const regulationId = document.getElementById("regulation").value;
+
   const url = `/api/course/generate-excel?programme_id=${programmeId}&branch_id=${branchId}&semester_id=${semesterId}&regulation_id=${regulationId}`;
-  window.location.href = url;
+
+  window.location.href = url; // triggers download
 }
+
 function uploadCourseExcel() {
   const file = document.getElementById("courseFile").files[0];
   const formData = new FormData();
