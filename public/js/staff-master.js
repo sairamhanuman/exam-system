@@ -31,7 +31,7 @@ function saveStaff() {
   formData.append("ifsc_code", ifsc_code.value);
 
   formData.append("pan_no", pan_no.value);
-  formData.append("status", status.value || "Working");
+  formData.append("status", staff_status.value || "Working");
 
   // ✅ send old photo if edit
   if (editStaffId && !photo.files[0]) {
@@ -133,7 +133,7 @@ function editStaff(s) {
   ifsc_code.value = s.ifsc_code;
 
   pan_no.value = s.pan_no;
-  status.value = s.status;
+  staff_status.value = s.status;
 
   // ✅ store old photo
   photo.dataset.old = s.photo || "";
