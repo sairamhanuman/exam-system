@@ -41,9 +41,11 @@ router.get("/list", async (req, res) => {
     const [rows] = await db.query(sql);
     res.json(rows);
   } catch (err) {
-    res.json([]);
+    console.error(err);
+    res.status(500).json([]);
   }
 });
+
 
 /* ======================
    DELETE BRANCH
