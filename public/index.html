@@ -613,77 +613,85 @@
 
   <input type="hidden" id="courseId">
 
-  <div>
-    <label>Order</label>
-    <input id="course_order" placeholder="Order">
+  <!-- ROW 1 -->
+  <div class="entry-row row-1">
+
+    <div>
+      <label>Order</label>
+      <input id="course_order">
+    </div>
+
+    <div>
+      <label>Course Code</label>
+      <input id="course_code">
+    </div>
+
+    <div>
+      <label>Course Name</label>
+      <input id="course_name">
+    </div>
+
+    <div>
+      <label>Short Title</label>
+      <input id="course_short">
+    </div>
+
+    <div>
+      <label>Type</label>
+      <select id="exam_type">
+        <option>Theory</option>
+        <option>Practical</option>
+        <option>Project</option>
+        <option>Others</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Elective</label>
+      <select id="elective">
+        <option>No</option>
+        <option>Yes</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Elective Name</label>
+      <input id="elective_name">
+    </div>
+
   </div>
 
-  <div>
-    <label>Course Code</label>
-    <input id="course_code" placeholder="Code">
-  </div>
+  <!-- ROW 2 -->
+  <div class="entry-row row-2">
 
-  <div>
-    <label>Course Name</label>
-    <input id="course_name" placeholder="Course Name">
-  </div>
+    <div>
+      <label>Replacement</label>
+      <select id="replacement">
+        <option>No</option>
+        <option>Yes</option>
+      </select>
+    </div>
 
+    <div>
+      <label>Credits</label>
+      <input id="credits">
+    </div>
 
-  <div>
-    <label>Course Short Title</label>
-    <input id="short_name" placeholder="Short Name">
-  </div>
+    <div>
+      <label>TA</label>
+      <input id="ta">
+    </div>
 
+    <div>
+      <label>Internal</label>
+      <input id="internal_marks">
+    </div>
 
-  <div>
-    <label>Course Type</label>
-    <select id="exam_type">
-      <option value="Theory">Theory</option>
-      <option value="Practical">Practical</option>
-      <option value="Project">Project</option>
-      <option value="Others">Others</option>
-    </select>
-  </div>
+    <div>
+      <label>External</label>
+      <input id="external_marks">
+    </div>
 
-  <div>
-    <label>Elective Status</label>
-    <select id="elective">
-      <option value="No">No</option>
-      <option value="Yes">Yes</option>
-    </select>
-  </div>
-
-  <div>
-    <label>Elective Name</label>
-    <input id="elective_name" placeholder="If elective">
-  </div>
-
-  <div>
-    <label>Replacement</label>
-    <select id="replacement">
-      <option value="No">No</option>
-      <option value="Yes">Yes</option>
-    </select>
-  </div>
-
-  <div>
-    <label>Credits</label>
-    <input id="credits" placeholder="Cr">
-  </div>
-
-  <div>
-    <label>TA</label>
-    <input id="ta" placeholder="TA">
-  </div>
-
-  <div>
-    <label>Internal</label>
-    <input id="internal_marks" placeholder="Internal">
-  </div>
-
-  <div>
-    <label>External</label>
-    <input id="external_marks" placeholder="External">
   </div>
 
 </div>

@@ -7,7 +7,7 @@ router.post("/add", async (req, res) => {
   await db.query(
     `INSERT INTO course_master
     (programme_id, branch_id, semester_id, regulation_id,
-     course_code, course_name,short_name, exam_type, elective, elective_name,
+     course_code, course_name,course_short, exam_type, elective, elective_name,
      replacement, credits, ta, internal_marks, external_marks)
      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
     Object.values(req.body)
@@ -46,7 +46,7 @@ router.put("/update/:id", async (req, res) => {
     await db.query(
       `UPDATE course_master SET
         course_name=?,
-        short_name=?,
+        course_short=?,
         exam_type=?,
         elective=?,
         elective_name=?,
@@ -58,7 +58,7 @@ router.put("/update/:id", async (req, res) => {
        WHERE id=?`,
       [
         req.body.course_name,
-        req.body.short_name,
+        req.body.course_short,
         req.body.exam_type,
         req.body.elective,
         req.body.elective_name,

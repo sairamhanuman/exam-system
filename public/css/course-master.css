@@ -1,37 +1,51 @@
 /* ================= COURSE ENTRY / FILTER BOX ================= */
+* {
+  box-sizing: border-box;
+}
 
-.filter-box,
 .entry-box {
-  border: 2px solid #111;          /* strong black border */
+  border: 2px solid #000;
   border-radius: 8px;
   padding: 12px;
-  margin: 15px 0;
+  margin-top: 15px;
   background: #fff;
+}
+
+/* ROWS */
+.entry-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 10px;
+  margin-bottom: 10px;
+}
+
+/* Row 1 – main info */
+.entry-row.row-1 {
+  grid-template-columns: 80px 130px 220px 160px 120px 130px 180px;
+}
+
+/* Row 2 – marks info */
+.entry-row.row-2 {
+  grid-template-columns: 120px 100px 100px 120px 120px;
+}
+
+/* Inputs */
+.entry-box input,
+.entry-box select {
+  height: 36px;
+  padding: 6px 8px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 100%;
 }
 
 /* Labels */
-.entry-box label,
-.filter-box label {
+.entry-box label {
   font-size: 12px;
   font-weight: 600;
-  color: #333;
-  margin-bottom: 2px;
+  display: block;
+  margin-bottom: 3px;
 }
-
-/* Inputs & selects */
-.entry-box input,
-.entry-box select,
-.filter-box select {
-  height: 36px;
-  padding: 4px 8px;
-  font-size: 14px;
-  border: 1px solid #333;
-  border-radius: 4px;
-}
-
 /* Focus effect */
 .entry-box input:focus,
 .entry-box select:focus,

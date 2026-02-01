@@ -56,7 +56,7 @@ document.getElementById("btnCourseShow").onclick = async () => {
         <td>${i + 1}</td>
         <td>${c.course_code}</td>
         <td>${c.course_name}</td>
-        <td>${c.short_name}</td>        
+        <td>${c.course_short}</td>        
         <td>${c.exam_type}</td>
         <td>${c.credits}</td>
         <td>${c.internal_marks}</td>
@@ -90,7 +90,7 @@ document.getElementById("btnCourseSave").onclick = async () => {
     regulation_id: courseRegulation.value,
 
     course_code: course_code.value,
-    course_name: course_name.value,
+    course_name: course_short.value,
     short_name:short_name.value,
     exam_type: exam_type.value,
     elective: elective.value,
@@ -138,7 +138,7 @@ function editCourse(c) {
 
   course_code.value = c.course_code;
   course_name.value = c.course_name;
-  short_name.value=c.short_name;
+  course_short.value=c.course_short;
   exam_type.value = c.exam_type;
   elective.value = c.elective;
   elective_name.value = c.elective_name;
