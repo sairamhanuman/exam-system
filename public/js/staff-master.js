@@ -5,6 +5,7 @@ console.log("staff js loaded");
 function openStaffMaster() {
   hideAllScreens();
   document.getElementById("staffMaster").style.display = "block";
+  loadBranches(); 
   loadStaff();
 }
 
@@ -118,7 +119,7 @@ function editStaff(s) {
 
   emp_id.value = s.emp_id;
   staff_name.value = s.staff_name;
-  department.value = s.department;
+  loadBranches(s.department);
   designation.value = s.designation;
   experience.value = s.experience;
   mobile.value = s.mobile;
@@ -132,7 +133,7 @@ function editStaff(s) {
   ifsc_code.value = s.ifsc_code;
 
   pan_no.value = s.pan_no;
-  status.value = s.status;
+  s.value = s.status;
 
   // ✅ store old photo
   photo.dataset.old = s.photo || "";
@@ -150,4 +151,28 @@ function deleteStaff(id) {
 function clearStaff() {
   document.querySelectorAll("#staffMaster input")
     .forEach(i => i.value = "");
+}
+function loadBranches(selected = "") {
+  fetch("/api/branch/list")
+    .then(res => res.json())
+    .then(data => {
+      department.innerHTML = `<option value="">-- Select Branch --</option>`;
+
+      data.forEach(b => {
+        const opt = document.createElement("option");
+
+        // store branch_name in staff table
+        opt.value = b.branch_name;
+
+        // show Programme + Branch
+        opt.textContent = `${b.programme_name} - ${b.branch_name}`;
+
+        if (b.branch_name === selected) {
+          opt.selected = true;
+        }
+
+        department.appendChild(opt);
+      });
+    })
+    .catch(err => console.error(err));
 }
