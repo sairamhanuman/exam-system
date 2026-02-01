@@ -166,3 +166,59 @@ async function deleteCourse(id) {
   // reload table
   document.getElementById("btnCourseShow").click();
 }
+
+
+/* =====================
+   DOWNLOAD TEMPLATE
+===================== */
+function downloadExcel() {
+  window.location =
+    "/api/course/generate-excel?programme=B.Tech&branch=CSE&semester=1&regulation=R18";
+}
+
+document.getElementById("uploadForm").onsubmit = async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData(e.target);
+  formData.append("programme_id", 1);
+  formData.append("branch_id", 1);
+  formData.append("semester_id", 1);
+  formData.append("regulation_id", 1);
+
+  const res = await fetch("/api/course/upload-excel", {
+    method: "POST",
+    body: formData
+  });
+
+  alert((await res.json()).message);
+};
+
+/* =====================
+   UPLOAD EXCEL
+===================== */
+function uploadCourseExcel() {
+  const file = document.getElementById("courseExcel").files[0];
+  if (!file) {
+    alert("Select Excel file");
+    return;
+  }
+
+  const fd = new FormData();
+  fd.append("file", file);
+  fd.append("programme_id", courseProgramme.value);
+  fd.append("branch_id", courseBranch.value);
+  fd.append("semester_id", courseSemester.value);
+  fd.append("regulation_id", courseRegulation.value);
+
+  fetch("/api/course/import", {
+    method: "POST",
+    body: fd
+  })
+  .then(res => res.json())
+  .then(d => {
+    alert(
+      `Import Completed\nInserted: ${d.inserted}\nSkipped (duplicates): ${d.skipped}`
+    );
+    document.getElementById("btnCourseShow").click();
+  });
+}
