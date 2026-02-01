@@ -9,35 +9,66 @@ function openCourseMaster() {
   loadCourseDropdown("courseRegulation", "/api/regulation/list", "Curriculum");
 }
 
-
 const API = "/api";
 
+/* ===============================
+   OPEN COURSE MASTER SCREEN
+================================ */
+function openCourseMaster() {
+  hideAllScreens();
+  document.getElementById("course").style.display = "block";
+
+  fillSelect("courseProgramme", "/api/programme/list", "programme_name");
+  fillSelect("courseSemester", "/api/semester/list", "semester_name");
+  fillSelect("courseRegulation", "/api/regulation/list", "regulation_name");
+
+  document.getElementById("courseProgramme").value = "";
+  document.getElementById("courseBranch").innerHTML = `<option value="">Branch</option>`;
+}
+
+/* ===============================
+   FILL DROPDOWN
+================================ */
 async function fillSelect(id, url, textKey) {
   const res = await fetch(url);
   const data = await res.json();
   const sel = document.getElementById(id);
+
   sel.innerHTML = `<option value="">Select</option>`;
   data.forEach(d => {
     sel.innerHTML += `<option value="${d.id}">${d[textKey]}</option>`;
   });
 }
 
-document.getElementById("programme").addEventListener("change", async e => {
+/* ===============================
+   LOAD BRANCH ON PROGRAMME CHANGE
+================================ */
+document.getElementById("courseProgramme").addEventListener("change", async e => {
   const res = await fetch("/api/branch/list");
   const data = await res.json();
-  const branch = document.getElementById("branch");
+
+  const branch = document.getElementById("courseBranch");
   branch.innerHTML = `<option value="">Branch</option>`;
-  data.filter(b => b.programme_id == e.target.value)
-      .forEach(b => branch.innerHTML += `<option value="${b.id}">${b.branch_name}</option>`);
+
+  data
+    .filter(b => b.programme_id == e.target.value)
+    .forEach(b => {
+      branch.innerHTML += `<option value="${b.id}">${b.branch_name}</option>`;
+    });
 });
 
-document.getElementById("btnShow").onclick = async () => {
-  const p = programme.value;
-  const b = branch.value;
-  const s = semester.value;
-  const r = regulation.value;
+/* ===============================
+   SHOW COURSES
+================================ */
+document.getElementById("btnCourseShow").onclick = async () => {
+  const p = courseProgramme.value;
+  const b = courseBranch.value;
+  const s = courseSemester.value;
+  const r = courseRegulation.value;
 
-  const res = await fetch(`/api/course/list?programme_id=${p}&branch_id=${b}&semester_id=${s}&regulation_id=${r}`);
+  const res = await fetch(
+    `/api/course/list?programme_id=${p}&branch_id=${b}&semester_id=${s}&regulation_id=${r}`
+  );
   const data = await res.json();
 
   const tbody = document.querySelector("#courseTable tbody");
@@ -52,12 +83,7 @@ document.getElementById("btnShow").onclick = async () => {
         <td>${c.credits}</td>
         <td>${c.internal_marks}</td>
         <td>${c.external_marks}</td>
-      </tr>`;
+      </tr>
+    `;
   });
 };
-
-document.addEventListener("DOMContentLoaded", () => {
-  fillSelect("programme", "/api/programme/list", "programme_name");
-  fillSelect("semester", "/api/semester/list", "semester_name");
-  fillSelect("regulation", "/api/regulation/list", "regulation_name");
-});
