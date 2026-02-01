@@ -7,9 +7,9 @@ router.post("/add", async (req, res) => {
   await db.query(
     `INSERT INTO course_master
     (programme_id, branch_id, semester_id, regulation_id,
-     course_code, course_name,course_short, exam_type, elective, elective_name,
+     course_code, course_name, course_short, exam_type, elective, elective_name,
      replacement, credits, ta, internal_marks, external_marks)
-     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
     Object.values(req.body)
   );
   res.json({ success: true });

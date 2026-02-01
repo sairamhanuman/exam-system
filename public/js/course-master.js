@@ -90,8 +90,8 @@ document.getElementById("btnCourseSave").onclick = async () => {
     regulation_id: courseRegulation.value,
 
     course_code: course_code.value,
-    course_name: course_short.value,
-    short_name:short_name.value,
+    course_name: course_name.value,
+    course_short:course_short.value,
     exam_type: exam_type.value,
     elective: elective.value,
     elective_name: elective_name.value,
