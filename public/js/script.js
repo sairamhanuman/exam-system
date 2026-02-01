@@ -178,6 +178,10 @@ function openBranch() {
   loadProgrammeDropdown();
   loadBranches();
 }
+function openBranchMaster() {
+  openBranch();
+}
+
 function loadProgrammeDropdown() {
   fetch("/api/programme/list")
     .then(res => res.json())
@@ -193,6 +197,7 @@ function loadProgrammeDropdown() {
       });
     });
 }
+
 function saveBranch() {
   const programme_id =
     document.getElementById("branchProgramme").value;

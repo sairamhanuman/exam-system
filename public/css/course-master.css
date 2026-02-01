@@ -23,7 +23,7 @@
 }
 
 .filter-row-course select {
-  width: 120px;       /* 🔥 adjust here */
+  width: 150px;       /* 🔥 adjust here */
   height: 36px;
   border: 1px solid #000;
   border-radius: 2px;
@@ -47,7 +47,7 @@
 
 /* Row 1 – main info */
 .entry-row.row-1 {
-  grid-template-columns: 80px 220px 500px 160px 120px 130px 180px;
+  grid-template-columns: 80px 180px 300px 150px 120px 130px 130px;
 }
 
 /* Row 2 – marks info */
