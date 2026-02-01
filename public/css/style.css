@@ -1,6 +1,4 @@
 
-
-
 body {
   margin: 0;
   font-family: Segoe UI;
@@ -12,9 +10,7 @@ body {
   margin-top: 25px;
   font-size: 32px;
 }
-.hidden {
-  display: none;
-}
+
 
 .screen {
   margin-top: 80px;
@@ -176,7 +172,7 @@ select:focus {
 
 .app-container {
   display: flex;
-  height: calc(100vh - 70px);
+  height: calc(100vh - 90px);
 }
 
 /* LEFT SIDE MENU */
@@ -283,6 +279,9 @@ select:focus {
   padding: 10px;
   overflow-y: auto;
   border-left: 2px solid #334155; /* 👈 RIGHT divider */
+}
+.screen {
+  display: none;
 }
 
 .nav-sub {

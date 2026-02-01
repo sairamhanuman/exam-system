@@ -3,6 +3,11 @@ function hideAllScreens() {
   screens.forEach(screen => (screen.style.display = 'none'));
 }
 
+function hideAllScreens() {
+  const screens = document.querySelectorAll('.screen');
+  screens.forEach(screen => (screen.style.display = 'none'));
+}
+
 window.onload = () => {
   hideAllScreens();
 
