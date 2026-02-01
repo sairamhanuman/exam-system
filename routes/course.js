@@ -29,4 +29,43 @@ router.get("/list", async (req, res) => {
   res.json(rows);
 });
 
+
+
+/* UPDATE */
+router.put("/update/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    await db.query(
+      `UPDATE course_master SET
+        course_name=?,
+        exam_type=?,
+        elective=?,
+        elective_name=?,
+        replacement=?,
+        credits=?,
+        ta=?,
+        internal_marks=?,
+        external_marks=?
+       WHERE id=?`,
+      [
+        req.body.course_name,
+        req.body.exam_type,
+        req.body.elective,
+        req.body.elective_name,
+        req.body.replacement,
+        req.body.credits,
+        req.body.ta,
+        req.body.internal_marks,
+        req.body.external_marks,
+        id
+      ]
+    );
+
+    res.json({ success: true });
+  } catch (err) {
+    res.json({ success: false, message: err.message });
+  }
+});
+
 module.exports = router;

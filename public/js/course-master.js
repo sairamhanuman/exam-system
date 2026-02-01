@@ -78,9 +78,10 @@ document.getElementById("btnCourseNew").onclick = () => {
 /* =====================
    SAVE
 ===================== */
+
 document.getElementById("btnCourseSave").onclick = async () => {
 
-  const data = {
+  const payload = {
     programme_id: courseProgramme.value,
     branch_id: courseBranch.value,
     semester_id: courseSemester.value,
@@ -98,20 +99,40 @@ document.getElementById("btnCourseSave").onclick = async () => {
     external_marks: external_marks.value
   };
 
-  await fetch(API + "/add", {
-    method: "POST",
+  const id = document.getElementById("courseId").value;
+
+  let url = "/api/course/add";
+  let method = "POST";
+
+  // 🔥 EDIT MODE
+  if (id) {
+    url = `/api/course/update/${id}`;
+    method = "PUT";
+  }
+
+  const res = await fetch(url, {
+    method,
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
+    body: JSON.stringify(payload)
   });
 
-  btnCourseShow.click();
+  const result = await res.json();
+
+  if (!result.success) {
+    alert(result.message || "Save failed");
+    return;
+  }
+
+  document.getElementById("btnCourseShow").click();
 };
 
 /* =====================
    EDIT
 ===================== */
+
 function editCourse(c) {
   courseId.value = c.id;
+
   course_code.value = c.course_code;
   course_name.value = c.course_name;
   exam_type.value = c.exam_type;
