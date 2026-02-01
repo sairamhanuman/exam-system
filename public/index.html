@@ -5,6 +5,7 @@
   <link rel="stylesheet" href="css/style.css">
       <link rel="stylesheet" href="css/student-management.css">
   <link rel="stylesheet" href="css/staff-master.css">
+<link rel="stylesheet" href="css/course-master.css">
 
 </head>
 
@@ -554,6 +555,8 @@
 
   <input type="file" id="photo">
 
+
+
 <select id="staff_status">
   <option value="">-- Select --</option>
   <option value="Working">Working</option>
@@ -586,6 +589,34 @@
 </div>
 
 
+<!-- ================= Course master screen ================= -->
+
+<div class="screen" id="course">
+
+  <h2>Course Master</h2>
+
+  <select id="courseProgramme"></select>
+  <select id="courseBranch"></select>
+  <select id="courseSemester"></select>
+  <select id="courseRegulation"></select>
+
+  <button class="btn blue" id="btnCourseShow">SHOW</button>
+
+  <table id="courseTable">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Credits</th>
+        <th>Internal</th>
+        <th>External</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+</div>
 
 
 
@@ -599,6 +630,7 @@
 <!-- STUDENT MANAGEMENT JS -->
 <script src="js/student-management.js"></script>
 <script src="js/staff-master.js"></script>
+<script src="js/course-master.js"></script>
   
   </div> <!-- content -->
 </div> <!-- app-container -->

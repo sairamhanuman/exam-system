@@ -46,6 +46,8 @@ app.use("/api/staff", require("./routes/staff"));
 // server
 app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
+app.use("/api/course", require("./routes/course"));
+
 // server
 const PORT = process.env.PORT || 3000;
 
