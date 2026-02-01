@@ -149,6 +149,10 @@ function editCourse(c) {
   external_marks.value = c.external_marks;
 }
 
+/* =====================
+Soft delete
+===================== */
+
 async function deleteCourse(id) {
   if (!confirm("Are you sure you want to delete this course?")) return;
 
@@ -166,6 +170,12 @@ async function deleteCourse(id) {
   // reload table
   document.getElementById("btnCourseShow").click();
 }
+
+
+/* =====================
+   GEnerate excel
+===================== */
+
 
 function generateCourseExcel() {
   const programmeId = document.getElementById("courseProgramme").value;
@@ -188,3 +198,54 @@ function generateCourseExcel() {
   window.location.href = url;
 }
 
+
+/* =====================
+Upload excel
+===================== */
+
+function uploadCourseExcel() {
+
+  const fileInput = document.getElementById("courseExcelFile");
+  const file = fileInput.files[0];
+
+  if (!file) {
+    alert("Please select an Excel file");
+    return;
+  }
+
+  // Dropdown values (VERY IMPORTANT)
+  const programme_id  = document.getElementById("courseProgramme").value;
+  const branch_id     = document.getElementById("courseBranch").value;
+  const semester_id   = document.getElementById("courseSemester").value;
+  const regulation_id = document.getElementById("courseRegulation").value;
+
+  if (!programme_id || !branch_id || !semester_id || !regulation_id) {
+    alert("Please select Programme, Branch, Semester and Regulation");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("programme_id", programme_id);
+  formData.append("branch_id", branch_id);
+  formData.append("semester_id", semester_id);
+  formData.append("regulation_id", regulation_id);
+
+  fetch("/api/course/upload-excel", {
+    method: "POST",
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert("✅ Courses uploaded successfully");
+      loadCourses(); // refresh table if exists
+    } else {
+      alert("❌ " + data.message);
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Upload failed");
+  });
+}

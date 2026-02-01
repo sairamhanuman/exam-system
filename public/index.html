@@ -638,8 +638,13 @@
 </button>
 
 <form id="uploadForm">
-<input type="file" id="courseFile" />
-<button class="btn blue" onclick="uploadCourseExcel()">Upload</button>
+<input type="file" id="courseExcelFile" accept=".xlsx" />
+
+<button type="button"
+        class="btn green"
+        onclick="uploadCourseExcel()">
+  Upload Excel
+</button>
 
 </form>
 
