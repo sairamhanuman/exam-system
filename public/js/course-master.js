@@ -237,15 +237,16 @@ function uploadCourseExcel() {
   })
   .then(res => res.json())
   .then(data => {
-    if (data.success) {
-      alert("✅ Courses uploaded successfully");
-      loadCourses(); // refresh table if exists
-    } else {
-      alert("❌ " + data.message);
-    }
-  })
-  .catch(err => {
-    console.error(err);
-    alert("Upload failed");
-  });
+  if (data.success) {
+    alert(
+      `✅ Upload finished\n\n` +
+      `Inserted: ${data.inserted}\n` +
+      `Skipped (duplicates): ${data.skipped}`
+    );
+    loadCourses();
+  } else {
+    alert("❌ " + data.message);
+  }
+});
+
 }

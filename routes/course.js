@@ -163,55 +163,53 @@ router.post("/upload-excel", upload.single("file"), async (req, res) => {
     const rows = XLSX.utils.sheet_to_json(sheet);
 
     let inserted = 0;
-    let skipped = 0;
+let skipped = 0;
 
-    for (let row of rows) {
-      // DUPLICATE CHECK (within same branch + semester + regulation)
-      const [exists] = await db.query(
-        `SELECT id FROM course_master 
-         WHERE course_code=? AND branch_id=? AND semester_id=? AND regulation_id=?`,
-        [row["Course Code"], branch_id, semester_id, regulation_id]
-      );
+for (const row of rows) {
+  try {
+    await db.query(
+      `INSERT INTO course_master
+      (programme_id, branch_id, semester_id, regulation_id,
+       course_code, course_name, course_short, exam_type,
+       elective, elective_name, replacement,
+       credits, ta, internal_marks, external_marks)
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+      [
+        programme_id,
+        branch_id,
+        semester_id,
+        regulation_id,
+        row.course_code,
+        row.course_name,
+        row.course_short,
+        row.exam_type,
+        row.elective || "No",
+        row.elective_name || null,
+        row.replacement || "No",
+        row.credits || 0,
+        row.ta || 0,
+        row.internal_marks || 0,
+        row.external_marks || 0
+      ]
+    );
 
-      if (exists.length > 0) {
-        skipped++;
-        continue;
-      }
+    inserted++;
 
-      await db.query(
-        `INSERT INTO course_master
-        (programme_id, branch_id, semester_id, regulation_id,
-         course_code, course_name, course_short,
-         exam_type, elective, elective_name,
-         credits, ta, internal_marks, external_marks, order_no)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
-        [
-          programme_id,
-          branch_id,
-          semester_id,
-          regulation_id,
-          row["Course Code"],
-          row["Course Name"],
-          row["Course Short"],
-          row["Exam Type"],
-          row["Elective (Yes/No)"] || "No",
-          row["Elective Name"] || null,
-          row["Credits"] || 0,
-          row["TA"] || 0,
-          row["Internal Marks"] || 0,
-          row["External Marks"] || 0,
-          row["Order No"] || 0
-        ]
-      );
-
-      inserted++;
+  } catch (err) {
+    if (err.code === "ER_DUP_ENTRY") {
+      skipped++;
+    } else {
+      throw err;
     }
+  }
+}
 
-    res.json({
-      message: "Upload completed",
-      inserted,
-      skipped
-    });
+res.json({
+  success: true,
+  inserted,
+  skipped
+});
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Upload failed" });
