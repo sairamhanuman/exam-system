@@ -1,4 +1,3 @@
-
 const API = "/api/course";
 
 /* =====================
@@ -124,4 +123,3 @@ function editCourse(c) {
   internal_marks.value = c.internal_marks;
   external_marks.value = c.external_marks;
 }
-
