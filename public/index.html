@@ -591,49 +591,75 @@
 
 
 <!-- ================= Course master screen ================= -->
-
-<div class="screen" id="course">
+<div class="screen" id="course" style="display:none">
 
   <h2>Course Master</h2>
 
-    <label for="courseProgramme">Programme</label>
-<select id="courseProgramme">
-  <option value="" disabled selected>Select Programme</option>
-</select>
-<label for="courseBranch">Branch</label>
-<select id="courseBranch">
-  <option value="" disabled selected>Select Branch</option>
-</select>
-<label for="courseSemester">Semester</label>
-<select id="courseSemester">
-  <option value="" disabled selected>Select Semester</option>
-</select>
-<label for="courseRegulation">Regulation</label>
-<select id="courseRegulation">
-  <option value="" disabled selected>Select Regulation</option>
-</select>
+  <!-- FILTER AREA -->
+  <div class="filter-box">
+    <select id="courseProgramme"></select>
+    <select id="courseBranch"></select>
+    <select id="courseSemester"></select>
+    <select id="courseRegulation"></select>
 
-  <button class="btn blue" id="btnCourseShow">SHOW</button>
+    <button class="btn blue" id="btnCourseShow">SHOW</button>
+    <button class="btn green" id="btnCourseNew">NEW</button>
+    <button class="btn orange" id="btnCourseSave">SAVE</button>
+  </div>
 
+  <!-- ENTRY AREA (SINGLE ROW) -->
+  <div class="entry-box">
+
+    <input type="hidden" id="courseId">
+
+    <input id="course_order" placeholder="Order">
+    <input id="course_code" placeholder="Course Code">
+    <input id="course_name" placeholder="Course Name">
+
+    <select id="exam_type">
+      <option value="Theory">Theory</option>
+      <option value="Practical">Practical</option>
+      <option value="Project">Project</option>
+      <option value="Others">Others</option>
+    </select>
+
+    <select id="elective">
+      <option value="No">Elective No</option>
+      <option value="Yes">Elective Yes</option>
+    </select>
+
+    <input id="elective_name" placeholder="Elective Name">
+
+    <select id="replacement">
+      <option value="No">Replacement No</option>
+      <option value="Yes">Replacement Yes</option>
+    </select>
+
+    <input id="credits" placeholder="Credits">
+    <input id="ta" placeholder="TA">
+    <input id="internal_marks" placeholder="Internal">
+    <input id="external_marks" placeholder="External">
+
+  </div>
+
+  <!-- VIEW TABLE -->
   <table id="courseTable">
     <thead>
       <tr>
+        <th>Sl</th>
         <th>Code</th>
         <th>Name</th>
         <th>Type</th>
         <th>Credits</th>
         <th>Internal</th>
         <th>External</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody></tbody>
   </table>
 
 </div>
-
-
-
-
 
 
 
