@@ -3,6 +3,7 @@
   box-sizing: border-box;
 }
 
+.filter-box,
 .entry-box {
   border: 2px solid #000;
   border-radius: 8px;
@@ -33,18 +34,20 @@
 .entry-box select {
   height: 36px;
   padding: 6px 8px;
-  border: 1px solid #333;
+  border: 2px solid #333;
   border-radius: 4px;
-  font-size: 14px;
-  width: 100%;
+  font-size: 16px;
+  font-weight: bold;
+  width: 50%;
 }
 
 /* Labels */
 .entry-box label {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   display: block;
   margin-bottom: 3px;
+  font-weight: bold;
 }
 /* Focus effect */
 .entry-box input:focus,
