@@ -12,6 +12,9 @@ body {
   margin-top: 25px;
   font-size: 32px;
 }
+.hidden {
+  display: none;
+}
 
 .screen {
   margin-top: 80px;

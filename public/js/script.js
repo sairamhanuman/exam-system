@@ -174,7 +174,9 @@ let editBranchId = null;
 
 function openBranch() {
   hideAllScreens();
-  document.getElementById("branchMaster").style.display = "block";
+  const screen = document.getElementById("branchMaster");
+  screen.classList.remove("hidden");
+  screen.style.display = "block"; // optional but safe
   loadProgrammeDropdown();
   loadBranches();
 }
