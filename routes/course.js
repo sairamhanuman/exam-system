@@ -17,18 +17,25 @@ router.post("/add", async (req, res) => {
 
 /* LIST */
 router.get("/list", async (req, res) => {
-  const { programme_id, branch_id, semester_id, regulation_id } = req.query;
+  try {
+    const { programme_id, branch_id, semester_id, regulation_id } = req.query;
 
-  const [rows] = await db.query(
-    `SELECT * FROM course_master
-     WHERE programme_id=? AND branch_id=?
-     AND semester_id=? AND regulation_id=?`,
-    [programme_id, branch_id, semester_id, regulation_id]
-  );
+    const [rows] = await db.query(
+      `SELECT * FROM course_master
+       WHERE status=1
+       AND programme_id=?
+       AND branch_id=?
+       AND semester_id=?
+       AND regulation_id=?
+       ORDER BY course_code`,
+      [programme_id, branch_id, semester_id, regulation_id]
+    );
 
-  res.json(rows);
+    res.json(rows);
+  } catch (err) {
+    res.json([]);
+  }
 });
-
 
 
 /* UPDATE */
@@ -62,6 +69,22 @@ router.put("/update/:id", async (req, res) => {
       ]
     );
 
+    res.json({ success: true });
+  } catch (err) {
+    res.json({ success: false, message: err.message });
+  }
+});
+
+
+/* ======================
+   SOFT DELETE COURSE
+====================== */
+router.delete("/delete/:id", async (req, res) => {
+  try {
+    await db.query(
+      "UPDATE course_master SET status=0 WHERE id=?",
+      [req.params.id]
+    );
     res.json({ success: true });
   } catch (err) {
     res.json({ success: false, message: err.message });

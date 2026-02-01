@@ -61,7 +61,8 @@ document.getElementById("btnCourseShow").onclick = async () => {
         <td>${c.internal_marks}</td>
         <td>${c.external_marks}</td>
         <td>
-          <button onclick='editCourse(${JSON.stringify(c)})'>Edit</button>
+           <button class="btn btn-edit" onclick='editCourse(${JSON.stringify(c)})'>Edit</button>
+          <button class="btn btn-delete" onclick='deleteCourse(${c.id})'>Delete</button>
         </td>
       </tr>`;
   });
@@ -143,4 +144,22 @@ function editCourse(c) {
   ta.value = c.ta;
   internal_marks.value = c.internal_marks;
   external_marks.value = c.external_marks;
+}
+
+async function deleteCourse(id) {
+  if (!confirm("Are you sure you want to delete this course?")) return;
+
+  const res = await fetch(`/api/course/delete/${id}`, {
+    method: "DELETE"
+  });
+
+  const result = await res.json();
+
+  if (!result.success) {
+    alert(result.message || "Delete failed");
+    return;
+  }
+
+  // reload table
+  document.getElementById("btnCourseShow").click();
 }
