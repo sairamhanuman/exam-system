@@ -161,6 +161,12 @@ select {
   border: 1px; ;
   margin: 10px;
 }
+input[type="text"]:focus,
+select:focus {
+  outline: none;               /* remove browser default */
+  border-color: #2563eb;       /* blue on focus */
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
+}
 
 
 /* ================= APP LAYOUT ================= */
@@ -174,8 +180,8 @@ select {
 /* ===== SIDEBAR STYLE ===== */
 .sidebar {
   width: 230px;
-  background: #c8ecece5;
-  color: #010713;
+  background: #001212e5;
+  color: #e5ebf7;
   height: 100vh;
   padding: 10px;
   border-right: 2px solid #334155;
