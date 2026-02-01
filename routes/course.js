@@ -150,70 +150,94 @@ router.get("/generate-excel", async (req, res) => {
 // ===============================
 // UPLOAD COURSE EXCEL
 // ===============================
+// =======================================
+// UPLOAD COURSE EXCEL
+// =======================================
 router.post("/upload-excel", upload.single("file"), async (req, res) => {
+  const { programme_id, branch_id, semester_id, regulation_id } = req.body;
+
+  if (!req.file) {
+    return res.status(400).json({ message: "No file uploaded" });
+  }
+
   try {
-    const { programme_id, branch_id, semester_id, regulation_id } = req.body;
-
-    if (!req.file) {
-      return res.status(400).json({ message: "No file uploaded" });
-    }
-
     const workbook = XLSX.read(req.file.buffer, { type: "buffer" });
-    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
     const rows = XLSX.utils.sheet_to_json(sheet);
 
     let inserted = 0;
-let skipped = 0;
+    let skipped = 0;
 
-for (const row of rows) {
-  try {
-    await db.query(
-      `INSERT INTO course_master
-      (programme_id, branch_id, semester_id, regulation_id,
-       course_code, course_name, course_short, exam_type,
-       elective, elective_name, replacement,
-       credits, ta, internal_marks, external_marks)
-      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
-      [
-        programme_id,
-        branch_id,
-        semester_id,
-        regulation_id,
-        row.course_code,
-        row.course_name,
-        row.course_short,
-        row.exam_type,
-        row.elective || "No",
-        row.elective_name || null,
-        row.replacement || "No",
-        row.credits || 0,
-        row.ta || 0,
-        row.internal_marks || 0,
-        row.external_marks || 0
-      ]
-    );
+    for (const row of rows) {
+      const {
+        "Course Code": course_code,
+        "Course Name": course_name,
+        "Course Short": course_short,
+        "Exam Type": exam_type,
+        "Elective (Yes/No)": elective,
+        "Elective Name": elective_name,
+        "Credits": credits,
+        "TA": ta,
+        "Internal Marks": internal_marks,
+        "External Marks": external_marks,
+        "Order No": order_no
+      } = row;
 
-    inserted++;
+      // DUPLICATE CHECK
+      const [exists] = await db.query(
+        `SELECT id FROM course_master
+         WHERE programme_id=? AND branch_id=? AND semester_id=?
+         AND regulation_id=? AND course_code=?`,
+        [programme_id, branch_id, semester_id, regulation_id, course_code]
+      );
 
-  } catch (err) {
-    if (err.code === "ER_DUP_ENTRY") {
-      skipped++;
-    } else {
-      throw err;
+      if (exists.length > 0) {
+        skipped++;
+        continue;
+      }
+
+      await db.query(
+        `INSERT INTO course_master
+        (programme_id, branch_id, semester_id, regulation_id,
+         course_code, course_name, course_short, exam_type,
+         elective, elective_name, credits, ta,
+         internal_marks, external_marks, order_no)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          programme_id,
+          branch_id,
+          semester_id,
+          regulation_id,
+          course_code,
+          course_name,
+          course_short,
+          exam_type,
+          elective,
+          elective_name,
+          credits || 0,
+          ta || 0,
+          internal_marks || 0,
+          external_marks || 0,
+          order_no || 0
+        ]
+      );
+
+      inserted++;
     }
-  }
-}
 
-res.json({
-  success: true,
-  inserted,
-  skipped
-});
+    // FINAL MESSAGE
+    let message = "✅ Upload completed. ";
+    if (inserted > 0) message += `${inserted} new courses added. `;
+    if (skipped > 0) message += `${skipped} already existed (skipped).`;
+
+    res.json({ message });
 
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Upload failed" });
+    res.status(500).json({ message: "Excel upload failed" });
   }
 });
+
 
 module.exports = router;

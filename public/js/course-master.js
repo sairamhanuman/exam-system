@@ -200,27 +200,27 @@ function generateCourseExcel() {
 
 
 /* =====================
-Upload excel
+Upload
 ===================== */
-
+// ===============================
+// UPLOAD COURSE EXCEL
+// ===============================
 function uploadCourseExcel() {
+  const programme_id = document.getElementById("courseProgramme").value;
+  const branch_id = document.getElementById("courseBranch").value;
+  const semester_id = document.getElementById("courseSemester").value;
+  const regulation_id = document.getElementById("courseRegulation").value;
 
   const fileInput = document.getElementById("courseExcelFile");
   const file = fileInput.files[0];
 
-  if (!file) {
-    alert("Please select an Excel file");
+  if (!programme_id || !branch_id || !semester_id || !regulation_id) {
+    alert("⚠️ Select all filters first");
     return;
   }
 
-  // Dropdown values (VERY IMPORTANT)
-  const programme_id  = document.getElementById("courseProgramme").value;
-  const branch_id     = document.getElementById("courseBranch").value;
-  const semester_id   = document.getElementById("courseSemester").value;
-  const regulation_id = document.getElementById("courseRegulation").value;
-
-  if (!programme_id || !branch_id || !semester_id || !regulation_id) {
-    alert("Please select Programme, Branch, Semester and Regulation");
+  if (!file) {
+    alert("⚠️ Please select Excel file");
     return;
   }
 
@@ -235,18 +235,13 @@ function uploadCourseExcel() {
     method: "POST",
     body: formData
   })
-  .then(res => res.json())
-  .then(data => {
-  if (data.success) {
-    alert(
-      `✅ Upload finished\n\n` +
-      `Inserted: ${data.inserted}\n` +
-      `Skipped (duplicates): ${data.skipped}`
-    );
-    loadCourses();
-  } else {
-    alert("❌ " + data.message);
-  }
-});
-
+    .then(res => res.json())
+    .then(data => {
+      alert(data.message);
+      fileInput.value = "";
+    })
+    .catch(err => {
+      console.error(err);
+      alert("❌ Upload failed");
+    });
 }
