@@ -2,14 +2,19 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
-const bodyParser = require("body-parser");
+const path = require("path");
+const fs = require("fs");
 
 const db = require("./config/db");
-const path = require("path");
 const app = express();
 
+// middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "public")));
 
-// DEBUG route to check MySQL env variables
+// DEBUG route
 app.get("/env", (req, res) => {
   res.json({
     MYSQLHOST: process.env.MYSQLHOST,
@@ -19,14 +24,6 @@ app.get("/env", (req, res) => {
     MYSQLPORT: process.env.MYSQLPORT
   });
 });
-
-// middleware
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static("public"));
-
-app.use(express.static(path.join(__dirname, "public")));
 
 // test route
 app.get("/", (req, res) => {
@@ -42,26 +39,20 @@ app.use("/api/batch", require("./routes/batch"));
 app.use("/api/section", require("./routes/section"));
 app.use("/api/students", require("./routes/studentmanagement"));
 app.use("/api/staff", require("./routes/staff"));
-
-// server
-app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
-
 app.use("/api/course", require("./routes/course"));
 
-app.use(express.json());
-app.use(express.static("course-mapping"));
+// uploads
+app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
-const courseMappingRoutes = require("./routes/courseMapping.routes");
-app.use("/api/course-mapping", courseMappingRoutes);
+// course mapping
+console.log(
+  "courseMapping.routes exists:",
+  fs.existsSync("./routes/courseMapping.routes.js")
+);
+app.use("/api/course-mapping", require("./routes/courseMapping.routes"));
 
-
-
-
-
+// server
 const PORT = process.env.PORT || 3000;
-
-// Bind to 0.0.0.0 so Railway can expose it
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running at http://0.0.0.0:${PORT}`);
 });
-
