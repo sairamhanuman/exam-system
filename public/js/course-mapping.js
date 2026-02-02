@@ -1,29 +1,49 @@
 window.onload = () => {
   loadFilters();
-  loadTable();
+  loadExtras();
 };
 
-async function loadFilters() {
-  const res = await fetch("/api/course-mapping/filters");
-  const data = await res.json();
-
-  fill("programme", data.programmes);
-  fill("branch", data.branches);
-  fill("semester", data.semesters);
-  fill("regulation", data.regulations);
-  fill("course", data.courses);
-  fill("batch", data.batches);
-  fill("section", data.sections);
-  fill("staff", data.staff);
+function loadFilters() {
+  fetch("/api/course-mapping/filters")
+    .then(res => res.json())
+    .then(data => {
+      fill("programme", data.programmes, "programme_name");
+      fill("branch", data.branches, "branch_name");
+      fill("semester", data.semesters, "semester_name");
+      fill("regulation", data.regulations, "regulation_name");
+      fillCourse(data.courses);
+    })
+    .catch(err => console.error(err));
 }
 
-function fill(id, arr) {
-  const el = document.getElementById(id);
-  el.innerHTML = `<option value="">Select</option>`;
+function loadExtras() {
+  fetch("/api/course-mapping/extras")
+    .then(res => res.json())
+    .then(data => {
+      fill("batch", data.batches, "batch_name");
+      fill("section", data.sections, "section_name");
+      fill("staff", data.staff, "staff_name");
+    });
+}
+
+function fill(id, arr, key) {
+  const sel = document.getElementById(id);
+  sel.innerHTML = `<option value="">Select</option>`;
   arr.forEach(o => {
-    el.innerHTML += `<option value="${o.id}">${o.name}</option>`;
+    sel.innerHTML += `<option value="${o.id}">${o[key]}</option>`;
   });
 }
+
+function fillCourse(arr) {
+  const sel = document.getElementById("course");
+  sel.innerHTML = `<option value="">Select Course</option>`;
+  arr.forEach(c => {
+    sel.innerHTML += `<option value="${c.id}">
+      ${c.course_code} - ${c.course_name}
+    </option>`;
+  });
+}
+
 
 async function saveMapping() {
   const payload = {
