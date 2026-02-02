@@ -3,17 +3,31 @@ const router = express.Router();
 const db = require("../config/db");
 
 /* Filters */
-router.get("/filters", (req,res) => {
-  db.query(`SELECT DISTINCT programme,branch,semester,regulation FROM course_master`,
-    (e,r) => {
-      const col = c => [...new Set(r.map(x => x[c]))];
-      res.json({
-        programme: col("programme"),
-        branch: col("branch"),
-        semester: col("semester"),
-        regulation: col("regulation")
+/ GET FILTER DROPDOWNS
+router.get("/filters", (req, res) => {
+  const data = {};
+
+  db.query("SELECT id, programme_name FROM programme_master", (err, programmes) => {
+    if (err) return res.status(500).json(err);
+    data.programmes = programmes;
+
+    db.query("SELECT id, branch_name FROM branch_master", (err, branches) => {
+      if (err) return res.status(500).json(err);
+      data.branches = branches;
+
+      db.query("SELECT id, semester_name FROM semester_master", (err, semesters) => {
+        if (err) return res.status(500).json(err);
+        data.semesters = semesters;
+
+        db.query("SELECT id, regulation FROM regulation_master", (err, regulations) => {
+          if (err) return res.status(500).json(err);
+          data.regulations = regulations;
+
+          res.json(data); // ✅ ONLY JSON
+        });
       });
     });
+  });
 });
 
 /* Dependent dropdowns */
@@ -57,9 +71,26 @@ router.post("/save", (req,res) => {
   );
 });
 
-/* List */
-router.get("/list", (req,res) => {
-  db.query(`SELECT * FROM course_faculty_mapping`, (e,r) => res.json(r));
+// GET MAPPING LIST
+router.get("/list", (req, res) => {
+  const sql = `
+    SELECT 
+      cm.id,
+      c.course_code,
+      c.course_name,
+      cm.batch,
+      cm.section,
+      CONCAT(s.branch,' - ',s.employee_id,' - ',s.employee_name) AS faculty
+    FROM course_mapping cm
+    JOIN course_master c ON cm.course_id = c.id
+    JOIN staff_master s ON cm.staff_id = s.id
+    ORDER BY cm.id DESC
+  `;
+
+  db.query(sql, (err, rows) => {
+    if (err) return res.status(500).json(err);
+    res.json(rows); // ✅ JSON ONLY
+  });
 });
 
 /* Delete */

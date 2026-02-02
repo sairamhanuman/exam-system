@@ -13,20 +13,18 @@ function fillSelect(id, list, labelFn) {
 }
 
 /* ---------- FILTER DROPDOWNS ---------- */
-function loadFilters() {
-  fetch("/api/course-mapping/filters")
-    .then(r => r.json())
-    .then(d => {
-      fillSelect("programme", d.programme);
-      fillSelect("branch", d.branch);
-      fillSelect("semester", d.semester);
-      fillSelect("regulation", d.regulation);
-    });
+async function loadFilters() {
+  const res = await fetch("/api/course-mapping/filters");
+
+  if (!res.ok) {
+    alert("Failed to load filters");
+    return;
+  }
+
+  const data = await res.json();
+  console.log("Filters:", data);
 }
 
-["programme","branch","semester","regulation"].forEach(id => {
-  document.getElementById(id).addEventListener("change", loadDependentData);
-});
 
 function loadDependentData() {
   const payload = {
@@ -82,27 +80,18 @@ function clearForm() {
 }
 
 /* ---------- TABLE ---------- */
-function loadTable() {
-  fetch("/api/course-mapping/list")
-    .then(r => r.json())
-    .then(data => {
-      const tb = document.getElementById("mappingTable");
-      tb.innerHTML = "";
-      data.forEach((d,i) => {
-        tb.innerHTML += `
-          <tr>
-            <td>${i+1}</td>
-            <td>${d.course}</td>
-            <td>${d.batch}</td>
-            <td>${d.section}</td>
-            <td>${d.faculty}</td>
-            <td>
-              <button onclick="deleteRow(${d.id})">Delete</button>
-            </td>
-          </tr>`;
-      });
-    });
+async function loadTable() {
+  const res = await fetch("/api/course-mapping/list");
+
+  if (!res.ok) {
+    alert("Failed to load mapping list");
+    return;
+  }
+
+  const data = await res.json();
+  console.log("Table:", data);
 }
+
 
 function deleteRow(id) {
   fetch(`/api/course-mapping/delete/${id}`, { method:"DELETE" })
