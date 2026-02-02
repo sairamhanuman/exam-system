@@ -25,6 +25,18 @@ function openCourseMapping() {
 }
 
 
+function openCourseMappingPage() {
+  fetch("/course-mapping.html")
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("rightContent").innerHTML = html;
+
+      // VERY IMPORTANT: reload JS manually
+      const script = document.createElement("script");
+      script.src = "/js/course-mapping.js";
+      document.body.appendChild(script);
+    });
+}
 
 
 function openPreExam() {
