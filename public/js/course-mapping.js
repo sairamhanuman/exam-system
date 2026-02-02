@@ -1,59 +1,32 @@
-document.addEventListener("DOMContentLoaded", () => {
+window.onload = () => {
   loadFilters();
+  loadTable();
+};
 
-  document.getElementById("newBtn").onclick = () => {
-    document.getElementById("entryBox").classList.remove("hidden");
-  };
+async function loadFilters() {
+  const res = await fetch("/api/course-mapping/filters");
+  const data = await res.json();
 
-  document.getElementById("saveBtn").onclick = saveMapping;
-  document.getElementById("showBtn").onclick = loadMappings;
-});
-
-function loadFilters() {
-  fetch("/api/course-mapping/filters")
-    .then(res => res.json())
-    .then(data => {
-      fill("programme", data.programmes);
-      fill("branch", data.branches);
-      fill("semester", data.semesters);
-      fill("regulation", data.regulations);
-      fillCourse(data.courses);
-      fill("batch", data.batches);
-      fill("section", data.sections);
-      fillStaff(data.staff);
-    });
+  fill("programme", data.programmes);
+  fill("branch", data.branches);
+  fill("semester", data.semesters);
+  fill("regulation", data.regulations);
+  fill("course", data.courses);
+  fill("batch", data.batches);
+  fill("section", data.sections);
+  fill("staff", data.staff);
 }
 
-function fill(id, rows) {
-  const s = document.getElementById(id);
-  s.innerHTML = `<option value="">Select</option>`;
-  rows.forEach(r => {
-    s.innerHTML += `<option value="${r.id}">${r.name}</option>`;
+function fill(id, arr) {
+  const el = document.getElementById(id);
+  el.innerHTML = `<option value="">Select</option>`;
+  arr.forEach(o => {
+    el.innerHTML += `<option value="${o.id}">${o.name}</option>`;
   });
 }
 
-function fillCourse(rows) {
-  const s = document.getElementById("course");
-  s.innerHTML = `<option value="">Select Course</option>`;
-  rows.forEach(r => {
-    s.innerHTML += `<option value="${r.id}">
-      ${r.course_code} - ${r.course_name}
-    </option>`;
-  });
-}
-
-function fillStaff(rows) {
-  const s = document.getElementById("staff");
-  s.innerHTML = `<option value="">Select Faculty</option>`;
-  rows.forEach(r => {
-    s.innerHTML += `<option value="${r.id}">
-      ${r.department}-${r.emp_id}-${r.staff_name}
-    </option>`;
-  });
-}
-
-function saveMapping() {
-  const body = {
+async function saveMapping() {
+  const payload = {
     programme_id: programme.value,
     branch_id: branch.value,
     semester_id: semester.value,
@@ -64,39 +37,41 @@ function saveMapping() {
     staff_id: staff.value
   };
 
-  fetch("/api/course-mapping/save", {
+  await fetch("/api/course-mapping/save", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body)
-  }).then(() => loadMappings());
+    body: JSON.stringify(payload)
+  });
+
+  loadTable();
 }
 
-function loadMappings() {
-  fetch("/api/course-mapping/list")
-    .then(res => res.json())
-    .then(rows => {
-      const tb = document.querySelector("#mappingTable tbody");
-      tb.innerHTML = "";
-      rows.forEach(r => {
-        tb.innerHTML += `
-          <tr>
-            <td>${r.programme}</td>
-            <td>${r.branch}</td>
-            <td>${r.semester}</td>
-            <td>${r.regulation}</td>
-            <td>${r.course}</td>
-            <td>${r.batch}</td>
-            <td>${r.section}</td>
-            <td>${r.faculty}</td>
-            <td>
-              <button onclick="deleteMap(${r.id})">Delete</button>
-            </td>
-          </tr>`;
-      });
-    });
+async function loadTable() {
+  const res = await fetch("/api/course-mapping/list");
+  const data = await res.json();
+
+  tableBody.innerHTML = "";
+  data.forEach((r, i) => {
+    tableBody.innerHTML += `
+      <tr>
+        <td>${i+1}</td>
+        <td>${r.course}</td>
+        <td>${r.batch}</td>
+        <td>${r.section}</td>
+        <td>${r.staff}</td>
+        <td>
+          <button onclick="del(${r.id})">❌</button>
+        </td>
+      </tr>
+    `;
+  });
 }
 
-function deleteMap(id) {
-  fetch(`/api/course-mapping/delete/${id}`, { method: "DELETE" })
-    .then(() => loadMappings());
+async function del(id) {
+  await fetch("/api/course-mapping/delete/" + id);
+  loadTable();
+}
+
+function clearForm() {
+  document.querySelectorAll("select").forEach(s => s.value = "");
 }

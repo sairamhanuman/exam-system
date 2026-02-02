@@ -44,8 +44,7 @@ app.use("/api/course", require("./routes/course"));
 // uploads
 app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
-const courseMappingRoutes = require("./routes/courseMapping");
-app.use("/api/course-mapping", courseMappingRoutes);
+app.use("/api/course-mapping", require("./routes/courseMapping"));
 
 
 // server
