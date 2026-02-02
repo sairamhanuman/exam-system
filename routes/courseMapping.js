@@ -47,34 +47,6 @@ router.get("/filters", async (req, res) => {
 });
 
 /* ================= EXTRAS ================= */
-router.get("/extras", async (req, res) => {
-  try {
-    const [batches] = await db.query(
-      "SELECT id, batch_name FROM batch_master WHERE status = 1"
-    );
-
-    const [sections] = await db.query(
-      "SELECT id, section_name FROM section_master WHERE status = 1"
-    );
-
-    const [staff] = await db.query(`
-      SELECT id,
-      CONCAT(department,'-',emp_id,'-',staff_name) AS staff_name
-      FROM staff_master
-      WHERE status != 'Relieved'
-    `);
-
-    res.json({ batches, sections, staff });
-  } catch (err) {
-    console.error("❌ extras error:", err);
-    res.status(500).json(err);
-  }
-});
-
-
-const express = require("express");
-const router = express.Router();
-const db = require("../config/db");
 
 /* ===== EXTRAS ===== */
 router.get("/extras", async (req, res) => {
