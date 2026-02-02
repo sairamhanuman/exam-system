@@ -4,6 +4,20 @@ const db = require("../config/db");
 const XLSX = require("xlsx");
 const multer = require("multer");
 const upload = multer({ storage: multer.memoryStorage() });
+// =====================
+// EXAM & ELECTIVE MAPS
+// =====================
+const EXAM_TYPE_MAP = {
+  "0": "Theory",
+  "1": "Practical",
+  "2": "Project",
+  "3": "Drawing"
+};
+
+const ELECTIVE_MAP = {
+  "0": "Yes",
+  "1": "No"
+};
 
 
 /* ADD */
@@ -174,8 +188,8 @@ router.post("/upload-excel", upload.single("file"), async (req, res) => {
         "Course Code": course_code,
         "Course Name": course_name,
         "Course Short": course_short,
-        "Exam Type": exam_type,
-        "Elective (Yes/No)": elective,
+       
+
         "Elective Name": elective_name,
         "Credits": credits,
         "TA": ta,
@@ -183,6 +197,29 @@ router.post("/upload-excel", upload.single("file"), async (req, res) => {
         "External Marks": external_marks,
         "Order No": order_no
       } = row;
+
+      // =====================
+// VALIDATE & MAP VALUES
+// =====================
+const examRaw = String(row["Exam Type"]).trim();
+const electiveRaw = String(row["Elective (Yes/No)"]).trim();
+
+if (!EXAM_TYPE_MAP.hasOwnProperty(examRaw)) {
+  return res.status(400).json({
+    message: `❌ Invalid Exam Type '${examRaw}'. Use:
+0-Theory, 1-Practical, 2-Project, 3-Drawing`
+  });
+}
+
+if (!ELECTIVE_MAP.hasOwnProperty(electiveRaw)) {
+  return res.status(400).json({
+    message: `❌ Invalid Elective '${electiveRaw}'. Use:
+0-Yes, 1-No`
+  });
+}
+
+const exam_type = EXAM_TYPE_MAP[examRaw];
+const elective = ELECTIVE_MAP[electiveRaw];
 
       // DUPLICATE CHECK
       const [exists] = await db.query(
