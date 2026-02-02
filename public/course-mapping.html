@@ -24,29 +24,26 @@
 <select id="course"></select>
 
 
-  <!-- STEP 2 -->
+<h3>New Entry</h3>
+
+<div class="row">
   <select id="batch"></select>
   <select id="section"></select>
-  <select id="staff"></select>
-
-  <div class="btns">
-    <button onclick="clearForm()">NEW</button>
-    <button onclick="saveMapping()">SAVE</button>
-  </div>
+  <select id="faculty"></select>
 </div>
 
-<table>
+<button onclick="saveMapping()">SAVE</button>
+
+<table id="mappingTable">
   <thead>
     <tr>
-      <th>#</th>
-      <th>Course</th>
       <th>Batch</th>
       <th>Section</th>
       <th>Faculty</th>
       <th>Action</th>
     </tr>
   </thead>
-  <tbody id="tableBody"></tbody>
+  <tbody></tbody>
 </table>
 
 <script src="/js/course-mapping.js"></script>

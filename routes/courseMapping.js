@@ -71,4 +71,59 @@ router.get("/extras", async (req, res) => {
   }
 });
 
+
+const express = require("express");
+const router = express.Router();
+const db = require("../config/db");
+
+/* ===== EXTRAS ===== */
+router.get("/extras", async (req, res) => {
+  const [batches] = await db.query(
+    "SELECT id, batch_name FROM batch_master WHERE status=1"
+  );
+
+  const [sections] = await db.query(
+    "SELECT id, section_name FROM section_master WHERE status=1"
+  );
+
+  const [staff] = await db.query(`
+    SELECT id,
+    CONCAT(department,'-',emp_id,'-',staff_name) AS staff_name
+    FROM staff_master
+    WHERE status='Active' OR status='Relieved'
+  `);
+
+  res.json({ batches, sections, staff });
+});
+
+/* ===== SAVE ===== */
+router.post("/save", async (req, res) => {
+  try {
+    await db.query(
+      `INSERT INTO course_faculty_mapping
+      (programme_id, branch_id, semester_id, regulation_id,
+       course_id, batch_id, section_id, staff_id)
+       VALUES (?,?,?,?,?,?,?,?)`,
+      [
+        req.body.programme_id,
+        req.body.branch_id,
+        req.body.semester_id,
+        req.body.regulation_id,
+        req.body.course_id,
+        req.body.batch_id,
+        req.body.section_id,
+        req.body.staff_id
+      ]
+    );
+
+    res.json({ message: "Mapping saved successfully" });
+  } catch (err) {
+    if (err.code === "ER_DUP_ENTRY") {
+      res.json({ message: "Already mapped" });
+    } else {
+      res.status(500).json(err);
+    }
+  }
+});
+
 module.exports = router;

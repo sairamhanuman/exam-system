@@ -23,3 +23,12 @@ th, td {
   padding: 8px;
   text-align: center;
 }
+.row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+select, button {
+  padding: 6px;
+}

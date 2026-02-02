@@ -121,3 +121,41 @@ function loadCourses() {
       </option>`;
   });
 }
+async function loadExtras() {
+  const res = await fetch("/api/course-mapping/extras");
+  const data = await res.json();
+
+  fill("batch", data.batches, "batch_name");
+  fill("section", data.sections, "section_name");
+  fill("faculty", data.staff, "staff_name");
+}
+
+function fill(id, arr, label) {
+  const el = document.getElementById(id);
+  el.innerHTML = `<option value="">Select</option>`;
+  arr.forEach(x => {
+    el.innerHTML += `<option value="${x.id}">${x[label]}</option>`;
+  });
+}
+async function saveMapping() {
+  const payload = {
+    programme_id: programme.value,
+    branch_id: branch.value,
+    semester_id: semester.value,
+    regulation_id: regulation.value,
+    course_id: course.value,
+
+    batch_id: batch.value,
+    section_id: section.value,
+    staff_id: faculty.value
+  };
+
+  const res = await fetch("/api/course-mapping/save", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+
+  const out = await res.json();
+  alert(out.message);
+}
