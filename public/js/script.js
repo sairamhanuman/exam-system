@@ -26,16 +26,19 @@ function openCourseMappingPage() {
       const container = document.getElementById("rightContent");
       container.innerHTML = html;
 
-      const oldScript = document.getElementById("courseMappingJS");
-      if (oldScript) oldScript.remove();
+      // remove old script if exists
+      const old = document.getElementById("courseMappingJS");
+      if (old) old.remove();
 
+      // load JS AFTER HTML
       const script = document.createElement("script");
       script.src = "/js/course-mapping.js";
       script.id = "courseMappingJS";
 
       script.onload = () => {
-        // ✅ THIS WAS MISSING
-        initCourseMapping();
+        // ✅ SAFE PLACE
+        loadFilters();   // your existing function
+        loadExtras();    // ✅ THIS WILL WORK NOW
       };
 
       document.body.appendChild(script);
