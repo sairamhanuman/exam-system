@@ -3,9 +3,6 @@ window.onload = () => {
   loadTable();
 };
 
-function openCourseMaster() {
-  window.location.href = "/course-mapping.html";
-}
 
 function fillSelect(id, list, labelFn) {
   const sel = document.getElementById(id);

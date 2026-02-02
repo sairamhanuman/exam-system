@@ -18,9 +18,11 @@ window.onload = () => {
     console.error("❌ home element not found");
   }
 };
-function openCourseMaster() {
+
+function openCourseMappingPage() {
   window.location.href = "/course-mapping.html";
 }
+
 
 function openPreExam() {
   hideAllScreens();
