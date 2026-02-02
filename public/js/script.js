@@ -19,24 +19,29 @@ window.onload = () => {
   }
 };
 
-function openCourseMapping() {
-  hideAllScreens();
-  document.getElementById("courseMapping").style.display = "block";
-}
-
-
 function openCourseMappingPage() {
   fetch("/course-mapping.html")
     .then(res => res.text())
     .then(html => {
-      document.getElementById("rightContent").innerHTML = html;
+      const container = document.getElementById("rightContent");
+      if (!container) {
+        console.error("❌ rightContent not found");
+        return;
+      }
 
-      // VERY IMPORTANT: reload JS manually
+      container.innerHTML = html;
+
+      // load JS after HTML
+      const oldScript = document.getElementById("courseMappingJS");
+      if (oldScript) oldScript.remove();
+
       const script = document.createElement("script");
       script.src = "/js/course-mapping.js";
+      script.id = "courseMappingJS";
       document.body.appendChild(script);
     });
 }
+
 
 
 function openPreExam() {
