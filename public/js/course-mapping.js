@@ -40,6 +40,8 @@ function loadProgrammes() {
     programmeSelect.innerHTML += `<option value="${id}">${name}</option>`;
   });
 }
+
+
 function loadBranches() {
   const programmeId = document.getElementById("programme").value;
   const branchSelect = document.getElementById("branch");
@@ -58,6 +60,8 @@ function loadBranches() {
     branchSelect.innerHTML += `<option value="${id}">${name}</option>`;
   });
 }
+
+
 function loadSemesters() {
   const programmeId = programme.value;
   const branchId = branch.value;
@@ -76,6 +80,30 @@ function loadSemesters() {
     semester.innerHTML += `<option value="${id}">${name}</option>`;
   });
 }
+
+function loadRegulations() {
+  const regulationSelect = document.getElementById("regulation");
+  if (!regulationSelect) return; // 🛡️ safety
+
+  regulationSelect.innerHTML = '<option value="">Select Regulation</option>';
+
+  const semesterId = document.getElementById("semester").value;
+
+  const regs = filterData
+    .filter(r => r.semester_id == semesterId)
+    .map(r => ({
+      id: r.regulation_id,
+      name: r.regulation_name
+    }));
+
+  const unique = [...new Map(regs.map(r => [r.id, r])).values()];
+
+  unique.forEach(r => {
+    regulationSelect.innerHTML +=
+      `<option value="${r.id}">${r.name}</option>`;
+  });
+}
+
 function loadCourses() {
   course.innerHTML = `<option value="">Select Course</option>`;
 
