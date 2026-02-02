@@ -1,0 +1,49 @@
+<div class="course-mapping">
+
+  <h2>Course Mapping vs Faculty</h2>
+
+  <!-- STEP 1 -->
+  <div class="row">
+    <select id="programme"></select>
+    <select id="branch"></select>
+    <select id="semester"></select>
+    <select id="regulation"></select>
+    <select id="course"></select>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="buttons">
+    <button id="newBtn">NEW</button>
+    <button id="saveBtn">SAVE</button>
+    <button id="showBtn">SHOW</button>
+  </div>
+
+  <!-- STEP 3 -->
+  <div id="entryBox" class="row hidden">
+    <select id="batch"></select>
+    <select id="section"></select>
+    <select id="staff"></select>
+  </div>
+
+  <!-- RESULT TABLE -->
+  <table id="mappingTable">
+    <thead>
+      <tr>
+        <th>Programme</th>
+        <th>Branch</th>
+        <th>Semester</th>
+        <th>Regulation</th>
+        <th>Course</th>
+        <th>Batch</th>
+        <th>Section</th>
+        <th>Faculty</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+</div>
+
+<link rel="stylesheet" href="/course-mapping.css">
+<script src="/course-mapping.js"></script>
