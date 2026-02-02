@@ -19,6 +19,10 @@ const ELECTIVE_MAP = {
   "1": "No"
 };
 
+const REPLACEMENT_MAP = {
+  "0": "Yes",
+  "1": "No"
+};
 
 /* ADD */
 router.post("/add", async (req, res) => {
@@ -131,7 +135,8 @@ router.get("/generate-excel", async (req, res) => {
         "Exam Type",
         "Elective (Yes/No)",
         "Elective Name",
-        "Credits",
+        "Replacement (Yes/No)",
+          "Credits",
         "TA",
         "Internal Marks",
         "External Marks",
@@ -203,6 +208,7 @@ router.post("/upload-excel", upload.single("file"), async (req, res) => {
 // =====================
 const examRaw = String(row["Exam Type"]).trim();
 const electiveRaw = String(row["Elective (Yes/No)"]).trim();
+const replacementRaw = String(row["Replacement (Yes/No)"]).trim();
 
 if (!EXAM_TYPE_MAP.hasOwnProperty(examRaw)) {
   return res.status(400).json({
@@ -218,8 +224,16 @@ if (!ELECTIVE_MAP.hasOwnProperty(electiveRaw)) {
   });
 }
 
+if (!REPLACEMENT_MAP.hasOwnProperty(replacementRaw)) {
+  return res.status(400).json({
+    message: `❌ Invalid Elective '${replacementRaw}'. Use:
+0-Yes, 1-No`
+  });
+}
+
 const exam_type = EXAM_TYPE_MAP[examRaw];
 const elective = ELECTIVE_MAP[electiveRaw];
+const replacement = REPLACEMENT_MAP[replacementRaw];
 
       // DUPLICATE CHECK
       const [exists] = await db.query(
@@ -238,9 +252,9 @@ const elective = ELECTIVE_MAP[electiveRaw];
         `INSERT INTO course_master
         (programme_id, branch_id, semester_id, regulation_id,
          course_code, course_name, course_short, exam_type,
-         elective, elective_name, credits, ta,
+         elective, elective_name,replacement, credits, ta,
          internal_marks, external_marks, order_no)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           programme_id,
           branch_id,
@@ -252,6 +266,7 @@ const elective = ELECTIVE_MAP[electiveRaw];
           exam_type,
           elective,
           elective_name,
+          replacement,
           credits || 0,
           ta || 0,
           internal_marks || 0,
