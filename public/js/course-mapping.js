@@ -28,18 +28,6 @@ function loadProgrammes() {
     programmeSelect.innerHTML += `<option value="${id}">${name}</option>`;
   });
 }
-function loadProgrammes() {
-  const programmeSelect = document.getElementById("programme");
-  programmeSelect.innerHTML = `<option value="">Select Programme</option>`;
-
-  const programmes = [...new Map(
-    filterData.map(f => [f.programme_id, f.programme_name])
-  )];
-
-  programmes.forEach(([id, name]) => {
-    programmeSelect.innerHTML += `<option value="${id}">${name}</option>`;
-  });
-}
 
 
 function loadBranches() {
@@ -125,9 +113,9 @@ async function loadExtras() {
   const res = await fetch("/api/course-mapping/extras");
   const data = await res.json();
 
-  fill("batch", data.batches, "batch_name");
-  fill("section", data.sections, "section_name");
-  fill("faculty", data.staff, "staff_name");
+  fill("cm_batch", data.batches, "batch_name");
+  fill("cm_section", data.sections, "section_name");
+  fill("cm_faculty", data.staff, "staff_name");
 }
 
 function fill(id, arr, label) {
@@ -137,6 +125,8 @@ function fill(id, arr, label) {
     el.innerHTML += `<option value="${x.id}">${x[label]}</option>`;
   });
 }
+
+
 async function saveMapping() {
   const payload = {
     programme_id: programme.value,
@@ -145,9 +135,9 @@ async function saveMapping() {
     regulation_id: regulation.value,
     course_id: course.value,
 
-    batch_id: batch.value,
-    section_id: section.value,
-    staff_id: faculty.value
+    batch_id: document.getElementById("cm_batch").value,
+    section_id: document.getElementById("cm_section").value,
+    staff_id: document.getElementById("cm_faculty").value
   };
 
   const res = await fetch("/api/course-mapping/save", {
@@ -159,3 +149,4 @@ async function saveMapping() {
   const out = await res.json();
   alert(out.message);
 }
+
