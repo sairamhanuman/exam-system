@@ -3,47 +3,31 @@ const router = express.Router();
 const db = require("../config/db");
 
 /* ================= FILTERS (FROM course_master ONLY) ================= */
-router.get("/filters", async (req, res) => {
-  try {
-    const [rows] = await db.query(`
-      SELECT DISTINCT
-        cm.programme_id,
-        pm.programme_name,
+router.get("/list", async (req, res) => {
+  const { programme_id, branch_id, semester_id, regulation_id } = req.query;
 
-        cm.branch_id,
-        bm.branch_name,
+  const [rows] = await db.query(`
+    SELECT 
+      c.course_code,
+      c.course_name,
+      b.batch_name,
+      s.section_name,
+      st.staff_name,
+      m.id
+    FROM course_faculty_mapping m
+    JOIN course_master c ON c.id = m.course_id
+    JOIN batch_master b ON b.id = m.batch_id
+    JOIN section_master s ON s.id = m.section_id
+    JOIN staff_master st ON st.id = m.staff_id
+    WHERE
+      m.programme_id = ?
+      AND m.branch_id = ?
+      AND m.semester_id = ?
+      AND m.regulation_id = ?
+      AND m.status = 1
+  `, [programme_id, branch_id, semester_id, regulation_id]);
 
-        cm.semester_id,
-        sm.semester_name,
-
-        cm.regulation_id,
-        rm.regulation_name
-      FROM course_master cm
-      JOIN programme_master pm ON pm.id = cm.programme_id
-      JOIN branch_master bm ON bm.id = cm.branch_id
-      JOIN semester_master sm ON sm.id = cm.semester_id
-      JOIN regulation_master rm ON rm.id = cm.regulation_id
-      WHERE cm.status = 1
-    `);
-
-    const [courses] = await db.query(`
-      SELECT
-        id,
-        programme_id,
-        branch_id,
-        semester_id,
-        regulation_id,
-        course_code,
-        course_name
-      FROM course_master
-      WHERE status = 1
-    `);
-
-    res.json({ filters: rows, courses });
-  } catch (err) {
-    console.error("❌ course-mapping filters error:", err);
-    res.status(500).json(err);
-  }
+  res.json(rows);
 });
 
 /* ================= EXTRAS ================= */

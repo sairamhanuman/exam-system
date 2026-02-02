@@ -19,12 +19,15 @@
 
 <select id="semester" onchange="loadRegulations()"></select>
 
+<button onclick="loadMappingTable()">SHOW</button>
+
+
 <select id="regulation" onchange="loadCourses()"></select>
 
 <select id="course"></select>
 
 
-<h3>New Entry</h3>
+<h3>New Entry for Faculty Mapping </h3>
 
 <div class="row">
   <select id="cm_batch"></select>
@@ -39,6 +42,8 @@
 <table id="mappingTable">
   <thead>
     <tr>
+      <th>Course Code</th>
+      <th>Course Name</th>
       <th>Batch</th>
       <th>Section</th>
       <th>Faculty</th>

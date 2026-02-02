@@ -134,10 +134,9 @@ async function saveMapping() {
     semester_id: semester.value,
     regulation_id: regulation.value,
     course_id: course.value,
-
-    batch_id: document.getElementById("cm_batch").value,
-    section_id: document.getElementById("cm_section").value,
-    staff_id: document.getElementById("cm_faculty").value
+    batch_id: cm_batch.value,
+    section_id: cm_section.value,
+    staff_id: cm_faculty.value
   };
 
   const res = await fetch("/api/course-mapping/save", {
@@ -148,5 +147,41 @@ async function saveMapping() {
 
   const out = await res.json();
   alert(out.message);
+
+  loadMappingTable(); // 🔥 AUTO RELOAD TABLE
 }
 
+async function loadMappingTable() {
+  const params = new URLSearchParams({
+    programme_id: programme.value,
+    branch_id: branch.value,
+    semester_id: semester.value,
+    regulation_id: regulation.value
+  });
+
+  const res = await fetch(`/api/course-mapping/list?${params}`);
+  const data = await res.json();
+
+  const tbody = document.querySelector("#mappingTable tbody");
+  tbody.innerHTML = "";
+
+  if (data.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6">No mappings found</td></tr>`;
+    return;
+  }
+
+  data.forEach(row => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${row.course_code}</td>
+        <td>${row.course_name}</td>
+        <td>${row.batch_name}</td>
+        <td>${row.section_name}</td>
+        <td>${row.staff_name}</td>
+        <td>
+          <button onclick="deleteMapping(${row.id})">❌</button>
+        </td>
+      </tr>
+    `;
+  });
+}
