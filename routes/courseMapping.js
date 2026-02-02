@@ -2,41 +2,46 @@ const express = require("express");
 const router = express.Router();
 const db = require("../config/db");
 
-/* ================= FILTERS FROM course_master ================= */
+/* ================= FILTERS (FROM course_master ONLY) ================= */
 router.get("/filters", async (req, res) => {
   try {
-    const [programmes] = await db.query(`
-      SELECT DISTINCT programme, programme AS programme_name
-      FROM course_master
-      WHERE programme IS NOT NULL
-    `);
+    const [rows] = await db.query(`
+      SELECT DISTINCT
+        cm.programme_id,
+        pm.programme_name,
 
-    const [branches] = await db.query(`
-      SELECT DISTINCT branch, branch AS branch_name
-      FROM course_master
-      WHERE branch IS NOT NULL
-    `);
+        cm.branch_id,
+        bm.branch_name,
 
-    const [semesters] = await db.query(`
-      SELECT DISTINCT semester, semester AS semester_name
-      FROM course_master
-      WHERE semester IS NOT NULL
-    `);
+        cm.semester_id,
+        sm.semester_name,
 
-    const [regulations] = await db.query(`
-      SELECT DISTINCT regulation, regulation AS regulation_name
-      FROM course_master
-      WHERE regulation IS NOT NULL
+        cm.regulation_id,
+        rm.regulation_name
+      FROM course_master cm
+      JOIN programme_master pm ON pm.id = cm.programme_id
+      JOIN branch_master bm ON bm.id = cm.branch_id
+      JOIN semester_master sm ON sm.id = cm.semester_id
+      JOIN regulation_master rm ON rm.id = cm.regulation_id
+      WHERE cm.status = 1
     `);
 
     const [courses] = await db.query(`
-      SELECT id, course_code, course_name
+      SELECT
+        id,
+        programme_id,
+        branch_id,
+        semester_id,
+        regulation_id,
+        course_code,
+        course_name
       FROM course_master
+      WHERE status = 1
     `);
 
-    res.json({ programmes, branches, semesters, regulations, courses });
+    res.json({ filters: rows, courses });
   } catch (err) {
-    console.error("❌ filters error:", err);
+    console.error("❌ course-mapping filters error:", err);
     res.status(500).json(err);
   }
 });
@@ -45,11 +50,11 @@ router.get("/filters", async (req, res) => {
 router.get("/extras", async (req, res) => {
   try {
     const [batches] = await db.query(
-      "SELECT id, batch_name FROM batch_master"
+      "SELECT id, batch_name FROM batch_master WHERE status = 1"
     );
 
     const [sections] = await db.query(
-      "SELECT id, section_name FROM section_master"
+      "SELECT id, section_name FROM section_master WHERE status = 1"
     );
 
     const [staff] = await db.query(`
