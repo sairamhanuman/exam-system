@@ -45,11 +45,10 @@ app.use("/api/course", require("./routes/course"));
 app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
 // course mapping
-console.log(
-  "courseMapping.routes exists:",
-  fs.existsSync("./routes/courseMapping.routes.js")
-);
+
 app.use("/api/course-mapping", require("./routes/courseMapping"));
+
+
 
 // server
 const PORT = process.env.PORT || 3000;

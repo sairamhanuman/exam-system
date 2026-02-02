@@ -19,9 +19,12 @@ window.onload = () => {
   }
 };
 
-function openCourseMappingPage() {
-  window.location.href = "/course-mapping.html";
+function openCourseMapping() {
+  hideAllScreens();
+  document.getElementById("courseMapping").style.display = "block";
 }
+
+
 
 
 function openPreExam() {

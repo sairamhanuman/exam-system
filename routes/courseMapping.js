@@ -2,102 +2,110 @@ const express = require("express");
 const router = express.Router();
 const db = require("../config/db");
 
-/* Filters */
-/* GET FILTER DROPDOWNS*/
-
+// ================= GET FILTER DROPDOWNS =================
 router.get("/filters", (req, res) => {
-  const data = {};
 
-  db.query("SELECT id, programme_name FROM programme_master", (err, programmes) => {
-    if (err) return res.status(500).json(err);
-    data.programmes = programmes;
+  const filters = {};
 
-    db.query("SELECT id, branch_name FROM branch_master", (err, branches) => {
-      if (err) return res.status(500).json(err);
-      data.branches = branches;
+  db.query("SELECT programme_name FROM programme_master", (e1, r1) => {
+    if (e1) return res.status(500).json(e1);
+    filters.programmes = r1;
 
-      db.query("SELECT id, semester_name FROM semester_master", (err, semesters) => {
-        if (err) return res.status(500).json(err);
-        data.semesters = semesters;
+    db.query("SELECT branch_name FROM branch_master", (e2, r2) => {
+      if (e2) return res.status(500).json(e2);
+      filters.branches = r2;
 
-        db.query("SELECT id, regulation FROM regulation_master", (err, regulations) => {
-          if (err) return res.status(500).json(err);
-          data.regulations = regulations;
+      db.query("SELECT semester FROM semester_master", (e3, r3) => {
+        if (e3) return res.status(500).json(e3);
+        filters.semesters = r3;
 
-          res.json(data); // ✅ ONLY JSON
+        db.query("SELECT regulation FROM regulation_master", (e4, r4) => {
+          if (e4) return res.status(500).json(e4);
+          filters.regulations = r4;
+
+          db.query("SELECT course_name FROM course_master", (e5, r5) => {
+            if (e5) return res.status(500).json(e5);
+            filters.courses = r5;
+
+            db.query("SELECT batch FROM batch_master", (e6, r6) => {
+              if (e6) return res.status(500).json(e6);
+              filters.batches = r6;
+
+              db.query("SELECT section FROM section_master", (e7, r7) => {
+                if (e7) return res.status(500).json(e7);
+                filters.sections = r7;
+
+                db.query("SELECT staff_name FROM staff_master", (e8, r8) => {
+                  if (e8) return res.status(500).json(e8);
+                  filters.faculty = r8;
+
+                  res.json(filters);
+                });
+              });
+            });
+          });
         });
       });
     });
   });
 });
 
-/* Dependent dropdowns */
-router.post("/dependent", (req,res) => {
-  const { programme,branch,semester,regulation } = req.body;
+// ================= SAVE MAPPING =================
+router.post("/save", (req, res) => {
+
+  const {
+    programme,
+    branch,
+    semester,
+    regulation,
+    course,
+    batch,
+    section,
+    faculty
+  } = req.body;
+
+  const sql = `
+    INSERT INTO course_faculty_mapping
+    (programme, branch, semester, regulation, course, batch, section, faculty)
+    VALUES (?,?,?,?,?,?,?,?)
+  `;
 
   db.query(
-    `SELECT CONCAT(course_code,' - ',course_name) course
-     FROM course_master
-     WHERE programme=? AND branch=? AND semester=? AND regulation=?`,
-    [programme,branch,semester,regulation],
-    (e,courses) => {
-
-      db.query(`SELECT batch FROM batch_master`, (e,batch) => {
-        db.query(`SELECT section FROM sectionmaster`, (e,section) => {
-          db.query(
-            `SELECT CONCAT(branch,'-',emp_id,'-',emp_name) faculty
-             FROM staff_master WHERE branch=?`,
-            [branch],
-            (e,faculty) => {
-              res.json({
-                courses: courses.map(c=>c.course),
-                batch: batch.map(b=>b.batch),
-                section: section.map(s=>s.section),
-                faculty: faculty.map(f=>f.faculty)
-              });
-            });
-        });
-      });
-    });
-});
-
-/* Save */
-router.post("/save", (req,res) => {
-  db.query(
-    `INSERT INTO course_faculty_mapping
-     (programme,branch,semester,regulation,course,batch,section,faculty)
-     VALUES (?,?,?,?,?,?,?,?)`,
-    Object.values(req.body),
-    () => res.json({msg:"saved"})
+    sql,
+    [programme, branch, semester, regulation, course, batch, section, faculty],
+    (err) => {
+      if (err) return res.status(500).json(err);
+      res.json({ message: "Course mapped successfully" });
+    }
   );
 });
 
-// GET MAPPING LIST
+// ================= LIST MAPPINGS =================
 router.get("/list", (req, res) => {
+
   const sql = `
-    SELECT 
-      cm.id,
-      c.course_code,
-      c.course_name,
-      cm.batch,
-      cm.section,
-      CONCAT(s.branch,' - ',s.employee_id,' - ',s.employee_name) AS faculty
-    FROM course_mapping cm
-    JOIN course_master c ON cm.course_id = c.id
-    JOIN staff_master s ON cm.staff_id = s.id
-    ORDER BY cm.id DESC
+    SELECT id, course, batch, section, faculty
+    FROM course_faculty_mapping
+    ORDER BY id DESC
   `;
 
   db.query(sql, (err, rows) => {
     if (err) return res.status(500).json(err);
-    res.json(rows); // ✅ JSON ONLY
+    res.json(rows);
   });
 });
 
-/* Delete */
-router.delete("/delete/:id", (req,res) => {
-  db.query(`DELETE FROM course_faculty_mapping WHERE id=?`,
-    [req.params.id], () => res.json({msg:"deleted"}));
+// ================= DELETE =================
+router.delete("/:id", (req, res) => {
+
+  db.query(
+    "DELETE FROM course_faculty_mapping WHERE id=?",
+    [req.params.id],
+    (err) => {
+      if (err) return res.status(500).json(err);
+      res.json({ message: "Deleted successfully" });
+    }
+  );
 });
 
 module.exports = router;
