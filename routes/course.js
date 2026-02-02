@@ -126,6 +126,39 @@ router.get("/generate-excel", async (req, res) => {
       return res.status(400).json({ message: "Missing dropdown values" });
     }
 
+    
+    // =============================
+    // GET FILTER NAMES
+    // =============================
+    const [[programme]] = await db.query(
+      "SELECT programme_name FROM programme_master WHERE id=?",
+      [programme_id]
+    );
+
+    const [[branch]] = await db.query(
+      "SELECT branch_name FROM branch_master WHERE id=?",
+      [branch_id]
+    );
+
+    const [[semester]] = await db.query(
+      "SELECT semester_name FROM semester_master WHERE id=?",
+      [semester_id]
+    );
+
+    const [[regulation]] = await db.query(
+      "SELECT regulation_name FROM regulation_master WHERE id=?",
+      [regulation_id]
+    );
+
+    // SAFE FILE NAME (no spaces / symbols)
+    const fileName =
+      `${programme.programme_name}_` +
+      `${branch.branch_name}_` +
+      `Sem${semester.semester_name}_` +
+      `${regulation.regulation_name}.xlsx`
+        .replace(/\s+/g, "_");
+
+
     // Excel header (ORDER MATTERS)
     const data = [
       [
@@ -150,9 +183,9 @@ router.get("/generate-excel", async (req, res) => {
 
     const buffer = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
 
-    res.setHeader(
+      res.setHeader(
       "Content-Disposition",
-      "attachment; filename=course_template.xlsx"
+      `attachment; filename="${fileName}"`
     );
     res.setHeader(
       "Content-Type",
