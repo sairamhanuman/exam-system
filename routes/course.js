@@ -247,6 +247,18 @@ const replacement = REPLACEMENT_MAP[replacementRaw];
         skipped++;
         continue;
       }
+// DUPLICATE ORDER NO CHECK (WITHIN SAME CONTEXT)
+const [orderExists] = await db.query(
+  `SELECT id FROM course_master
+   WHERE programme_id=? AND branch_id=? AND semester_id=?
+   AND regulation_id=? AND order_no=?`,
+  [programme_id, branch_id, semester_id, regulation_id, order_no]
+);
+
+if (orderExists.length > 0) {
+  skipped++;
+  continue;
+}
 
       await db.query(
         `INSERT INTO course_master
