@@ -49,7 +49,7 @@ console.log(
   "courseMapping.routes exists:",
   fs.existsSync("./routes/courseMapping.routes.js")
 );
-app.use("/api/course-mapping", require("./routes/courseMapping.routes"));
+app.use("/api/course-mapping", require("./routes/courseMapping"));
 
 // server
 const PORT = process.env.PORT || 3000;
