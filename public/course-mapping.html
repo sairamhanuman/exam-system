@@ -13,12 +13,16 @@
 <div class="box">
 
   <!-- STEP 1 -->
- <select id="programme" onchange="loadBranches()"></select>
+<select id="programme" onchange="loadBranches()"></select>
 
-  <select id="branch"></select>
-  <select id="semester"></select>
-  <select id="regulation"></select>
-  <select id="course"></select>
+<select id="branch" onchange="loadSemesters()"></select>
+
+<select id="semester" onchange="loadRegulations()"></select>
+
+<select id="regulation" onchange="loadCourses()"></select>
+
+<select id="course"></select>
+
 
   <!-- STEP 2 -->
   <select id="batch"></select>

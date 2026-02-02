@@ -24,23 +24,24 @@ function openCourseMappingPage() {
     .then(res => res.text())
     .then(html => {
       const container = document.getElementById("rightContent");
-      if (!container) {
-        console.error("❌ rightContent not found");
-        return;
-      }
-
       container.innerHTML = html;
 
-      // load JS after HTML
       const oldScript = document.getElementById("courseMappingJS");
       if (oldScript) oldScript.remove();
 
       const script = document.createElement("script");
       script.src = "/js/course-mapping.js";
       script.id = "courseMappingJS";
+
+      script.onload = () => {
+        // ✅ THIS WAS MISSING
+        initCourseMapping();
+      };
+
       document.body.appendChild(script);
     });
 }
+
 
 
 

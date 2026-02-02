@@ -1,9 +1,9 @@
 let filterData = [];
 let courseData = [];
 
-window.onload = async () => {
+async function initCourseMapping() {
   await loadFilters();
-};
+}
 
 async function loadFilters() {
   const res = await fetch("/api/course-mapping/filters");
