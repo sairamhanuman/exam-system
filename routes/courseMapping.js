@@ -3,7 +3,8 @@ const router = express.Router();
 const db = require("../config/db");
 
 /* Filters */
-/ GET FILTER DROPDOWNS
+/* GET FILTER DROPDOWNS*/
+
 router.get("/filters", (req, res) => {
   const data = {};
 
