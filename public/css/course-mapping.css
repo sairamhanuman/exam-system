@@ -1,0 +1,48 @@
+body {
+  font-family: Arial;
+  background: #f2f4f7;
+  padding: 20px;
+}
+
+h2, h3 {
+  text-align: center;
+}
+
+.form-box {
+  width: 650px;
+  background: #fff;
+  padding: 20px;
+  margin: auto;
+  border-radius: 6px;
+}
+
+select {
+  width: 100%;
+  padding: 8px;
+  margin: 6px 0;
+}
+
+.btns {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+button {
+  flex: 1;
+  padding: 8px;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+  margin-top: 20px;
+  background: #fff;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}

@@ -48,7 +48,16 @@ app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
 app.use("/api/course", require("./routes/course"));
 
-// server
+app.use(express.json());
+app.use(express.static("course-mapping"));
+
+const courseMappingRoutes = require("./routes/courseMapping.routes");
+app.use("/api/course-mapping", courseMappingRoutes);
+
+
+
+
+
 const PORT = process.env.PORT || 3000;
 
 // Bind to 0.0.0.0 so Railway can expose it
