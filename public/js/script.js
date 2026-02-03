@@ -154,35 +154,35 @@ function saveProgramme() {
 
 
 /* ================= LOAD PROGRAMME LIST ================= */
-  function loadProgrammes() {
-    fetch("/api/programme/list")
-      .then(res => res.json())
-      .then(data => {
-        const tbody = document.querySelector("#programmeTable tbody");
-        tbody.innerHTML = "";
+function loadProgrammes() {
+  fetch("/api/programme/list")
+    .then(res => res.json())
+    .then(data => {
+      const tbody = document.querySelector("#programmeTable tbody");
+      tbody.innerHTML = "";
 
-        data.forEach((row, i) => {
-          tbody.innerHTML += `
-            <tr>
-              <td>${i + 1}</td>
-              <td>${row.programme_name}</td>
-              <td>
-                <button class="btn purple"
-                  onclick="editProgramme(${row.id}, '${row.programme_name}')">
-                  Edit
-                </button>
-              </td>
-              <td>
-                <button class="btn red"
-                  onclick="deleteProgramme(${row.id})">
-                  Delete
-                </button>
-              </td>
-            </tr>
-          `;
-        });
+      data.forEach((row, i) => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${i + 1}</td>
+            <td>${row.programme_name}</td>
+            <td>
+              <button class="btn purple"
+                onclick="editProgramme(${row.id}, '${row.programme_name}')">
+                Edit
+              </button>
+            </td>
+            <td>
+              <button class="btn red"
+                onclick="deleteProgramme(${row.id})">
+                Delete
+              </button>
+            </td>
+          </tr>
+        `;
       });
-  }
+    });
+}
 
 /* ================= EDIT PROGRAMME LIST ================= */
 function editProgramme(id, name) {
@@ -203,9 +203,9 @@ function deleteProgramme(id) {
   });
 }
 
-  
 /* ================= OPEN BRANCH MASTER ================= */
 let editBranchId = null;
+
 
 function openBranch() {
   hideAllScreens();
@@ -213,6 +213,11 @@ function openBranch() {
   loadProgrammeDropdown();
   loadBranches();
 }
+
+
+
+
+
 function loadProgrammeDropdown() {
   fetch("/api/programme/list")
     .then(res => res.json())
@@ -228,6 +233,7 @@ function loadProgrammeDropdown() {
       });
     });
 }
+
 function saveBranch() {
   const programme_id =
     document.getElementById("branchProgramme").value;
@@ -270,37 +276,26 @@ function saveBranch() {
 }
 
 function loadBranches() {
-  fetch("/api/branch/list")
-    .then(res => res.json())
-    .then(data => {
-      const tbody =
-        document.querySelector("#branchTable tbody");
+  const programmeId = document.getElementById("programme").value;
+  const branchSelect = document.getElementById("branch");
 
-      tbody.innerHTML = "";
+  branchSelect.innerHTML = `<option value="">Select Branch</option>`;
 
-      data.forEach((row, i) => {
-        tbody.innerHTML += `
-          <tr>
-            <td>${i + 1}</td>
-            <td>${row.programme_name}</td>
-            <td>${row.branch_name}</td>
-            <td>
-              <button class="btn purple"
-                onclick="editBranch(${row.id}, ${row.programme_id}, '${row.branch_name}')">
-                Edit
-              </button>
-            </td>
-            <td>
-              <button class="btn red"
-                onclick="deleteBranch(${row.id})">
-                Delete
-              </button>
-            </td>
-          </tr>
-        `;
-      });
-    });
+  const branches = filterData.filter(
+    f => f.programme_id == programmeId
+  );
+
+  const uniqueBranches = [...new Map(
+    branches.map(b => [b.branch_id, b.branch_name])
+  )];
+
+  uniqueBranches.forEach(([id, name]) => {
+    branchSelect.innerHTML += `<option value="${id}">${name}</option>`;
+  });
 }
+
+
+
 function editBranch(id, programme_id, branch_name) {
   editBranchId = id;
 
