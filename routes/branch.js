@@ -27,22 +27,22 @@ router.post("/add", async (req, res) => {
 ====================== */
 router.get("/list", async (req, res) => {
   try {
-    const sql = `
-      SELECT 
+    const [rows] = await db.query(`
+      SELECT
         b.id,
-        b.branch_name,
         b.programme_id,
+        b.branch_name,
         p.programme_name
       FROM branch_master b
-      JOIN programme_master p ON p.id = b.programme_id
+      JOIN programme_master p
+        ON b.programme_id = p.id
       ORDER BY p.programme_name, b.branch_name
-    `;
+    `);
 
-    const [rows] = await db.query(sql);
     res.json(rows);
   } catch (err) {
     console.error(err);
-    res.status(500).json([]);
+    res.json([]);
   }
 });
 
