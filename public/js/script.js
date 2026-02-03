@@ -208,10 +208,14 @@ let editBranchId = null;
 
 
 function openBranch() {
-  hideAllScreens();
-  document.getElementById("branchMaster").style.display = "block";
-  loadProgrammeDropdown();
-  loadBranches();
+  hideAllScreens();  // Hide all screens first
+  document.getElementById("branchMaster").style.display = "block";  // Show branchMaster screen
+  
+  // Wait for the DOM to render before calling loadBranches
+  setTimeout(() => {
+    loadProgrammeDropdown();  // Load the dropdown
+    loadBranches();           // Load the branch data
+  }, 0);  // Timeout of 0 ensures this runs after the DOM is fully rendered
 }
 
 
@@ -279,9 +283,12 @@ function loadBranches() {
   fetch("/api/branch/list")
     .then(res => res.json())
     .then(data => {
-      const tbody = document.querySelector("#branchTable tbody");
-      tbody.innerHTML = "";
+      console.log("Branch data:", data);  // Log the data to check the response
 
+      const tbody = document.querySelector("#branchTable tbody");  // Get the tbody of the table
+      tbody.innerHTML = "";  // Clear any previous rows
+
+      // Loop through the data and populate the table
       data.forEach((row, i) => {
         tbody.innerHTML += `
           <tr>
@@ -303,9 +310,9 @@ function loadBranches() {
           </tr>
         `;
       });
-    });
+    })
+    .catch(err => console.error("Branch load error:", err));  // Log any errors
 }
-
 
 function editBranch(id, programme_id, branch_name) {
   editBranchId = id;
