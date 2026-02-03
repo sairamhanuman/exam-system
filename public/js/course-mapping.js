@@ -179,7 +179,9 @@ async function loadMappingTable() {
         <td>${row.section_name}</td>
         <td>${row.staff_name}</td>
         <td>
-          <button onclick="deleteMapping(${row.id})">❌</button>
+         <button onclick="editMapping(${row.id})">✏️</button>
+<button onclick="deleteMapping(${row.id})">❌</button>
+
         </td>
       </tr>
     `;
@@ -189,3 +191,15 @@ document.addEventListener("DOMContentLoaded", () => {
   initCourseMapping();
   loadExtras();
 });
+async function deleteMapping(id) {
+  if (!confirm("Are you sure you want to delete this mapping?")) return;
+
+  const res = await fetch(`/api/course-mapping/delete/${id}`, {
+    method: "DELETE"
+  });
+
+  const out = await res.json();
+  alert(out.message);
+
+  loadMappingTable();
+}

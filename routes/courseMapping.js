@@ -124,4 +124,54 @@ router.post("/save", async (req, res) => {
   }
 });
 
+/* ===== GET ONE MAPPING ===== */
+router.get("/get/:id", async (req, res) => {
+  const [rows] = await db.query(
+    `SELECT * FROM course_faculty_mapping WHERE id = ?`,
+    [req.params.id]
+  );
+
+  res.json(rows[0]);
+});
+
+
+/* ===== SOFT DELETE ===== */
+router.delete("/delete/:id", async (req, res) => {
+  try {
+    await db.query(
+      `UPDATE course_faculty_mapping 
+       SET status = 0 
+       WHERE id = ?`,
+      [req.params.id]
+    );
+
+    res.json({ message: "Mapping deleted successfully" });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+/* ===== UPDATE ===== */
+router.put("/update/:id", async (req, res) => {
+  try {
+    await db.query(
+      `UPDATE course_faculty_mapping SET
+        batch_id = ?,
+        section_id = ?,
+        staff_id = ?
+       WHERE id = ?`,
+      [
+        req.body.batch_id,
+        req.body.section_id,
+        req.body.staff_id,
+        req.params.id
+      ]
+    );
+
+    res.json({ message: "Mapping updated successfully" });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 module.exports = router;
