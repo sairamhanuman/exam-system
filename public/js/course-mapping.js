@@ -190,7 +190,8 @@ async function loadMappingTable() {
         <td>${row.course_name}</td>
         <td>${row.batch_name}</td>
         <td>${row.section_name}</td>
-        <td>${row.staff_name}</td>
+       <td>${row.faculty_name}</td>
+
         <td>
          <button onclick="editMapping(${row.id})">✏️</button>
 <button onclick="deleteMapping(${row.id})">❌</button>

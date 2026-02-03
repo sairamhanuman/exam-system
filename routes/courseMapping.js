@@ -46,35 +46,41 @@ router.get("/filters", async (req, res) => {
 
 /* ================= FILTERS (FROM course_master ONLY) ================= */
 router.get("/list", async (req, res) => {
-  const { programme_id, branch_id, semester_id, regulation_id } = req.query;
+  try {
+    const { programme_id, branch_id, semester_id, regulation_id } = req.query;
 
-  const [rows] = await db.query(`
-    SELECT 
-      c.course_code,
-      c.course_name,
-      b.batch_name,
-      s.section_name,
-      st.staff_name,
-      CONCAT(
-    st.department, '-', 
-    st.emp_id, '-', 
-    st.staff_name
-  ) AS staff_name,
-    FROM course_faculty_mapping m
-    JOIN course_master c ON c.id = m.course_id
-    JOIN batch_master b ON b.id = m.batch_id
-    JOIN section_master s ON s.id = m.section_id
-    JOIN staff_master st ON st.id = m.staff_id
-    WHERE
-      m.programme_id = ?
-      AND m.branch_id = ?
-      AND m.semester_id = ?
-      AND m.regulation_id = ?
-      AND m.status = 1
-  `, [programme_id, branch_id, semester_id, regulation_id]);
+    const [rows] = await db.query(`
+      SELECT 
+        c.course_code,
+        c.course_name,
+        b.batch_name,
+        s.section_name,
+        CONCAT(
+          st.department, '-', 
+          st.emp_id, '-', 
+          st.staff_name
+        ) AS faculty_name,
+        m.id
+      FROM course_faculty_mapping m
+      JOIN course_master c ON c.id = m.course_id
+      JOIN batch_master b ON b.id = m.batch_id
+      JOIN section_master s ON s.id = m.section_id
+      JOIN staff_master st ON st.id = m.staff_id
+      WHERE
+        m.programme_id = ?
+        AND m.branch_id = ?
+        AND m.semester_id = ?
+        AND m.regulation_id = ?
+        AND m.status = 1
+    `, [programme_id, branch_id, semester_id, regulation_id]);
 
-  res.json(rows);
+    res.json(rows);
+  } catch (err) {
+    console.error("LIST ERROR:", err);
+    res.status(500).json({ error: "Failed to load mappings" });
+  }
 });
+
 
 /* ================= EXTRAS ================= */
 
