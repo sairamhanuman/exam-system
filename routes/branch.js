@@ -32,16 +32,17 @@ router.get("/list", async (req, res) => {
         b.id,
         b.programme_id,
         b.branch_name,
-        p.programme_name
+        COALESCE(p.programme_name, '❌ Missing Programme') AS programme_name
       FROM branch_master b
-      JOIN programme_master p
+      LEFT JOIN programme_master p
         ON b.programme_id = p.id
-      ORDER BY p.programme_name, b.branch_name
+      WHERE b.status = 1
+      ORDER BY b.id
     `);
 
     res.json(rows);
   } catch (err) {
-    console.error(err);
+    console.error("Branch list error:", err);
     res.json([]);
   }
 });
