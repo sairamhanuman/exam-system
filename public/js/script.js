@@ -84,23 +84,7 @@ function openPage(el, page) {
 
   // open screens
   if (page === "programme") openProgramme();
- if (page === "branch") {
-  console.log("👉 Branch menu clicked");
-
-  const section = document.getElementById("branchSection");
-  console.log("👉 Branch section:", section);
-
-  const table = document.getElementById("branchTable");
-  console.log("👉 Branch table:", table);
-
-  if (!table) {
-    console.error("❌ branchTable NOT found in DOM");
-    return;
-  }
-
-  loadBranches();
-}
-
+  if (page === "branch") openBranch();
   if (page === "semester") openSemester();
   if (page === "regulation") openRegulation();
   if (page === "batch") openBatch();
