@@ -769,6 +769,3 @@ function uploadExcel() {
     alert("Excel upload next step");
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  loadBranches();
-});

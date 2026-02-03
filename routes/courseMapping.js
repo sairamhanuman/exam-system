@@ -98,7 +98,7 @@ router.get("/extras", async (req, res) => {
     SELECT id,
     CONCAT(department,'-',emp_id,'-',staff_name) AS staff_name
     FROM staff_master
-    WHERE status='Active' OR status='Relieved'
+    WHERE status='Working' OR status='Relieved'
   `);
 
   res.json({ batches, sections, staff });
