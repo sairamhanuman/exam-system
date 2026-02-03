@@ -2,6 +2,48 @@ const express = require("express");
 const router = express.Router();
 const db = require("../config/db");
 
+
+/* ================= FILTERS ================= */
+router.get("/filters", async (req, res) => {
+  try {
+    const [filters] = await db.query(`
+      SELECT DISTINCT
+        c.programme_id,
+        p.programme_name,
+        c.branch_id,
+        b.branch_name,
+        c.semester_id,
+        s.semester_name,
+        c.regulation_id,
+        r.regulation_name
+      FROM course_master c
+      JOIN programme_master p ON p.id = c.programme_id
+      JOIN branch_master b ON b.id = c.branch_id
+      JOIN semester_master s ON s.id = c.semester_id
+      JOIN regulation_master r ON r.id = c.regulation_id
+      WHERE c.status = 1
+    `);
+
+    const [courses] = await db.query(`
+      SELECT
+        id,
+        programme_id,
+        branch_id,
+        semester_id,
+        regulation_id,
+        course_code,
+        course_name
+      FROM course_master
+      WHERE status = 1
+    `);
+
+    res.json({ filters, courses });
+  } catch (err) {
+    console.error("filters error", err);
+    res.status(500).json(err);
+  }
+});
+
 /* ================= FILTERS (FROM course_master ONLY) ================= */
 router.get("/list", async (req, res) => {
   const { programme_id, branch_id, semester_id, regulation_id } = req.query;

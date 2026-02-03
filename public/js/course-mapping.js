@@ -185,3 +185,7 @@ async function loadMappingTable() {
     `;
   });
 }
+document.addEventListener("DOMContentLoaded", () => {
+  initCourseMapping();
+  loadExtras();
+});
