@@ -84,7 +84,23 @@ function openPage(el, page) {
 
   // open screens
   if (page === "programme") openProgramme();
-  if (page === "branch") openBranch();
+ if (page === "branch") {
+  console.log("👉 Branch menu clicked");
+
+  const section = document.getElementById("branchSection");
+  console.log("👉 Branch section:", section);
+
+  const table = document.getElementById("branchTable");
+  console.log("👉 Branch table:", table);
+
+  if (!table) {
+    console.error("❌ branchTable NOT found in DOM");
+    return;
+  }
+
+  loadBranches();
+}
+
   if (page === "semester") openSemester();
   if (page === "regulation") openRegulation();
   if (page === "batch") openBatch();
@@ -276,24 +292,53 @@ function saveBranch() {
 }
 
 function loadBranches() {
-  const programmeId = document.getElementById("programme").value;
-  const branchSelect = document.getElementById("branch");
+  console.log("🚀 loadBranches() called");
 
-  branchSelect.innerHTML = `<option value="">Select Branch</option>`;
+  fetch("/api/branch/list")
+    .then(res => {
+      console.log("📡 API response status:", res.status);
+      return res.json();
+    })
+    .then(data => {
+      console.log("📦 Branch API data:", data);
 
-  const branches = filterData.filter(
-    f => f.programme_id == programmeId
-  );
+      const tbody = document.querySelector("#branchTable tbody");
+      console.log("📋 branchTable tbody:", tbody);
 
-  const uniqueBranches = [...new Map(
-    branches.map(b => [b.branch_id, b.branch_name])
-  )];
+      if (!tbody) {
+        console.error("❌ tbody NOT found");
+        return;
+      }
 
-  uniqueBranches.forEach(([id, name]) => {
-    branchSelect.innerHTML += `<option value="${id}">${name}</option>`;
-  });
+      tbody.innerHTML = "";
+
+      if (!data || data.length === 0) {
+        console.warn("⚠️ No branch data received");
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4" style="text-align:center">No data found</td>
+          </tr>
+        `;
+        return;
+      }
+
+      data.forEach((row, i) => {
+        console.log("➕ inserting row:", row);
+
+        tbody.innerHTML += `
+          <tr>
+            <td>${i + 1}</td>
+            <td>${row.programme_name}</td>
+            <td>${row.branch_name}</td>
+            <td>—</td>
+          </tr>
+        `;
+      });
+
+      console.log("✅ Branch table rendered");
+    })
+    .catch(err => console.error("❌ Branch fetch error:", err));
 }
-
 
 
 function editBranch(id, programme_id, branch_name) {
