@@ -275,46 +275,25 @@ function saveBranch() {
   }
 }
 
-
 function loadBranches() {
-  fetch("/api/branch/list")
-    .then(res => res.json())
-    .then(data => {
-      console.log("Branch API data:", data); // 🔥 DEBUG LINE
+  const programmeId = document.getElementById("programme").value;
+  const branchSelect = document.getElementById("branch");
 
-      const tbody = document.querySelector("#branchTable tbody");
+  branchSelect.innerHTML = `<option value="">Select Branch</option>`;
 
-      if (!tbody) {
-        console.error("branchTable tbody not found");
-        return;
-      }
+  const branches = filterData.filter(
+    f => f.programme_id == programmeId
+  );
 
-      tbody.innerHTML = "";
+  const uniqueBranches = [...new Map(
+    branches.map(b => [b.branch_id, b.branch_name])
+  )];
 
-      if (data.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="4" class="text-center">No data found</td>
-          </tr>
-        `;
-        return;
-      }
-
-      data.forEach((row, i) => {
-        tbody.innerHTML += `
-          <tr>
-            <td>${i + 1}</td>
-            <td>${row.programme_name}</td>
-            <td>${row.branch_name}</td>
-            <td>
-              <button class="btn btn-sm btn-danger">Delete</button>
-            </td>
-          </tr>
-        `;
-      });
-    })
-    .catch(err => console.error("Branch fetch error:", err));
+  uniqueBranches.forEach(([id, name]) => {
+    branchSelect.innerHTML += `<option value="${id}">${name}</option>`;
+  });
 }
+
 
 
 function editBranch(id, programme_id, branch_name) {
