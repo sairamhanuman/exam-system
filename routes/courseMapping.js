@@ -55,7 +55,11 @@ router.get("/list", async (req, res) => {
       b.batch_name,
       s.section_name,
       st.staff_name,
-      m.id
+      CONCAT(
+    st.department, '-', 
+    st.emp_id, '-', 
+    st.staff_name
+  ) AS staff_name,
     FROM course_faculty_mapping m
     JOIN course_master c ON c.id = m.course_id
     JOIN batch_master b ON b.id = m.batch_id
