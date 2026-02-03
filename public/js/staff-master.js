@@ -4,19 +4,10 @@ console.log("staff js loaded");
 
 function openStaffMaster() {
   hideAllScreens();
-
-  const el = document.getElementById("staffMaster");
-  if (!el) {
-    console.warn("staffMaster not found in DOM");
-    return;
-  }
-
-  el.style.display = "block";
-  loadBranches();
+  document.getElementById("staffMaster").style.display = "block";
+  loadBranches(); 
   loadStaff();
 }
-
-
 
 /* ================= SAVE ================= */
 

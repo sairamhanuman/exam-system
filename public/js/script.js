@@ -3,7 +3,10 @@ function hideAllScreens() {
   screens.forEach(screen => (screen.style.display = 'none'));
 }
 
-
+function hideAllScreens() {
+  const screens = document.querySelectorAll('.screen');
+  screens.forEach(screen => (screen.style.display = 'none'));
+}
 
 window.onload = () => {
   hideAllScreens();
@@ -88,9 +91,6 @@ function openPage(el, page) {
   if (page === "section") openSection();
   if (page === "students") openStudentManagement();
   if (page === "staff") openStaffMaster();
-  if (page === "course") openCourseMaster();
-  if (page === "coursemapping") openCourseMappingPage();
-  
 }
 
 function toggleCourseSubmenu() {
@@ -109,14 +109,7 @@ function toggleCourseSubmenu() {
 /* ================= OPEN PROGRAMME MASTER ================= */
 function openProgramme() {
   hideAllScreens();
- 
-  const el = document.getElementById("programmeMaster");
-  if (!el) {
-    console.warn("programmeMaster not found in DOM");
-    return; // ✅ prevents crash
-  }
-
-  el.style.display = "block";
+  document.getElementById("programmeMaster").style.display = "block";
   loadProgrammes();
 }
 
@@ -216,19 +209,10 @@ let editBranchId = null;
 
 function openBranch() {
   hideAllScreens();
-
-  const el = document.getElementById("branchMaster");
-  if (!el) {
-    console.warn("branchMaster not found in DOM");
-    return; // prevents crash
-  }
-
-  el.style.display = "block";
+  document.getElementById("branchMaster").style.display = "block";
   loadProgrammeDropdown();
   loadBranches();
 }
-
-
 function loadProgrammeDropdown() {
   fetch("/api/programme/list")
     .then(res => res.json())
@@ -339,14 +323,7 @@ let editSemesterId = null;
 /* ================= OPEN SEMESTER ================= */
 function openSemester() {
   hideAllScreens();
-
-  const el = document.getElementById("semesterMaster");
-  if (!el) {
-    console.warn("semesterMaster not found in DOM");
-    return; // prevents crash
-  }
-
-  el.style.display = "block";
+  document.getElementById("semesterMaster").style.display = "block";
   loadSemesters();
 }
 
@@ -457,14 +434,7 @@ let editRegulationId = null;
 
 function openRegulation() {
   hideAllScreens();
-
-  const el = document.getElementById("regulationMaster");
-  if (!el) {
-    console.warn("regulationMaster not found in DOM");
-    return;
-  }
-
-  el.style.display = "block";
+  document.getElementById("regulationMaster").style.display = "block";
   loadRegulations();
 }
 
@@ -574,19 +544,12 @@ function deleteRegulation(id) {
 
 /* ================= OPEN BATCH  ================= */
 let editBatchId = null;
+
 function openBatch() {
   hideAllScreens();
-
-  const el = document.getElementById("batchMaster");
-  if (!el) {
-    console.warn("batchMaster not found in DOM");
-    return;
-  }
-
-  el.style.display = "block";
+  document.getElementById("batchMaster").style.display = "block";
   loadBatches();
 }
-
 
 /* ================= SAVE ================= */
 function saveBatch() {
@@ -694,17 +657,9 @@ function deleteBatch(id) {
 /* ================= OPEN SECTION ================= */
 function openSection() {
   hideAllScreens();
-
-  const el = document.getElementById("sectionMaster");
-  if (!el) {
-    console.warn("sectionMaster not found in DOM");
-    return;
-  }
-
-  el.style.display = "block";
+  document.getElementById("sectionMaster").style.display = "block";
   loadSections();
 }
-
 
 /* ================= SAVE ================= */
 function saveSection() {

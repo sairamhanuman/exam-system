@@ -5,38 +5,28 @@ const API = "/api/course";
 ===================== */
 function openCourseMaster() {
   hideAllScreens();
-
-  const el = document.getElementById("course");
-  if (!el) {
-    console.warn("course screen not found in DOM");
-    return;
-  }
-
-  el.style.display = "block";
+  document.getElementById("course").style.display = "block";
 
   fillSelect("courseProgramme", "/api/programme/list", "programme_name");
   fillSelect("courseSemester", "/api/semester/list", "semester_name");
   fillSelect("courseRegulation", "/api/regulation/list", "regulation_name");
 
+  // ✅ Attach event ONLY when page exists
   const programme = document.getElementById("courseProgramme");
-  const branch = document.getElementById("courseBranch");
-
-  if (programme && branch && !programme.dataset.bound) {
+  if (programme && !programme.dataset.bound) {
     programme.dataset.bound = "true";
 
     programme.addEventListener("change", async e => {
       const res = await fetch("/api/branch/list");
       const data = await res.json();
+      const branch = document.getElementById("courseBranch");
+      if (!branch) return;
 
       branch.innerHTML = `<option value="">Branch</option>`;
-      data
-        .filter(b => b.programme_id == e.target.value)
-        .forEach(b => {
-          const opt = document.createElement("option");
-          opt.value = b.id;
-          opt.textContent = b.branch_name;
-          branch.appendChild(opt);
-        });
+      data.filter(b => b.programme_id == e.target.value)
+          .forEach(b =>
+            branch.innerHTML += `<option value="${b.id}">${b.branch_name}</option>`
+          );
     });
   }
 }
