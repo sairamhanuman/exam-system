@@ -3,6 +3,11 @@ function hideAllScreens() {
   screens.forEach(screen => (screen.style.display = 'none'));
 }
 
+function hideAllScreens() {
+  const screens = document.querySelectorAll('.screen');
+  screens.forEach(screen => (screen.style.display = 'none'));
+}
+
 window.onload = () => {
   hideAllScreens();
 
@@ -149,35 +154,35 @@ function saveProgramme() {
 
 
 /* ================= LOAD PROGRAMME LIST ================= */
-function loadProgrammes() {
-  fetch("/api/programme/list")
-    .then(res => res.json())
-    .then(data => {
-      const tbody = document.querySelector("#programmeTable tbody");
-      tbody.innerHTML = "";
+  function loadProgrammes() {
+    fetch("/api/programme/list")
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.querySelector("#programmeTable tbody");
+        tbody.innerHTML = "";
 
-      data.forEach((row, i) => {
-        tbody.innerHTML += `
-          <tr>
-            <td>${i + 1}</td>
-            <td>${row.programme_name}</td>
-            <td>
-              <button class="btn purple"
-                onclick="editProgramme(${row.id}, '${row.programme_name}')">
-                Edit
-              </button>
-            </td>
-            <td>
-              <button class="btn red"
-                onclick="deleteProgramme(${row.id})">
-                Delete
-              </button>
-            </td>
-          </tr>
-        `;
+        data.forEach((row, i) => {
+          tbody.innerHTML += `
+            <tr>
+              <td>${i + 1}</td>
+              <td>${row.programme_name}</td>
+              <td>
+                <button class="btn purple"
+                  onclick="editProgramme(${row.id}, '${row.programme_name}')">
+                  Edit
+                </button>
+              </td>
+              <td>
+                <button class="btn red"
+                  onclick="deleteProgramme(${row.id})">
+                  Delete
+                </button>
+              </td>
+            </tr>
+          `;
+        });
       });
-    });
-}
+  }
 
 /* ================= EDIT PROGRAMME LIST ================= */
 function editProgramme(id, name) {
@@ -203,14 +208,10 @@ let editBranchId = null;
 
 
 function openBranch() {
-  hideAllScreens();  // Hide all screens first
-  document.getElementById("branchMaster").style.display = "block";  // Show branchMaster screen
-  
-  // Wait for the DOM to render before calling loadBranches
-  setTimeout(() => {
-    loadProgrammeDropdown();  // Load the dropdown
-    loadBranches();           // Load the branch data
-  }, 0);  // Timeout of 0 ensures this runs after the DOM is fully rendered
+  hideAllScreens();
+  document.getElementById("branchMaster").style.display = "block";
+  loadProgrammeDropdown();
+  loadBranches();
 }
 
 
@@ -274,41 +275,37 @@ function saveBranch() {
   }
 }
 
-function loadBranches() {
-  console.log("loadBranches called");  // Confirm function execution
-  fetch("/api/branch/list")
-    .then(res => res.json())
-    .then(data => {
-      console.log("Branch data:", data);  // Log the branch data
-      const tbody = document.querySelector("#branchTable tbody");
-      tbody.innerHTML = "";
 
-      data.forEach((row, i) => {
-        tbody.innerHTML += `
-          <tr>
-            <td>${i + 1}</td>
-            <td>${row.programme_name}</td>
-            <td>${row.branch_name}</td>
-            <td>
-              <button class="btn purple"
-                onclick='editBranch(${row.id}, ${row.programme_id}, ${JSON.stringify(row.branch_name)})'>
-                Edit
-              </button>
-            </td>
-            <td>
-              <button class="btn red"
-                onclick="deleteBranch(${row.id})">
-                Delete
-              </button>
-            </td>
-          </tr>
-        `;
+function loadBranches() {
+    fetch("/api/branch/list")
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.querySelector("#branchTable tbody");
+        tbody.innerHTML = "";
+
+        data.forEach((row, i) => {
+          tbody.innerHTML += `
+            <tr>
+              <td>${i + 1}</td>
+              <td>${row.branch_name}</td>
+              <td>
+                <button class="btn purple"
+                  onclick="editbranch(${row.id}, '${row.branch_name}')">
+                  Edit
+                </button>
+              </td>
+              <td>
+                <button class="btn red"
+                  onclick="deleteBranch(${row.id})">
+                  Delete
+                </button>
+              </td>
+            </tr>
+          `;
+        });
       });
-    })
-    .catch(err => {
-      console.error("Error loading branches:", err);  // Catch any errors and log them
-    });
-}
+  }
+
 
 function editBranch(id, programme_id, branch_name) {
   editBranchId = id;
