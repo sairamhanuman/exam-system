@@ -3,11 +3,6 @@ function hideAllScreens() {
   screens.forEach(screen => (screen.style.display = 'none'));
 }
 
-function hideAllScreens() {
-  const screens = document.querySelectorAll('.screen');
-  screens.forEach(screen => (screen.style.display = 'none'));
-}
-
 window.onload = () => {
   hideAllScreens();
 
@@ -280,15 +275,14 @@ function saveBranch() {
 }
 
 function loadBranches() {
+  console.log("loadBranches called");  // Confirm function execution
   fetch("/api/branch/list")
     .then(res => res.json())
     .then(data => {
-      console.log("Branch data:", data);  // Log the data to check the response
+      console.log("Branch data:", data);  // Log the branch data
+      const tbody = document.querySelector("#branchTable tbody");
+      tbody.innerHTML = "";
 
-      const tbody = document.querySelector("#branchTable tbody");  // Get the tbody of the table
-      tbody.innerHTML = "";  // Clear any previous rows
-
-      // Loop through the data and populate the table
       data.forEach((row, i) => {
         tbody.innerHTML += `
           <tr>
@@ -311,7 +305,9 @@ function loadBranches() {
         `;
       });
     })
-    .catch(err => console.error("Branch load error:", err));  // Log any errors
+    .catch(err => {
+      console.error("Error loading branches:", err);  // Catch any errors and log them
+    });
 }
 
 function editBranch(id, programme_id, branch_name) {
