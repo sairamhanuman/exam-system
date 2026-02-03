@@ -300,7 +300,9 @@ function loadBranches() {
         `;
       });
     });
+
 }
+
 function editBranch(id, programme_id, branch_name) {
   editBranchId = id;
 
