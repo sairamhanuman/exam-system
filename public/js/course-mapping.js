@@ -126,21 +126,31 @@ function fill(id, arr, label) {
   });
 }
 
-
 async function saveMapping() {
   const payload = {
-    programme_id: programme.value,
-    branch_id: branch.value,
-    semester_id: semester.value,
-    regulation_id: regulation.value,
-    course_id: course.value,
     batch_id: cm_batch.value,
     section_id: cm_section.value,
     staff_id: cm_faculty.value
   };
 
-  const res = await fetch("/api/course-mapping/save", {
-    method: "POST",
+  let url = "/api/course-mapping/save";
+  let method = "POST";
+
+  if (editId) {
+    url = `/api/course-mapping/update/${editId}`;
+    method = "PUT";
+  } else {
+    Object.assign(payload, {
+      programme_id: programme.value,
+      branch_id: branch.value,
+      semester_id: semester.value,
+      regulation_id: regulation.value,
+      course_id: course.value
+    });
+  }
+
+  const res = await fetch(url, {
+    method,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
   });
@@ -148,7 +158,10 @@ async function saveMapping() {
   const out = await res.json();
   alert(out.message);
 
-  loadMappingTable(); // 🔥 AUTO RELOAD TABLE
+  editId = null;
+  document.getElementById("saveBtn").innerText = "Save";
+
+  loadMappingTable();
 }
 
 async function loadMappingTable() {

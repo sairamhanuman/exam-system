@@ -18,26 +18,24 @@
 <select id="branch" onchange="loadSemesters()"></select>
 
 <select id="semester" onchange="loadRegulations()"></select>
-
-<button onclick="loadMappingTable()">SHOW</button>
-
-
 <select id="regulation" onchange="loadCourses()"></select>
 
-<select id="course"></select>
+<button onclick="loadMappingTable()">SHOW</button>
 
 
 <h3>New Entry for Faculty Mapping </h3>
 
 <div class="row">
-  <select id="cm_batch"></select>
+  <select id="course"></select>
+
+ <select id="cm_batch"></select>
   <select id="cm_section"></select>
   <select id="cm_faculty"></select>
 </div>
 
 </div>
 
-<button onclick="saveMapping()">SAVE</button>
+<button id="saveBtn" onclick="saveMapping()">Save</button>
 
 <table id="mappingTable">
   <thead>
