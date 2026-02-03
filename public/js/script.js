@@ -109,7 +109,11 @@ function toggleCourseSubmenu() {
 /* ================= OPEN PROGRAMME MASTER ================= */
 function openProgramme() {
   hideAllScreens();
-  document.getElementById("programmeMaster").style.display = "block";
+
+  const el = document.getElementById("programmeMaster");
+  if (!el) return;           // 🛡️ CRITICAL LINE
+
+  el.style.display = "block";
   loadProgrammes();
 }
 
