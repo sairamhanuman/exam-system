@@ -10,29 +10,43 @@ function openCourseMaster() {
   fillSelect("courseProgramme", "/api/programme/list", "programme_name");
   fillSelect("courseSemester", "/api/semester/list", "semester_name");
   fillSelect("courseRegulation", "/api/regulation/list", "regulation_name");
+
+  // ✅ Attach event ONLY when page exists
+  const programme = document.getElementById("courseProgramme");
+  if (programme && !programme.dataset.bound) {
+    programme.dataset.bound = "true";
+
+    programme.addEventListener("change", async e => {
+      const res = await fetch("/api/branch/list");
+      const data = await res.json();
+      const branch = document.getElementById("courseBranch");
+      if (!branch) return;
+
+      branch.innerHTML = `<option value="">Branch</option>`;
+      data.filter(b => b.programme_id == e.target.value)
+          .forEach(b =>
+            branch.innerHTML += `<option value="${b.id}">${b.branch_name}</option>`
+          );
+    });
+  }
 }
 
 /* =====================
    DROPDOWNS
 ===================== */
 async function fillSelect(id, url, key) {
+  const sel = document.getElementById(id);
+  if (!sel) return; // 🛡️ PREVENT CRASH
+
   const res = await fetch(url);
   const data = await res.json();
-  const sel = document.getElementById(id);
+
   sel.innerHTML = `<option value="">Select</option>`;
   data.forEach(d => {
     sel.innerHTML += `<option value="${d.id}">${d[key]}</option>`;
   });
 }
 
-document.getElementById("courseProgramme").addEventListener("change", async e => {
-  const res = await fetch("/api/branch/list");
-  const data = await res.json();
-  const branch = document.getElementById("courseBranch");
-  branch.innerHTML = `<option value="">Branch</option>`;
-  data.filter(b => b.programme_id == e.target.value)
-      .forEach(b => branch.innerHTML += `<option value="${b.id}">${b.branch_name}</option>`);
-});
 
 /* =====================
    SHOW COURSES
