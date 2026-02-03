@@ -276,36 +276,34 @@ function saveBranch() {
 }
 
 function loadBranches() {
-fetch("/api/branch/list")
-.then(res => res.json())
-.then(data => {
-const tbody =
-document.querySelector("#branchTable tbody");
+  fetch("/api/branch/list")
+    .then(res => res.json())
+    .then(data => {
+      const tbody = document.querySelector("#branchTable tbody");
+      tbody.innerHTML = "";
 
-tbody.innerHTML = "";
-
-data.forEach((row, i) => {
-tbody.innerHTML += `
-         <tr>
-           <td>${i + 1}</td>
-           <td>${row.programme_name}</td>
-           <td>${row.branch_name}</td>
-           <td>
-             <button class="btn purple"
-               onclick="editBranch(${row.id}, ${row.programme_id}, '${row.branch_name}')">
-               Edit
-             </button>
-           </td>
-           <td>
-             <button class="btn red"
-               onclick="deleteBranch(${row.id})">
-               Delete
-             </button>
-           </td>
-         </tr>
-       `;
-});
-});
+      data.forEach((row, i) => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${i + 1}</td>
+            <td>${row.programme_name}</td>
+            <td>${row.branch_name}</td>
+            <td>
+              <button class="btn purple"
+                onclick='editBranch(${row.id}, ${row.programme_id}, ${JSON.stringify(row.branch_name)})'>
+                Edit
+              </button>
+            </td>
+            <td>
+              <button class="btn red"
+                onclick="deleteBranch(${row.id})">
+                Delete
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+    });
 }
 
 
