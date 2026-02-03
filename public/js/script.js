@@ -276,24 +276,37 @@ function saveBranch() {
 }
 
 function loadBranches() {
-  const programmeId = document.getElementById("programme").value;
-  const branchSelect = document.getElementById("branch");
+fetch("/api/branch/list")
+.then(res => res.json())
+.then(data => {
+const tbody =
+document.querySelector("#branchTable tbody");
 
-  branchSelect.innerHTML = `<option value="">Select Branch</option>`;
+tbody.innerHTML = "";
 
-  const branches = filterData.filter(
-    f => f.programme_id == programmeId
-  );
-
-  const uniqueBranches = [...new Map(
-    branches.map(b => [b.branch_id, b.branch_name])
-  )];
-
-  uniqueBranches.forEach(([id, name]) => {
-    branchSelect.innerHTML += `<option value="${id}">${name}</option>`;
-  });
+data.forEach((row, i) => {
+tbody.innerHTML += `
+         <tr>
+           <td>${i + 1}</td>
+           <td>${row.programme_name}</td>
+           <td>${row.branch_name}</td>
+           <td>
+             <button class="btn purple"
+               onclick="editBranch(${row.id}, ${row.programme_id}, '${row.branch_name}')">
+               Edit
+             </button>
+           </td>
+           <td>
+             <button class="btn red"
+               onclick="deleteBranch(${row.id})">
+               Delete
+             </button>
+           </td>
+         </tr>
+       `;
+});
+});
 }
-
 
 
 function editBranch(id, programme_id, branch_name) {
