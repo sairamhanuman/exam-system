@@ -1,5 +1,10 @@
-let filterData = [];
-let courseData = [];
+if (!window.filterData) {
+  window.filterData = [];
+  window.courseData = [];
+}
+
+const filterData = window.filterData;
+const courseData = window.courseData;
 
 async function initCourseMapping() {
   await loadFilters();
