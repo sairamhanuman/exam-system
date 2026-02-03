@@ -191,6 +191,24 @@ document.addEventListener("DOMContentLoaded", () => {
   initCourseMapping();
   loadExtras();
 });
+
+
+let editId = null;
+
+async function editMapping(id) {
+  const res = await fetch(`/api/course-mapping/get/${id}`);
+  const data = await res.json();
+
+  editId = id;
+
+  // Only editable fields
+  document.getElementById("cm_batch").value = data.batch_id;
+  document.getElementById("cm_section").value = data.section_id;
+  document.getElementById("cm_faculty").value = data.staff_id;
+
+  document.getElementById("saveBtn").innerText = "Update Mapping";
+}
+
 async function deleteMapping(id) {
   if (!confirm("Are you sure you want to delete this mapping?")) return;
 
