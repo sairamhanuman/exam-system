@@ -3,10 +3,7 @@ function hideAllScreens() {
   screens.forEach(screen => (screen.style.display = 'none'));
 }
 
-function hideAllScreens() {
-  const screens = document.querySelectorAll('.screen');
-  screens.forEach(screen => (screen.style.display = 'none'));
-}
+
 
 window.onload = () => {
   hideAllScreens();
@@ -112,7 +109,14 @@ function toggleCourseSubmenu() {
 /* ================= OPEN PROGRAMME MASTER ================= */
 function openProgramme() {
   hideAllScreens();
-  document.getElementById("programmeMaster").style.display = "block";
+ 
+  const el = document.getElementById("programmeMaster");
+  if (!el) {
+    console.warn("programmeMaster not found in DOM");
+    return; // ✅ prevents crash
+  }
+
+  el.style.display = "block";
   loadProgrammes();
 }
 
@@ -212,10 +216,19 @@ let editBranchId = null;
 
 function openBranch() {
   hideAllScreens();
-  document.getElementById("branchMaster").style.display = "block";
+
+  const el = document.getElementById("branchMaster");
+  if (!el) {
+    console.warn("branchMaster not found in DOM");
+    return; // prevents crash
+  }
+
+  el.style.display = "block";
   loadProgrammeDropdown();
   loadBranches();
 }
+
+
 function loadProgrammeDropdown() {
   fetch("/api/programme/list")
     .then(res => res.json())
@@ -326,7 +339,14 @@ let editSemesterId = null;
 /* ================= OPEN SEMESTER ================= */
 function openSemester() {
   hideAllScreens();
-  document.getElementById("semesterMaster").style.display = "block";
+
+  const el = document.getElementById("semesterMaster");
+  if (!el) {
+    console.warn("semesterMaster not found in DOM");
+    return; // prevents crash
+  }
+
+  el.style.display = "block";
   loadSemesters();
 }
 
@@ -437,7 +457,14 @@ let editRegulationId = null;
 
 function openRegulation() {
   hideAllScreens();
-  document.getElementById("regulationMaster").style.display = "block";
+
+  const el = document.getElementById("regulationMaster");
+  if (!el) {
+    console.warn("regulationMaster not found in DOM");
+    return;
+  }
+
+  el.style.display = "block";
   loadRegulations();
 }
 
@@ -547,12 +574,19 @@ function deleteRegulation(id) {
 
 /* ================= OPEN BATCH  ================= */
 let editBatchId = null;
-
 function openBatch() {
   hideAllScreens();
-  document.getElementById("batchMaster").style.display = "block";
+
+  const el = document.getElementById("batchMaster");
+  if (!el) {
+    console.warn("batchMaster not found in DOM");
+    return;
+  }
+
+  el.style.display = "block";
   loadBatches();
 }
+
 
 /* ================= SAVE ================= */
 function saveBatch() {
@@ -660,9 +694,17 @@ function deleteBatch(id) {
 /* ================= OPEN SECTION ================= */
 function openSection() {
   hideAllScreens();
-  document.getElementById("sectionMaster").style.display = "block";
+
+  const el = document.getElementById("sectionMaster");
+  if (!el) {
+    console.warn("sectionMaster not found in DOM");
+    return;
+  }
+
+  el.style.display = "block";
   loadSections();
 }
+
 
 /* ================= SAVE ================= */
 function saveSection() {

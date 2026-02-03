@@ -6,11 +6,19 @@ let currentHtno = "";
 
 function openStudentManagement() {
   hideAllScreens();
-  document.getElementById("studentManagement").style.display = "block";
+
+  const el = document.getElementById("studentManagement");
+  if (!el) {
+    console.warn("studentManagement not found in DOM");
+    return;
+  }
+
+  el.style.display = "block";
 
   // ✅ load dropdowns AFTER screen is visible
   loadFilters();
 }
+
 
 /* =====================================================
    LOAD ALL DROPDOWNS
