@@ -91,6 +91,9 @@ function openPage(el, page) {
   if (page === "section") openSection();
   if (page === "students") openStudentManagement();
   if (page === "staff") openStaffMaster();
+  if (page === "course") openCourseMaster();
+  if (page === "coursemapping") openCourseMappingPage();
+  
 }
 
 function toggleCourseSubmenu() {
@@ -109,11 +112,7 @@ function toggleCourseSubmenu() {
 /* ================= OPEN PROGRAMME MASTER ================= */
 function openProgramme() {
   hideAllScreens();
-
-  const el = document.getElementById("programmeMaster");
-  if (!el) return;           // 🛡️ CRITICAL LINE
-
-  el.style.display = "block";
+  document.getElementById("programmeMaster").style.display = "block";
   loadProgrammes();
 }
 
