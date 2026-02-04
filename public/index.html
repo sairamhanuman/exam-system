@@ -254,24 +254,37 @@
 
 <!-- BATCH MASTER -->
 
-<div id="batchMaster" class="screen">
+<!-- BRANCH MASTER -->
 
-  <h2>Batch Master</h2>
+<div id="branchMaster" class="screen">
+
+  <h2>Branch Master</h2>
+
+  <select id="branchProgramme"
+          style="width:300px;height:40px;font-size:16px;">
+    <option value="">Select Programme</option>
+  </select>
+
+  <br><br>
+
   <input type="text"
-         id="batchName"
-         placeholder="Enter Batch Name"
+         id="branchName"
+         placeholder="Enter Branch Name"
          style="width:300px;height:40px;font-size:16px;">
 
-  <button class="btn blue" onclick="saveBatch()">Save</button>
+  <br><br>
+
+  <button class="btn blue" onclick="saveBranch()">Save</button>
   <button class="btn red" onclick="openMaster()">Quit</button>
 
   <br><br>
 
-  <table id="batchTable">
+  <table id="branchTable">
     <thead>
       <tr>
         <th>S.No</th>
-        <th>Batch</th>
+        <th>Programme</th>
+        <th>Branch</th>
         <th>Edit</th>
         <th>Delete</th>
       </tr>
@@ -280,6 +293,7 @@
   </table>
 
 </div>
+
 
 
 <!-- SECTION MASTER -->
