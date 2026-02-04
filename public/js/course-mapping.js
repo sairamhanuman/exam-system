@@ -6,29 +6,52 @@ async function initCourseMapping() {
 }
 
 async function loadFilters() {
-  const res = await fetch("/api/course-mapping/filters");
-  const data = await res.json();
+  try {
+    const res = await fetch("/api/course-mapping/filters");
+    const data = await res.json();
 
-  filterData = data.filters;
-  courseData = data.courses;
+    if (!data.filters || !data.courses) {
+      console.error("API response does not include required keys: filters or courses");
+      return;
+    }
 
-  loadProgrammes();
+    filterData = data.filters;
+    courseData = data.courses;
+
+    console.log("✅ Filter Data Loaded:", filterData);
+    console.log("✅ Course Data Loaded:", courseData);
+
+    loadProgrammes();
+  } catch (error) {
+    console.error("Error loading filters:", error);
+  }
 }
 
 
 function loadProgrammes() {
   const programmeSelect = document.getElementById("programme");
+
+  if (!programmeSelect) {
+    console.error("Programme dropdown not found in DOM.");
+    return;
+  }
+
   programmeSelect.innerHTML = `<option value="">Select Programme</option>`;
 
   const programmes = [...new Map(
     filterData.map(f => [f.programme_id, f.programme_name])
   )];
 
+  // Debugging the programmes list
+  console.log("Programmes Data:", programmes);
+
   programmes.forEach(([id, name]) => {
     programmeSelect.innerHTML += `<option value="${id}">${name}</option>`;
   });
-}
 
+  // Add a log to verify dropdown options
+  console.log("Programme dropdown options loaded:", programmeSelect.innerHTML);
+}
 
 function loadBranches() {
   const programmeId = document.getElementById("programme").value;
