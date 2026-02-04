@@ -1,31 +1,22 @@
+// Variables
 let filterData = [];
 let courseData = [];
+let editId = null;
 
+// Initialize the course mapping functionality
 async function initCourseMapping() {
-  await loadFilters();
+  await loadFilters(); // Load filters and populate dropdowns
+  await loadExtras();  // Load additional data (batches, sections, faculties)
 }
-function reinitializeDropdownListeners() {
-  const programme = document.getElementById("programme");
-  if (programme) programme.addEventListener("change", loadBranches);
 
-  const branch = document.getElementById("branch");
-  if (branch) branch.addEventListener("change", loadSemesters);
-
-  const semester = document.getElementById("semester");
-  if (semester) semester.addEventListener("change", loadRegulations);
-
-  const regulation = document.getElementById("regulation");
-  if (regulation) regulation.addEventListener("change", loadCourses);
-
-  console.log("✅ Dropdown listeners reinitialized");
-}
+// Load filter data from the API
 async function loadFilters() {
   try {
     const res = await fetch("/api/course-mapping/filters");
     const data = await res.json();
 
     if (!data.filters || !data.courses) {
-      console.error("API response does not include required keys: filters or courses");
+      console.error("API Response is missing required keys: filters or courses", data);
       return;
     }
 
@@ -35,13 +26,13 @@ async function loadFilters() {
     console.log("✅ Filter Data Loaded:", filterData);
     console.log("✅ Course Data Loaded:", courseData);
 
-    loadProgrammes();
+    loadProgrammes(); // Trigger loading of Programmes (first dropdown)
   } catch (error) {
     console.error("Error loading filters:", error);
   }
 }
 
-
+// Populate Programme Dropdown
 function loadProgrammes() {
   const programmeSelect = document.getElementById("programme");
 
@@ -56,50 +47,49 @@ function loadProgrammes() {
     filterData.map(f => [f.programme_id, f.programme_name])
   )];
 
-  // Debugging the programmes list
-  console.log("Programmes Data:", programmes);
-
   programmes.forEach(([id, name]) => {
     programmeSelect.innerHTML += `<option value="${id}">${name}</option>`;
   });
 
-  // Add a log to verify dropdown options
   console.log("Programme dropdown options loaded:", programmeSelect.innerHTML);
 }
 
+// Populate Branch Dropdown
 function loadBranches() {
   const programmeId = document.getElementById("programme")?.value;
   const branchSelect = document.getElementById("branch");
 
-  if (!branchSelect) {
-    console.error("Branch dropdown element not found in DOM.");
+  if (!programmeId) {
+    console.error("No programme selected. Cannot load branches.");
     return;
   }
 
   branchSelect.innerHTML = `<option value="">Select Branch</option>`;
 
   const branches = filterData.filter(f => f.programme_id == programmeId);
-  console.log("Filtered Branches:", branches);
-
-  const uniqueBranches = [...new Map(branches.map(b => [b.branch_id, b.branch_name]))];
+  const uniqueBranches = [...new Map(
+    branches.map(b => [b.branch_id, b.branch_name])
+  )];
 
   uniqueBranches.forEach(([id, name]) => {
     branchSelect.innerHTML += `<option value="${id}">${name}</option>`;
   });
 
-  // Debug output
   console.log("Branch dropdown options loaded:", branchSelect.innerHTML);
 }
+
+// Populate Semester Dropdown
 function loadSemesters() {
-  const programmeId = programme?.value;
-  const branchId = branch?.value;
+  const programmeId = document.getElementById("programme")?.value;
+  const branchId = document.getElementById("branch")?.value;
+  const semesterSelect = document.getElementById("semester");
 
   if (!programmeId || !branchId) {
-    console.error("Programme or Branch is not selected.");
+    console.error("Programme or Branch is not selected yet.");
     return;
   }
 
-  semester.innerHTML = `<option value="">Select Semester</option>`;
+  semesterSelect.innerHTML = `<option value="">Select Semester</option>`;
 
   const semesters = filterData.filter(f =>
     f.programme_id == programmeId &&
@@ -111,53 +101,71 @@ function loadSemesters() {
   )];
 
   uniqueSemesters.forEach(([id, name]) => {
-    semester.innerHTML += `<option value="${id}">${name}</option>`;
+    semesterSelect.innerHTML += `<option value="${id}">${name}</option>`;
   });
 
-  console.log("Semesters loaded:", uniqueSemesters);
+  console.log("Semester dropdown options loaded:", semesterSelect.innerHTML);
 }
 
-
+// Populate Regulation Dropdown
 function loadRegulations() {
+  const semesterId = document.getElementById("semester")?.value;
   const regulationSelect = document.getElementById("regulation");
-  if (!regulationSelect) return; // 🛡️ safety
+
+  if (!semesterId) {
+    console.error("No semester selected. Cannot load regulations.");
+    return;
+  }
 
   regulationSelect.innerHTML = '<option value="">Select Regulation</option>';
 
-  const semesterId = document.getElementById("semester").value;
-
   const regs = filterData
     .filter(r => r.semester_id == semesterId)
-    .map(r => ({
-      id: r.regulation_id,
-      name: r.regulation_name
-    }));
+    .map(r => ({ id: r.regulation_id, name: r.regulation_name }));
 
-  const unique = [...new Map(regs.map(r => [r.id, r])).values()];
+  const uniqueRegulations = [...new Map(regs.map(r => [r.id, r])).values()];
 
-  unique.forEach(r => {
-    regulationSelect.innerHTML +=
-      `<option value="${r.id}">${r.name}</option>`;
+  uniqueRegulations.forEach(r => {
+    regulationSelect.innerHTML += `<option value="${r.id}">${r.name}</option>`;
   });
+
+  console.log("Regulation dropdown options loaded:", regulationSelect.innerHTML);
 }
 
+// Populate Course Dropdown
 function loadCourses() {
-  course.innerHTML = `<option value="">Select Course</option>`;
+  const programmeId = document.getElementById("programme")?.value;
+  const branchId = document.getElementById("branch")?.value;
+  const semesterId = document.getElementById("semester")?.value;
+  const regulationId = document.getElementById("regulation")?.value;
 
-  const filtered = courseData.filter(c =>
-    c.programme_id == programme.value &&
-    c.branch_id == branch.value &&
-    c.semester_id == semester.value &&
-    c.regulation_id == regulation.value
+  const courseSelect = document.getElementById("course");
+
+  if (!programmeId || !branchId || !semesterId || !regulationId) {
+    console.error("Missing one or more dropdown selections.");
+    return;
+  }
+
+  courseSelect.innerHTML = `<option value="">Select Course</option>`;
+
+  const filteredCourses = courseData.filter(c =>
+    c.programme_id == programmeId &&
+    c.branch_id == branchId &&
+    c.semester_id == semesterId &&
+    c.regulation_id == regulationId
   );
 
-  filtered.forEach(c => {
-    course.innerHTML += `
+  filteredCourses.forEach(c => {
+    courseSelect.innerHTML += `
       <option value="${c.id}">
         ${c.course_code} - ${c.course_name}
       </option>`;
   });
+
+  console.log("Course dropdown options loaded:", courseSelect.innerHTML);
 }
+
+// Load Additional Data (e.g., Batch, Section, Faculty)
 async function loadExtras() {
   const res = await fetch("/api/course-mapping/extras");
   const data = await res.json();
@@ -165,15 +173,30 @@ async function loadExtras() {
   fill("cm_batch", data.batches, "batch_name");
   fill("cm_section", data.sections, "section_name");
   fill("cm_faculty", data.staff, "staff_name");
+
+  console.log("✅ Extras loaded:", data);
 }
 
 function fill(id, arr, label) {
   const el = document.getElementById(id);
+  if (!el) {
+    console.error(`Element with ID '${id}' not found.`);
+    return;
+  }
+
   el.innerHTML = `<option value="">Select</option>`;
   arr.forEach(x => {
     el.innerHTML += `<option value="${x.id}">${x[label]}</option>`;
   });
+
+  console.log(`Dropdown '${id}' options loaded:`, el.innerHTML);
 }
+
+// Initialize the page
+document.addEventListener("DOMContentLoaded", () => {
+  initCourseMapping();
+  loadExtras();
+});
 
 async function saveMapping() {
   const payload = {
