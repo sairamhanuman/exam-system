@@ -4,7 +4,21 @@ let courseData = [];
 async function initCourseMapping() {
   await loadFilters();
 }
+function reinitializeDropdownListeners() {
+  const programme = document.getElementById("programme");
+  if (programme) programme.addEventListener("change", loadBranches);
 
+  const branch = document.getElementById("branch");
+  if (branch) branch.addEventListener("change", loadSemesters);
+
+  const semester = document.getElementById("semester");
+  if (semester) semester.addEventListener("change", loadRegulations);
+
+  const regulation = document.getElementById("regulation");
+  if (regulation) regulation.addEventListener("change", loadCourses);
+
+  console.log("✅ Dropdown listeners reinitialized");
+}
 async function loadFilters() {
   try {
     const res = await fetch("/api/course-mapping/filters");
@@ -54,28 +68,37 @@ function loadProgrammes() {
 }
 
 function loadBranches() {
-  const programmeId = document.getElementById("programme").value;
+  const programmeId = document.getElementById("programme")?.value;
   const branchSelect = document.getElementById("branch");
+
+  if (!branchSelect) {
+    console.error("Branch dropdown element not found in DOM.");
+    return;
+  }
 
   branchSelect.innerHTML = `<option value="">Select Branch</option>`;
 
-  const branches = filterData.filter(
-    f => f.programme_id == programmeId
-  );
+  const branches = filterData.filter(f => f.programme_id == programmeId);
+  console.log("Filtered Branches:", branches);
 
-  const uniqueBranches = [...new Map(
-    branches.map(b => [b.branch_id, b.branch_name])
-  )];
+  const uniqueBranches = [...new Map(branches.map(b => [b.branch_id, b.branch_name]))];
 
   uniqueBranches.forEach(([id, name]) => {
     branchSelect.innerHTML += `<option value="${id}">${name}</option>`;
   });
+
+  // Debug output
+  console.log("Branch dropdown options loaded:", branchSelect.innerHTML);
 }
-
-
 function loadSemesters() {
-  const programmeId = programme.value;
-  const branchId = branch.value;
+  const programmeId = programme?.value;
+  const branchId = branch?.value;
+
+  if (!programmeId || !branchId) {
+    console.error("Programme or Branch is not selected.");
+    return;
+  }
+
   semester.innerHTML = `<option value="">Select Semester</option>`;
 
   const semesters = filterData.filter(f =>
@@ -83,14 +106,17 @@ function loadSemesters() {
     f.branch_id == branchId
   );
 
-  const uniqueSem = [...new Map(
+  const uniqueSemesters = [...new Map(
     semesters.map(s => [s.semester_id, s.semester_name])
   )];
 
-  uniqueSem.forEach(([id, name]) => {
+  uniqueSemesters.forEach(([id, name]) => {
     semester.innerHTML += `<option value="${id}">${name}</option>`;
   });
+
+  console.log("Semesters loaded:", uniqueSemesters);
 }
+
 
 function loadRegulations() {
   const regulationSelect = document.getElementById("regulation");
