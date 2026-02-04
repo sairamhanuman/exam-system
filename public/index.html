@@ -161,21 +161,31 @@
 </div>
 
 <!-- BRANCH MASTER -->
-<div id="branchMaster" class="screen">
+ <!-- BRANCH MASTER -->
+
+<div id="branchMaster" class="screen" style="display:none;">
 
   <h2>Branch Master</h2>
 
-  <select id="branchProgramme"></select>
+  <select id="branchProgramme" style="width:300px;height:40px;">
+    <option value="">Select Programme</option>
+  </select>
 
-  <input type="text" id="branchName"
-         placeholder="Enter Branch Name">
+  <br><br>
+
+  <input type="text"
+         id="branchName"
+         placeholder="Enter Branch Name"
+         style="width:300px;height:40px;">
+
+  <br><br>
 
   <button class="btn blue" onclick="saveBranch()">Save</button>
   <button class="btn red" onclick="openMaster()">Quit</button>
 
   <br><br>
 
-  <table id="branchTable">
+  <table id="branchTable" border="1" cellpadding="8">
     <thead>
       <tr>
         <th>S.No</th>
@@ -254,38 +264,24 @@
 
 <!-- BATCH MASTER -->
 
-<!-- BRANCH MASTER -->
+<div id="batchMaster" class="screen">
 
-<!-- BRANCH MASTER -->
-
-<div id="branchMaster" class="screen" style="display:none;">
-
-  <h2>Branch Master</h2>
-
-  <select id="branchProgramme" style="width:300px;height:40px;">
-    <option value="">Select Programme</option>
-  </select>
-
-  <br><br>
-
+  <h2>Batch Master</h2>
   <input type="text"
-         id="branchName"
-         placeholder="Enter Branch Name"
-         style="width:300px;height:40px;">
+         id="batchName"
+         placeholder="Enter Batch Name"
+         style="width:300px;height:40px;font-size:16px;">
 
-  <br><br>
-
-  <button class="btn blue" onclick="saveBranch()">Save</button>
+  <button class="btn blue" onclick="saveBatch()">Save</button>
   <button class="btn red" onclick="openMaster()">Quit</button>
 
   <br><br>
 
-  <table id="branchTable" border="1" cellpadding="8">
+  <table id="batchTable">
     <thead>
       <tr>
         <th>S.No</th>
-        <th>Programme</th>
-        <th>Branch</th>
+        <th>Batch</th>
         <th>Edit</th>
         <th>Delete</th>
       </tr>
@@ -294,7 +290,6 @@
   </table>
 
 </div>
-
 
 
 <!-- SECTION MASTER -->
