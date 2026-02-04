@@ -131,14 +131,11 @@
   <button class="btn red" onclick="backToPreExam()">Quit</button>
 </div>
 
-
-<!-- PROGRAMME MASTER -->
-<div id="programmeMaster" class="screen">
-
+<!-- ================= PROGRAMME MASTER ================= -->
+<div id="programmeMaster" class="screen" style="display:none">
   <h2>Programme Master</h2>
 
-  <input type="text" id="programmeName"
-         placeholder="Enter Programme Name">
+  <input type="text" id="programmeName" placeholder="Enter Programme Name">
 
   <button class="btn blue" onclick="saveProgramme()">Save</button>
   <button class="btn red" onclick="openMaster()">Quit</button>
@@ -147,24 +144,19 @@
 
   <table id="programmeTable">
     <thead>
-  <tr>
-    <th>S.No</th>
-    <th>Programme Name</th>
-    <th>Edit</th>
-    <th>Delete</th>
-  </tr>
-</thead>
-
+      <tr>
+        <th>S.No</th>
+        <th>Programme Name</th>
+        <th>Edit</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
     <tbody></tbody>
   </table>
-
 </div>
 
-<!-- BRANCH MASTER -->
- <!-- BRANCH MASTER -->
-
-<div id="branchMaster" class="screen" style="display:none;">
-
+<!-- ================= BRANCH MASTER ================= -->
+<div id="branchMaster" class="screen" style="display:none">
   <h2>Branch Master</h2>
 
   <select id="branchProgramme" style="width:300px;height:40px;">
@@ -172,19 +164,13 @@
   </select>
 
   <br><br>
-
-  <input type="text"
-         id="branchName"
-         placeholder="Enter Branch Name"
-         style="width:300px;height:40px;">
+  <input type="text" id="branchName" placeholder="Enter Branch Name" style="width:300px;height:40px;">
 
   <br><br>
-
   <button class="btn blue" onclick="saveBranch()">Save</button>
   <button class="btn red" onclick="openMaster()">Quit</button>
 
   <br><br>
-
   <table id="branchTable" border="1" cellpadding="8">
     <thead>
       <tr>
@@ -197,27 +183,18 @@
     </thead>
     <tbody></tbody>
   </table>
-
-</div>
 </div>
 
-<!-- SEMESTER MASTER -->
-<!-- SEMESTER MASTER -->
-
-<div id="semesterMaster" class="screen">
-
+<!-- ================= SEMESTER MASTER ================= -->
+<div id="semesterMaster" class="screen" style="display:none">
   <h2>Semester Master</h2>
 
-  <input type="text"
-         id="semesterName"
-         placeholder="Enter Semester (I, II, III...)"
-         style="width:260px;height:40px;font-size:16px;">
+  <input type="text" id="semesterName" placeholder="Enter Semester (I, II, III...)" style="width:260px;height:40px;font-size:16px;">
 
   <button class="btn blue" onclick="saveSemester()">Save</button>
   <button class="btn red" onclick="openMaster()">Quit</button>
 
   <br><br>
-
   <table id="semesterTable">
     <thead>
       <tr>
@@ -229,25 +206,18 @@
     </thead>
     <tbody></tbody>
   </table>
-
 </div>
 
-<!-- REGULATION MASTER -->
-
-<div id="regulationMaster" class="screen">
-
+<!-- ================= REGULATION MASTER ================= -->
+<div id="regulationMaster" class="screen" style="display:none">
   <h2>Regulation Master</h2>
 
-  <input type="text"
-         id="regulationName"
-         placeholder="Enter Regulation (URR-18, URR-22)"
-         style="width:300px;height:40px;font-size:16px;">
+  <input type="text" id="regulationName" placeholder="Enter Regulation (URR-18, URR-22)" style="width:300px;height:40px;font-size:16px;">
 
   <button class="btn blue" onclick="saveRegulation()">Save</button>
   <button class="btn red" onclick="openMaster()">Quit</button>
 
   <br><br>
-
   <table id="regulationTable">
     <thead>
       <tr>
@@ -259,25 +229,17 @@
     </thead>
     <tbody></tbody>
   </table>
-
 </div>
 
-
-<!-- BATCH MASTER -->
-
-<div id="batchMaster" class="screen">
-
+<!-- ================= BATCH MASTER ================= -->
+<div id="batchMaster" class="screen" style="display:none">
   <h2>Batch Master</h2>
-  <input type="text"
-         id="batchName"
-         placeholder="Enter Batch Name"
-         style="width:300px;height:40px;font-size:16px;">
+  <input type="text" id="batchName" placeholder="Enter Batch Name" style="width:300px;height:40px;font-size:16px;">
 
   <button class="btn blue" onclick="saveBatch()">Save</button>
   <button class="btn red" onclick="openMaster()">Quit</button>
 
   <br><br>
-
   <table id="batchTable">
     <thead>
       <tr>
@@ -289,26 +251,18 @@
     </thead>
     <tbody></tbody>
   </table>
-
 </div>
 
-
-<!-- SECTION MASTER -->
-
-<div id="sectionMaster" class="screen">
-
+<!-- ================= SECTION MASTER ================= -->
+<div id="sectionMaster" class="screen" style="display:none">
   <h2>Section Master</h2>
 
-  <input type="text"
-         id="sectionName"
-         placeholder="Enter Section (A, B, C...)"
-         style="width:260px;height:40px;font-size:16px;">
+  <input type="text" id="sectionName" placeholder="Enter Section (A, B, C...)" style="width:260px;height:40px;font-size:16px;">
 
   <button class="btn blue" onclick="saveSection()">Save</button>
   <button class="btn red" onclick="openMaster()">Quit</button>
 
   <br><br>
-
   <table id="sectionTable">
     <thead>
       <tr>
@@ -320,7 +274,6 @@
     </thead>
     <tbody></tbody>
   </table>
-
 </div>
 
 <!-- ================= STUDENT MANAGEMENT ================= -->
