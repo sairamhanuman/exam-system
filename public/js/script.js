@@ -216,7 +216,8 @@ function openBranch() {
   loadBranches();
 
   // Attach event listener here
-  const showBtn = document.getElementById("btnBranchShow");
+const showBtn = document.getElementById("btnShowBranches");
+
   if (showBtn) {
     showBtn.onclick = () => {
       const programmeId = document.getElementById("branchProgramme").value;
