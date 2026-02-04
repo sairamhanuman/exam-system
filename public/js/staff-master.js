@@ -1,176 +1,187 @@
-let editStaffId = null;
+const express = require("express");
+const router = express.Router();
+const db = require("../config/db");
 
-console.log("staff js loaded");
 
-function openStaffMaster() {
-  hideAllScreens();
-  document.getElementById("staffMaster").style.display = "block";
-  loadBranches(); 
-  loadStaff();
-}
+/* ================= FILTERS ================= */
+router.get("/filters", async (req, res) => {
+  try {
+    const [filters] = await db.query(`
+      SELECT DISTINCT
+        c.programme_id,
+        p.programme_name,
+        c.branch_id,
+        b.branch_name,
+        c.semester_id,
+        s.semester_name,
+        c.regulation_id,
+        r.regulation_name
+      FROM course_master c
+      JOIN programme_master p ON p.id = c.programme_id
+      JOIN branch_master b ON b.id = c.branch_id
+      JOIN semester_master s ON s.id = c.semester_id
+      JOIN regulation_master r ON r.id = c.regulation_id
+      WHERE c.status = 1
+    `);
 
-/* ================= SAVE ================= */
+    const [courses] = await db.query(`
+      SELECT
+        id,
+        programme_id,
+        branch_id,
+        semester_id,
+        regulation_id,
+        course_code,
+        course_name
+      FROM course_master
+      WHERE status = 1
+    `);
 
-function saveStaff() {
-
-  const formData = new FormData();
-
-  formData.append("emp_id", emp_id.value);
-  formData.append("staff_name", staff_name.value);
-  formData.append("department", department.value);
-  formData.append("designation", designation.value);
-  formData.append("experience", experience.value);
-  formData.append("mobile", mobile.value);
-  formData.append("email", email.value);
-  formData.append("gender", gender.value);
-  formData.append("doj", doj.value);
-
-  formData.append("bank_name", bank_name.value);
-  formData.append("bank_branch", bank_branch.value);
-  formData.append("account_no", account_no.value);
-  formData.append("ifsc_code", ifsc_code.value);
-
-  formData.append("pan_no", pan_no.value);
-  formData.append("status", staff_status.value || "Working");
-
-  // ✅ send old photo if edit
-  if (editStaffId && !photo.files[0]) {
-    formData.append("old_photo", photo.dataset.old);
+    res.json({ filters, courses });
+  } catch (err) {
+    console.error("filters error", err);
+    res.status(500).json(err);
   }
-
-  // ✅ new photo
-  if (photo.files[0]) {
-    formData.append("photo", photo.files[0]);
-  }
-
-  const url = editStaffId
-    ? "/api/staff/update/" + editStaffId
-    : "/api/staff/add";
-
-  fetch(url, {
-    method: "POST",
-    body: formData
-  })
-    .then(res => res.json())
-    .then(() => {
-      clearStaff();
-      loadStaff();
-      editStaffId = null;
-      photo.dataset.old = "";
-    });
-}
-
-/* ================= LOAD ================= */
-function loadStaff() {
-  fetch("/api/staff/list")
-    .then(res => res.json())
-    .then(data => {
-
-      console.log("STAFF DATA:", data);
-
-      const tbody = document.querySelector("#staffTable tbody");
-      tbody.innerHTML = "";
-
-      if (!Array.isArray(data)) {
-        console.error("Staff list error:", data);
-        return;
-      }
-
-      data.forEach((s, i) => {
-  // Escape single quotes in strings to avoid JS errors
-  const staffData = JSON.stringify(s).replace(/'/g, "\\'");
-  
-  tbody.innerHTML += `
-    <tr>
-      <td>${i + 1}</td>
-      <td>${s.emp_id}</td>
-      <td>${s.staff_name}</td>
-      <td>${s.department}</td>
-      <td>${s.designation}</td>
-      <td>
-        <img src="/uploads/staff/${s.photo || 'no-photo.png'}"
-             class="staff-photo"
-             onerror="this.src='/uploads/staff/no-photo.png'">
-      </td>
-      <td>
-       <button class="btn-sm btn-edit" onclick='editStaff(${staffData})'>
-  Edit
-</button>
-      </td>
-      <td>
-    <button class="btn-sm btn-delete" onclick="deleteStaff(${s.id})">
-  Delete
-</button>
-      </td>
-    </tr>
-  `;
 });
-    })
-    .catch(err => console.error("Fetch error:", err));
-}
+
+/* ================= FILTERS (FROM course_master ONLY) ================= */
+router.get("/list", async (req, res) => {
+  try {
+    const { programme_id, branch_id, semester_id, regulation_id } = req.query;
+
+    const [rows] = await db.query(`
+      SELECT 
+        c.course_code,
+        c.course_name,
+        b.batch_name,
+        s.section_name,
+        CONCAT(
+          st.department, '-', 
+          st.emp_id, '-', 
+          st.staff_name
+        ) AS faculty_name,
+        m.id
+      FROM course_faculty_mapping m
+      JOIN course_master c ON c.id = m.course_id
+      JOIN batch_master b ON b.id = m.batch_id
+      JOIN section_master s ON s.id = m.section_id
+      JOIN staff_master st ON st.id = m.staff_id
+      WHERE
+        m.programme_id = ?
+        AND m.branch_id = ?
+        AND m.semester_id = ?
+        AND m.regulation_id = ?
+        AND m.status = 1
+    `, [programme_id, branch_id, semester_id, regulation_id]);
+
+    res.json(rows);
+  } catch (err) {
+    console.error("LIST ERROR:", err);
+    res.status(500).json({ error: "Failed to load mappings" });
+  }
+});
 
 
+/* ================= EXTRAS ================= */
 
-/* ================= EDIT ================= */
+/* ===== EXTRAS ===== */
+router.get("/extras", async (req, res) => {
+  const [batches] = await db.query(
+    "SELECT id, batch_name FROM batch_master WHERE status=1"
+  );
 
-function editStaff(s) {
+  const [sections] = await db.query(
+    "SELECT id, section_name FROM section_master WHERE status=1"
+  );
 
-  editStaffId = s.id;
+  const [staff] = await db.query(`
+    SELECT id,
+    CONCAT(department,'-',emp_id,'-',staff_name) AS staff_name
+    FROM staff_master
+    WHERE status='Working' OR status='Relieved'
+  `);
 
-  emp_id.value = s.emp_id;
-  staff_name.value = s.staff_name;
-  loadBranches(s.department);
-  designation.value = s.designation;
-  experience.value = s.experience;
-  mobile.value = s.mobile;
-  email.value = s.email;
-  gender.value = s.gender;
-  doj.value = s.doj?.substring(0, 10);
+  res.json({ batches, sections, staff });
+});
 
-  bank_name.value = s.bank_name;
-  bank_branch.value = s.bank_branch;
-  account_no.value = s.account_no;
-  ifsc_code.value = s.ifsc_code;
+/* ===== SAVE ===== */
+router.post("/save", async (req, res) => {
+  try {
+    await db.query(
+      `INSERT INTO course_faculty_mapping
+      (programme_id, branch_id, semester_id, regulation_id,
+       course_id, batch_id, section_id, staff_id)
+       VALUES (?,?,?,?,?,?,?,?)`,
+      [
+        req.body.programme_id,
+        req.body.branch_id,
+        req.body.semester_id,
+        req.body.regulation_id,
+        req.body.course_id,
+        req.body.batch_id,
+        req.body.section_id,
+        req.body.staff_id
+      ]
+    );
 
-  pan_no.value = s.pan_no;
-  staff_status.value = s.status;
+    res.json({ message: "Mapping saved successfully" });
+  } catch (err) {
+    if (err.code === "ER_DUP_ENTRY") {
+      res.json({ message: "Already mapped" });
+    } else {
+      res.status(500).json(err);
+    }
+  }
+});
 
-  // ✅ store old photo
-  photo.dataset.old = s.photo || "";
-}
+/* ===== GET ONE MAPPING ===== */
+router.get("/get/:id", async (req, res) => {
+  const [rows] = await db.query(
+    `SELECT * FROM course_faculty_mapping WHERE id = ?`,
+    [req.params.id]
+  );
 
-/* ================= DELETE ================= */
+  res.json(rows[0]);
+});
 
-function deleteStaff(id) {
-  if (!confirm("Delete staff?")) return;
 
-  fetch("/api/staff/delete/" + id, { method: "DELETE" })
-    .then(() => loadStaff());
-}
+/* ===== SOFT DELETE ===== */
+router.delete("/delete/:id", async (req, res) => {
+  try {
+    await db.query(
+      `UPDATE course_faculty_mapping 
+       SET status = 0 
+       WHERE id = ?`,
+      [req.params.id]
+    );
 
-function clearStaff() {
-  document.querySelectorAll("#staffMaster input")
-    .forEach(i => i.value = "");
-}
-function loadBranches(selected = "") {
-  fetch("/api/branch/list")
-    .then(res => res.json())
-    .then(data => {
-      department.innerHTML = `<option value="">-- Select Branch --</option>`;
+    res.json({ message: "Mapping deleted successfully" });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
-      data.forEach(b => {
-        const opt = document.createElement("option");
+/* ===== UPDATE ===== */
+router.put("/update/:id", async (req, res) => {
+  try {
+    await db.query(
+      `UPDATE course_faculty_mapping SET
+        batch_id = ?,
+        section_id = ?,
+        staff_id = ?
+       WHERE id = ?`,
+      [
+        req.body.batch_id,
+        req.body.section_id,
+        req.body.staff_id,
+        req.params.id
+      ]
+    );
 
-        // store branch_name in staff table
-        opt.value = b.branch_name;  // saved in staff table
-        opt.textContent = b.branch_name; // shown in dropdown
+    res.json({ message: "Mapping updated successfully" });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
-        if (b.branch_name === selected) {
-          opt.selected = true;
-        }
-
-        department.appendChild(opt);
-      });
-    })
-    .catch(err => console.error(err));
-}
+module.exports = router;

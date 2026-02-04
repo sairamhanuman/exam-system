@@ -768,4 +768,3 @@ function generateExcel() {
 function uploadExcel() {
     alert("Excel upload next step");
 }
-
