@@ -207,51 +207,28 @@ function deleteProgramme(id) {
 /* ================= OPEN BRANCH MASTER ================= */
 
 let editBranchId = null;
-
 function openBranch() {
   console.log("openBranch called");
   hideAllScreens();
   document.getElementById("branchMaster").style.display = "block";
+
   loadProgrammeDropdown();
-  loadBranches();
+  loadBranches(); // load all initially
 
-  // Attach event listener here
-const showBtn = document.getElementById("btnShowBranches");
-
-  if (showBtn) {
-    showBtn.onclick = () => {
+  // Attach Show button listener here, after DOM exists
+  const btn = document.getElementById("btnShowBranches");
+  if (btn) {
+    btn.addEventListener("click", () => {
       const programmeId = document.getElementById("branchProgramme").value;
       console.log("Show clicked for programmeId:", programmeId);
 
-      fetch(`/api/branch/list?programmeId=${programmeId}`)
-        .then(res => res.json())
-        .then(data => {
-          console.log("Branches returned:", data); // debug
-
-          const tbody = document.querySelector("#branchTable123 tbody");
-          tbody.innerHTML = "";
-
-          data.forEach((row, i) => {
-            tbody.innerHTML += `
-              <tr>
-                <td>${i + 1}</td>
-                <td>${row.programme_name}</td>
-                <td>${row.branch_name}</td>
-                <td>
-                  <button onclick="editBranch(${row.id}, ${row.programme_id}, '${row.branch_name}')">Edit</button>
-                </td>
-                <td>
-                  <button onclick="deleteBranch(${row.id})">Delete</button>
-                </td>
-              </tr>
-            `;
-          });
-        });
-    };
+      loadBranches(programmeId); // call with filter
+    });
   } else {
-    console.error("btnBranchShow NOT FOUND");
+    console.error("btnShowBranches not found in DOM");
   }
 }
+
 
 /* ================= LOAD PROGRAMME DROPDOWN ================= */
 
@@ -301,6 +278,7 @@ function saveBranch() {
 }
 
 /* ================= LOAD BRANCH TABLE ================= */
+
 function loadBranches(programmeId = null) {
   fetch("/api/branch/list")
     .then(res => res.json())
@@ -317,6 +295,13 @@ function loadBranches(programmeId = null) {
         data = data.filter(row => row.programme_id == programmeId);
       }
 
+      // ✅ Show message if no branches
+      if (data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5">No branches found</td></tr>`;
+        return;
+      }
+
+      // Render rows
       data.forEach((row, i) => {
         tbody.innerHTML += `
           <tr>
