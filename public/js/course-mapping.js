@@ -126,6 +126,42 @@ function fill(id, arr, label) {
   });
 }
 
+// Reinitialize dropdown event listeners
+function reinitializeDropdownListeners() {
+  const programme = document.getElementById("programme");
+  if (programme) {
+    programme.onchange = loadBranches;
+  }
+
+  const branch = document.getElementById("branch");
+  if (branch) {
+    branch.onchange = loadSemesters;
+  }
+
+  const semester = document.getElementById("semester");
+  if (semester) {
+    semester.onchange = loadRegulations;
+  }
+
+  const regulation = document.getElementById("regulation");
+  if (regulation) {
+    regulation.onchange = loadCourses;
+  }
+
+  console.log("✅ Dropdown event listeners reinitialized.");
+}
+
+// Initialize all dropdown listeners after dynamic content loads
+script.onload = () => {
+  if (typeof loadFilters === "function") loadFilters();
+  if (typeof loadExtras === "function") loadExtras();
+  reinitializeDropdownListeners();
+};
+
+// Execute initialization on page load
+document.addEventListener("DOMContentLoaded", initCourseMapping);
+
+
 async function saveMapping() {
   const payload = {
     batch_id: cm_batch.value,
