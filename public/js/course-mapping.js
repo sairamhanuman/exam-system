@@ -237,7 +237,6 @@ script.onload = () => {
 
 // Execute initialization on page load
 document.addEventListener("DOMContentLoaded", initCourseMapping);
-
 async function saveMapping() {
   const payload = {
     batch_id: cm_batch.value,
@@ -319,7 +318,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-let editId = null;
 
 async function editMapping(id) {
   const res = await fetch(`/api/course-mapping/get/${id}`);
