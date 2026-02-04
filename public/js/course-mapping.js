@@ -84,7 +84,6 @@ function loadSemesters() {
 
 document.addEventListener("DOMContentLoaded", initCourseMapping);
 
-
 function loadRegulations() {
   const regulationSelect = document.getElementById("regulation");
   if (!regulationSelect) return; // 🛡️ safety
@@ -125,21 +124,22 @@ function loadCourses() {
       </option>`;
   });
 }
+
 async function loadExtras() {
-  const res = await fetch("/api/course-mapping/extras");
-  const data = await res.json();
+  try {
+    const res = await fetch("/api/course-mapping/extras");
+    const data = await res.json();
 
-  fill("cm_batch", data.batches, "batch_name");
-  fill("cm_section", data.sections, "section_name");
-  fill("cm_faculty", data.staff, "staff_name");
-}
+    console.log("Filters API full response:", data);
 
-function fill(id, arr, label) {
-  const el = document.getElementById(id);
-  el.innerHTML = `<option value="">Select</option>`;
-  arr.forEach(x => {
-    el.innerHTML += `<option value="${x.id}">${x[label]}</option>`;
-  });
+    fill("cm_batch", data.batches, "batch_name");
+    fill("cm_section", data.sections, "section_name");
+    fill("cm_faculty", data.staff, "staff_name");
+
+    console.log("✅ Extras dropdowns populated.");
+  } catch (error) {
+    console.error("Error loading extras:", error);
+  }
 }
 
 async function saveMapping() {
@@ -223,7 +223,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-let editId = null;
 
 async function editMapping(id) {
   const res = await fetch(`/api/course-mapping/get/${id}`);
