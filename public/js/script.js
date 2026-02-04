@@ -2,7 +2,6 @@
 function el(id) {
   return document.getElementById(id);
 }
-
 // 🛠 Function to Reinitialize Listeners for Master Buttons
 function reinitializeMasterButtons() {
   // Example: Programme Master Button
@@ -48,6 +47,9 @@ window.onload = () => {
 };
 
 function openCourseMappingPage() {
+  // Hide any other sections (like Masters, etc.)
+  hideAllScreens(); // This function already hides all elements with the 'screen' class.
+
   fetch("/course-mapping.html")
     .then((res) => res.text())
     .then((html) => {
@@ -57,7 +59,6 @@ function openCourseMappingPage() {
         return;
       }
 
-      // Create 'externalContent' container if it doesn't exist
       let external = document.getElementById("externalContent");
       if (!external) {
         external = document.createElement("div");
@@ -65,20 +66,16 @@ function openCourseMappingPage() {
         container.appendChild(external);
       }
 
-      // Replace externalContent with HTML content
       external.innerHTML = html;
       external.style.display = "block";
 
-      // Remove old script, if it exists
       const oldScript = document.getElementById("courseMappingJS");
       if (oldScript) oldScript.remove();
 
-      // Dynamically load course-mapping.js script
       const script = document.createElement("script");
       script.src = "/js/course-mapping.js";
       script.id = "courseMappingJS";
 
-      // Reinitialize functionality for Course Mapping
       script.onload = () => {
         if (typeof loadFilters === "function") loadFilters();
         if (typeof loadExtras === "function") loadExtras();
@@ -86,13 +83,13 @@ function openCourseMappingPage() {
 
       document.body.appendChild(script);
 
-      // Reinitialize event listeners for master buttons
-      reinitializeMasterButtons();
+      reinitializeMasterButtons(); // To ensure buttons are working if needed later.
     })
     .catch((err) =>
       console.error("Failed to load course-mapping.html:", err)
     );
 }
+
 
 function openPreExam() {
   hideAllScreens();
@@ -122,6 +119,20 @@ function toggleMastersSubmenu() {
   }
 }
 
+function openPage(button, id) {
+  hideAllScreens(); // Hide all sections
+  const external = document.getElementById("externalContent");
+  if (external) {
+    external.style.display = "none"; // Ensure Course Mapping is hidden
+  }
+
+  const page = document.getElementById(id);
+  if (page) {
+    page.style.display = "block"; // Show the selected page (e.g. Masters)
+  } else {
+    console.error(`openPage: Page with ID '${id}' not found!`);
+  }
+}
 function openPage(el, page) {
   // sidebar active highlight
   document.querySelectorAll(".nav-item")
