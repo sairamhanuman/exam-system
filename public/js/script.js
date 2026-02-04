@@ -19,6 +19,7 @@ window.onload = () => {
   }
 };
 
+
 function openCourseMappingPage() {
   fetch("/course-mapping.html")
     .then(res => res.text())
