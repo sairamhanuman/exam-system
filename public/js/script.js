@@ -276,11 +276,18 @@ function saveBranch() {
     });
   }
 }
+
 function loadBranches() {
   fetch("/api/branch/list")
     .then(res => res.json())
     .then(data => {
       const tbody = document.querySelector("#branchTable tbody");
+
+      if (!tbody) {
+        console.error("branchTable tbody not found");
+        return;
+      }
+
       tbody.innerHTML = "";
 
       data.forEach((row, i) => {
@@ -304,7 +311,8 @@ function loadBranches() {
           </tr>
         `;
       });
-    });
+    })
+    .catch(err => console.error("Branch load error:", err));
 }
 
 
