@@ -47,15 +47,14 @@ window.onload = () => {
 };
 
 function openCourseMappingPage() {
-  // Hide any other sections (like Masters, etc.)
-  hideAllScreens(); // This function already hides all elements with the 'screen' class.
+  hideAllScreens(); // Hide all screens when navigating to a new page
 
   fetch("/course-mapping.html")
     .then((res) => res.text())
     .then((html) => {
       const container = document.getElementById("rightContent");
       if (!container) {
-        console.error("openCourseMappingPage: #rightContent not found!");
+        console.error("rightContent not found!");
         return;
       }
 
@@ -83,13 +82,12 @@ function openCourseMappingPage() {
 
       document.body.appendChild(script);
 
-      reinitializeMasterButtons(); // To ensure buttons are working if needed later.
+      console.log("✅ Master Button event listeners reinitialized.");
     })
-    .catch((err) =>
-      console.error("Failed to load course-mapping.html:", err)
-    );
+    .catch((err) => {
+      console.error("Failed to load course-mapping.html:", err);
+    });
 }
-
 
 function openPreExam() {
   hideAllScreens();
@@ -119,27 +117,22 @@ function toggleMastersSubmenu() {
   }
 }
 
-function openPage(button, id) {
-  hideAllScreens(); // Hide all sections
+function openPage(el, page) {
+  // Hide all screens
+  hideAllScreens(); // This ensures that all other views are hidden.
+
+  // Ensure "externalContent" (Course Mapping vs Faculty) is also hidden
   const external = document.getElementById("externalContent");
   if (external) {
-    external.style.display = "none"; // Ensure Course Mapping is hidden
+    external.style.display = "none"; // Hide external content if it's being used
   }
 
-  const page = document.getElementById(id);
-  if (page) {
-    page.style.display = "block"; // Show the selected page (e.g. Masters)
-  } else {
-    console.error(`openPage: Page with ID '${id}' not found!`);
-  }
-}
-function openPage(el, page) {
-  // sidebar active highlight
+  // Sidebar active highlight
   document.querySelectorAll(".nav-item")
-    .forEach(i => i.classList.remove("active"));
-  el.classList.add("active");
+    .forEach(i => i.classList.remove("active")); // Remove "active" from all side menu items
+  el.classList.add("active"); // Highlight the clicked button
 
-  // open screens
+  // Open specific screens based on the page identifier
   if (page === "programme") openProgramme();
   if (page === "branch") openBranch();
   if (page === "semester") openSemester();
@@ -148,6 +141,8 @@ function openPage(el, page) {
   if (page === "section") openSection();
   if (page === "students") openStudentManagement();
   if (page === "staff") openStaffMaster();
+
+  console.log(`Navigated to the ${page} screen`);
 }
 
 function toggleCourseSubmenu() {
