@@ -116,7 +116,7 @@ function loadCourses() {
   const branchId = document.getElementById("coursebranch").value;
   const semesterId = document.getElementById("coursesemester").value;
   const regulationId = document.getElementById("courseregulation").value;
-  const courseSelect = document.getElementById("course");
+  const courseSelect = document.getElementById("mappingcourse");
 
   console.log("Filtering courses for Programme ID:", programmeId);
   console.log("Filtering courses for Branch ID:", branchId);
