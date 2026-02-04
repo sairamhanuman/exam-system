@@ -204,21 +204,19 @@ function deleteProgramme(id) {
 }
 
 /* ================= OPEN BRANCH MASTER ================= */
+/* ================= OPEN BRANCH MASTER ================= */
+
 let editBranchId = null;
 
-
 function openBranch() {
-  console.log("openBranch called"); // 👈 add this
+  console.log("openBranch called");
   hideAllScreens();
   document.getElementById("branchMaster").style.display = "block";
   loadProgrammeDropdown();
   loadBranches();
 }
 
-
-
-
-
+/* ================= LOAD PROGRAMME DROPDOWN ================= */
 
 function loadProgrammeDropdown() {
   fetch("/api/programme/list")
@@ -229,62 +227,54 @@ function loadProgrammeDropdown() {
 
       data.forEach(p => {
         sel.innerHTML += `
-          <option value="${p.id}">
-            ${p.programme_name}
-          </option>`;
+          <option value="${p.id}">${p.programme_name}</option>
+        `;
       });
     });
 }
 
-function saveBranch() {
-  const programme_id =
-    document.getElementById("branchProgramme").value;
+/* ================= SAVE BRANCH ================= */
 
-  const branch_name =
-    document.getElementById("branchName").value.trim();
+function saveBranch() {
+  const programme_id = document.getElementById("branchProgramme").value;
+  const branch_name = document.getElementById("branchName").value.trim();
 
   if (!programme_id || !branch_name) {
     alert("Select programme and enter branch");
     return;
   }
 
-  // ADD
-  if (editBranchId === null) {
-    fetch("/api/branch/add", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ programme_id, branch_name })
-    })
-    .then(res => res.json())
-    .then(() => {
-      document.getElementById("branchName").value = "";
-      loadBranches();
-    });
+  const url = editBranchId
+    ? "/api/branch/update/" + editBranchId
+    : "/api/branch/add";
 
-  // UPDATE
-  } else {
-    fetch("/api/branch/update/" + editBranchId, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ programme_id, branch_name })
-    })
-    .then(res => res.json())
-    .then(() => {
-      editBranchId = null;
-      document.getElementById("branchName").value = "";
-      loadBranches();
-    });
-  }
+  const method = editBranchId ? "PUT" : "POST";
+
+  fetch(url, {
+    method,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ programme_id, branch_name })
+  })
+  .then(res => res.json())
+  .then(() => {
+    editBranchId = null;
+    document.getElementById("branchName").value = "";
+    loadBranches();
+  });
 }
 
+/* ================= LOAD BRANCH TABLE ================= */
+
 function loadBranches() {
+  console.log("loadBranches called");
+
   fetch("/api/branch/list")
     .then(res => res.json())
     .then(data => {
       const tbody = document.querySelector("#branchTable tbody");
 
       if (!tbody) {
-        console.error("branchTable tbody not found");
+        console.error("branchTable tbody NOT FOUND");
         return;
       }
 
@@ -297,42 +287,34 @@ function loadBranches() {
             <td>${row.programme_name}</td>
             <td>${row.branch_name}</td>
             <td>
-              <button class="btn purple"
-                onclick="editBranch(${row.id}, ${row.programme_id}, '${row.branch_name}')">
-                Edit
-              </button>
+              <button onclick="editBranch(${row.id}, ${row.programme_id}, '${row.branch_name}')">Edit</button>
             </td>
             <td>
-              <button class="btn red"
-                onclick="deleteBranch(${row.id})">
-                Delete
-              </button>
+              <button onclick="deleteBranch(${row.id})">Delete</button>
             </td>
           </tr>
         `;
       });
-    })
-    .catch(err => console.error("Branch load error:", err));
+    });
 }
 
-
-
+/* ================= EDIT BRANCH ================= */
 
 function editBranch(id, programme_id, branch_name) {
   editBranchId = id;
-
   document.getElementById("branchProgramme").value = programme_id;
   document.getElementById("branchName").value = branch_name;
 }
 
+/* ================= DELETE BRANCH ================= */
+
 function deleteBranch(id) {
   if (!confirm("Delete this branch?")) return;
 
-  fetch("/api/branch/" + id, {
-    method: "DELETE"
-  })
-  .then(() => loadBranches());
+  fetch("/api/branch/" + id, { method: "DELETE" })
+    .then(() => loadBranches());
 }
+
 
 /* ================= OPEN SEMESTER MASTER ================= */
 let editSemesterId = null;
