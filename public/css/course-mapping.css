@@ -2,15 +2,24 @@ body {
   font-family: Segoe UI;
 }
 
+
 .box {
-  width: 70%;
-  margin: auto;
+  width: 100%;                   /* Full width */
+  max-width: 900px;              /* Optional: Limit width for better layout */
+  margin: auto;                  /* Center in page */
+  padding: 16px;                 /* Add padding for inner elements */
+  background-color: #ffffff;     /* Light background for visibility */
+  border-radius: 8px;            /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for a clean look */
 }
 
-select {
-  padding: 8px;
-  margin: 5px;
+.row {
+  display: flex;                 /* Flexbox for horizontal dropdown layout */
+  flex-wrap: wrap;               /* Wrap items when space isn't enough */
+  gap: 16px;                     /* Space between items */
+  margin-bottom: 16px;           /* Add spacing between rows */
 }
+
 
 table {
   width: 90%;
@@ -30,21 +39,60 @@ th, td {
 }
 
 select {
-  padding: 6px;
+  display: block;                /* Ensure the dropdown is displayed */
+  width: 100%;                   /* Take the full width of its container */
+  max-width: 300px;              /* Optional: Limit the width for aesthetics */
+  min-width: 150px;              /* Ensure some readable minimum width */
+  height: 40px;                  /* Sufficient height for visibility */
+  padding: 8px;                  /* Internal padding inside the dropdown */
+  font-size: 16px;               /* Standard text size */
+  color: #1f2937;                /* Standard dark text color */
+  background-color: #fff;        /* White background */
+  border: 1px solid #d1d5db;     /* Light border */
+  border-radius: 6px;            /* Rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+  margin-bottom: 10px;           /* Add space below dropdowns */
+  appearance: none;              /* Remove default browser-specific dropdown design */
 }
 
+select:focus {
+  outline: none;                 /* Remove default focus outline */
+  border: 2px solid #2563eb;     /* Blue border on focus */
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2); /* Subtle border glow */
+}
+
+select:disabled {
+  background-color: #e5e7eb;     /* Gray background for disabled dropdowns */
+  color: #9ca3af;                /* Faded text for disabled dropdowns */
+  cursor: not-allowed;           /* Prevent pointer for disabled dropdown values */
+}
 
 /* ===== COMMON BUTTON STYLE ===== */
 button {
-  padding: 8px 18px;
-  border-radius: 6px;
+  padding: 8px 16px;
+  background-color: #2563eb; /* Blue background */
+  color: #ffffff;            /* White text */
   font-size: 14px;
   font-weight: 600;
   border: none;
+  border-radius: 6px;        /* Add rounded corners */
+  transition: 0.2s ease;
   cursor: pointer;
-  transition: all 0.25s ease;
+  display: inline-block;
 }
 
+button:hover {
+  background-color: #1e40af;
+  transform: translateY(-2px); /* Subtle hover effect */
+}
+
+#saveBtn {
+  background-color: #16a34a; /* Green background */
+}
+
+#saveBtn:hover {
+  background-color: #15803d; /* Darker green on hover */
+}
 /* ===== SHOW BUTTON ===== */
 button[onclick="loadMappingTable()"] {
   background-color: #1e3a8a; /* deep blue */
@@ -57,10 +105,6 @@ button[onclick="loadMappingTable()"]:hover {
 }
 
 /* ===== SAVE BUTTON ===== */
-#saveBtn {
-  background-color: #16a34a; /* green */
-  color: #ffffff;
-}
 
 #saveBtn:hover {
   background-color: #15803d;
@@ -72,4 +116,15 @@ button:disabled {
   background-color: #9ca3af;
   cursor: not-allowed;
   transform: none;
+}
+/* Ensure all dropdowns are visible */
+select {
+  visibility: visible !important;
+  display: block !important;
+  opacity: 1 !important;
+}
+
+/* Ensure parent containers don't hide children */
+.box, .row, .content {
+  overflow: visible !important;
 }
