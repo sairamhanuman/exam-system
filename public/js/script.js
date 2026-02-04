@@ -1,146 +1,88 @@
-// Helper to safely get elements
-function el(id) {
-  return document.getElementById(id);
-}
-
-// Helper to safely show elements
-function showIfExists(id) {
-  const e = el(id);
-  if (e && e.style) {
-    e.style.display = 'block';
-  } else if (!e) {
-    console.warn(`showIfExists: Element not found: ${id}`);
-  }
-}
-
-// Helper to safely hide elements
-function hideIfExists(id) {
-  const e = el(id);
-  if (e && e.style) {
-    e.style.display = 'none';
-  } else if (!e) {
-    console.warn(`hideIfExists: Element not found: ${id}`);
-  }
-}
-
-
-
-
-
-// Hide all "screens" in the rightContent area and any dynamically injected external content
 function hideAllScreens() {
   const screens = document.querySelectorAll('.screen');
-  screens.forEach(screen => {
-    if (screen && screen.style) {
-      screen.style.display = 'none';
-    }
-  });
-
-  // Hide externalContent if it's being used
-  hideIfExists('externalContent');
+  screens.forEach(screen => (screen.style.display = 'none'));
 }
 
-// Load the default home screen
+function hideAllScreens() {
+  const screens = document.querySelectorAll('.screen');
+  screens.forEach(screen => (screen.style.display = 'none'));
+}
+
 window.onload = () => {
   hideAllScreens();
 
-  const home = el("home");
+  const home = document.getElementById("home");
   if (home) {
     home.style.display = "block";
   } else {
-    console.error("❌ Home element not found!");
+    console.error("❌ home element not found");
   }
 };
-
 
 function openCourseMappingPage() {
   fetch("/course-mapping.html")
     .then(res => res.text())
     .then(html => {
-      const container = el("rightContent");
-      if (!container) {
-        console.error("openCourseMappingPage: #rightContent not found!");
-        return;
-      }
+      const container = document.getElementById("rightContent");
+      container.innerHTML = html;
 
-      // Create externalContent container if it doesn't exist
-      let external = el("externalContent");
-      if (!external) {
-        external = document.createElement("div");
-        external.id = "externalContent";
-        container.appendChild(external);
-      }
+      // remove old script if exists
+      const old = document.getElementById("courseMappingJS");
+      if (old) old.remove();
 
-      // Replace externalContent with the new HTML content
-      external.innerHTML = html;
-      external.style.display = 'block';
-
-      // Remove old script if it exists
-      const oldScript = el("courseMappingJS");
-      if (oldScript) oldScript.remove();
-
-      // Load the course-mapping.js script dynamically
+      // load JS AFTER HTML
       const script = document.createElement("script");
       script.src = "/js/course-mapping.js";
       script.id = "courseMappingJS";
 
-      // Initialize functions for course mapping when the script is loaded
       script.onload = () => {
-        if (typeof loadFilters === "function") loadFilters();
-        if (typeof loadExtras === "function") loadExtras();
+        // ✅ SAFE PLACE
+        loadFilters();   // your existing function
+        loadExtras();    // ✅ THIS WILL WORK NOW
       };
 
       document.body.appendChild(script);
-    })
-    .catch(err => console.error("Failed to load course-mapping.html:", err));
+    });
 }
 
 
 
 
-
-// Open Pre-Examinations
 function openPreExam() {
   hideAllScreens();
-  showIfExists("preExam");
+  document.getElementById("preExam").style.display = "block";
 }
 
-// Open the Home screen
+
 function goHome() {
   hideAllScreens();
-  showIfExists("home");
+  document.getElementById("home").style.display = "block";
 }
 
-// Back to Pre-Examinations
 function backToPreExam() {
   hideAllScreens();
-  showIfExists("preExam");
+  document.getElementById("preExam").style.display = "block";
 }
 
 
-// Toggle the Masters submenu
 function toggleMastersSubmenu() {
   const submenu = document.querySelector('.nav-sub');
-  if (!submenu) return;
-
   if (submenu.style.display === 'block') {
     submenu.style.display = 'none';
-    const toggle = el('mastersToggle');
-    if (toggle) toggle.textContent = '▶ Masters';
+    document.getElementById('mastersToggle').textContent = '▶ Masters';
   } else {
     submenu.style.display = 'block';
-    const toggle = el('mastersToggle');
-    if (toggle) toggle.textContent = '▼ Masters';
+    document.getElementById('mastersToggle').textContent = '▼ Masters';
   }
 }
 
-// Navigate between different sections
-function openPage(elm, page) {
-  // Highlight the active menu item in the sidebar
-  document.querySelectorAll(".nav-item").forEach(item => item.classList.remove("active"));
-  if (elm && elm.classList) elm.classList.add("active");
+function openPage(el, page) {
+  // sidebar active highlight
+  document.querySelectorAll(".nav-item")
+    .forEach(i => i.classList.remove("active"));
+  el.classList.add("active");
 
-  // Open the specified page based on the section (with null checks)
+  // open screens
   if (page === "programme") openProgramme();
   if (page === "branch") openBranch();
   if (page === "semester") openSemester();
@@ -165,16 +107,12 @@ function toggleCourseSubmenu() {
 }
 
 /* ================= OPEN PROGRAMME MASTER ================= */
-// Open Programme Master
 function openProgramme() {
   hideAllScreens();
-  if (!el("programmeMaster")) {
-    console.warn("openProgramme: programmeMaster not found!");
-    return;
-  }
-  showIfExists("programmeMaster");
-  if (typeof loadProgrammes === "function") loadProgrammes();
+  document.getElementById("programmeMaster").style.display = "block";
+  loadProgrammes();
 }
+
 /* ================= SAVE PROGRAMME ================= */
 let editProgrammeId = null;
 function saveProgramme() {
@@ -271,15 +209,11 @@ function deleteProgramme(id) {
 let editBranchId = null;
 
 function openBranch() {
+  console.log("openBranch called");
   hideAllScreens();
-  if (!el("branchMaster")) {
-    console.warn("openBranch: branchMaster not found!");
-    return;
-  }
-  showIfExists("branchMaster");
-  if (typeof loadProgrammeDropdown === "function") loadProgrammeDropdown();
-  if (typeof loadBranches === "function") loadBranches();
-}
+  document.getElementById("branchMaster").style.display = "block";
+  loadProgrammeDropdown();
+  loadBranches();
 
   // Attach event listener here
 const showBtn = document.getElementById("btnShowBranches");
@@ -430,13 +364,10 @@ let editSemesterId = null;
 /* ================= OPEN SEMESTER ================= */
 function openSemester() {
   hideAllScreens();
-  if (!el("semesterMaster")) {
-    console.warn("openSemester: semesterMaster not found!");
-    return;
-  }
-  showIfExists("semesterMaster");
-  if (typeof loadSemesters === "function") loadSemesters();
+  document.getElementById("semesterMaster").style.display = "block";
+  loadSemesters();
 }
+
 /* ================= SAVE SEMESTER ================= */
 function saveSemester() {
 
@@ -541,15 +472,13 @@ function deleteSemester(id) {
 
 /* ================= OPEN REGULATION ================= */
 let editRegulationId = null;
+
 function openRegulation() {
   hideAllScreens();
-  if (!el("regulationMaster")) {
-    console.warn("openRegulation: regulationMaster not found!");
-    return;
-  }
-  showIfExists("regulationMaster");
-  if (typeof loadRegulations === "function") loadRegulations();
+  document.getElementById("regulationMaster").style.display = "block";
+  loadRegulations();
 }
+
 /* ================= SAVE ================= */
 function saveRegulation() {
 
@@ -659,14 +588,9 @@ let editBatchId = null;
 
 function openBatch() {
   hideAllScreens();
-  if (!el("batchMaster")) {
-    console.warn("openBatch: batchMaster not found!");
-    return;
-  }
-  showIfExists("batchMaster");
-  if (typeof loadBatches === "function") loadBatches();
+  document.getElementById("batchMaster").style.display = "block";
+  loadBatches();
 }
-
 
 /* ================= SAVE ================= */
 function saveBatch() {
@@ -774,12 +698,8 @@ function deleteBatch(id) {
 /* ================= OPEN SECTION ================= */
 function openSection() {
   hideAllScreens();
-  if (!el("sectionMaster")) {
-    console.warn("openSection: sectionMaster not found!");
-    return;
-  }
-  showIfExists("sectionMaster");
-  if (typeof loadSections === "function") loadSections();
+  document.getElementById("sectionMaster").style.display = "block";
+  loadSections();
 }
 
 /* ================= SAVE ================= */
@@ -882,16 +802,7 @@ function deleteSection(id) {
 }
 /* ================= OPEN STUDENT MANAGEMENT ================= */
 
-// Open Student Management
-function openStudentManagement() {
-  hideAllScreens();
-  if (!el("studentManagement")) {
-    console.warn("openStudentManagement: studentManagement not found!");
-    return;
-  }
-  showIfExists("studentManagement");
-  if (typeof loadStudents === "function") loadStudents();
-}
+
 function loadStudents() {
     alert("Next step backend will load students here");
 }
