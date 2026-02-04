@@ -1,8 +1,11 @@
 let filterData = [];
 let courseData = [];
 
+function getEl(id) { return document.getElementById(id); }
+
 async function initCourseMapping() {
   await loadFilters();
+  if (typeof loadExtras === 'function') await loadExtras();
 }
 
 async function loadFilters() {
