@@ -151,12 +151,7 @@ function reinitializeDropdownListeners() {
   console.log("✅ Dropdown event listeners reinitialized.");
 }
 
-// Initialize all dropdown listeners after dynamic content loads
-script.onload = () => {
-  if (typeof loadFilters === "function") loadFilters();
-  if (typeof loadExtras === "function") loadExtras();
-  reinitializeDropdownListeners();
-};
+
 
 // Execute initialization on page load
 document.addEventListener("DOMContentLoaded", initCourseMapping);
