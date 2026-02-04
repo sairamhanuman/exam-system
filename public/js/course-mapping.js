@@ -17,7 +17,7 @@ async function loadFilters() {
 
 
 function loadProgrammes() {
-  const programmeSelect = document.getElementById("programme");
+  const programmeSelect = document.getElementById("courseprogramme");
   programmeSelect.innerHTML = `<option value="">Select Programme</option>`;
 
   const programmes = [...new Map(
@@ -31,8 +31,8 @@ function loadProgrammes() {
 
 
 function loadBranches() {
-  const programmeId = document.getElementById("programme").value;
-  const branchSelect = document.getElementById("branch");
+  const programmeId = document.getElementById("courseprogramme").value;
+  const branchSelect = document.getElementById("coursebranch");
 
   branchSelect.innerHTML = `<option value="">Select Branch</option>`;
 
@@ -51,9 +51,9 @@ function loadBranches() {
 
 
 function loadSemesters() {
-  const programmeId = programme.value;
-  const branchId = branch.value;
-  semester.innerHTML = `<option value="">Select Semester</option>`;
+  const programmeId = courseprogramme.value;
+  const branchId = coursebranch.value;
+  coursesemester.innerHTML = `<option value="">Select Semester</option>`;
 
   const semesters = filterData.filter(f =>
     f.programme_id == programmeId &&
@@ -70,12 +70,12 @@ function loadSemesters() {
 }
 
 function loadRegulations() {
-  const regulationSelect = document.getElementById("regulation");
+  const regulationSelect = document.getElementById("courseregulation");
   if (!regulationSelect) return; // 🛡️ safety
 
   regulationSelect.innerHTML = '<option value="">Select Regulation</option>';
 
-  const semesterId = document.getElementById("semester").value;
+  const semesterId = document.getElementById("coursesemester").value;
 
   const regs = filterData
     .filter(r => r.semester_id == semesterId)
