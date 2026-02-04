@@ -214,6 +214,42 @@ function openBranch() {
   document.getElementById("branchMaster").style.display = "block";
   loadProgrammeDropdown();
   loadBranches();
+
+  // Attach event listener here
+  const showBtn = document.getElementById("btnBranchShow");
+  if (showBtn) {
+    showBtn.onclick = () => {
+      const programmeId = document.getElementById("branchProgramme").value;
+      console.log("Show clicked for programmeId:", programmeId);
+
+      fetch(`/api/branch/list?programmeId=${programmeId}`)
+        .then(res => res.json())
+        .then(data => {
+          console.log("Branches returned:", data); // debug
+
+          const tbody = document.querySelector("#branchTable123 tbody");
+          tbody.innerHTML = "";
+
+          data.forEach((row, i) => {
+            tbody.innerHTML += `
+              <tr>
+                <td>${i + 1}</td>
+                <td>${row.programme_name}</td>
+                <td>${row.branch_name}</td>
+                <td>
+                  <button onclick="editBranch(${row.id}, ${row.programme_id}, '${row.branch_name}')">Edit</button>
+                </td>
+                <td>
+                  <button onclick="deleteBranch(${row.id})">Delete</button>
+                </td>
+              </tr>
+            `;
+          });
+        });
+    };
+  } else {
+    console.error("btnBranchShow NOT FOUND");
+  }
 }
 
 /* ================= LOAD PROGRAMME DROPDOWN ================= */
@@ -298,35 +334,7 @@ function loadBranches(programmeId = null) {
     });
 }
 
-document.getElementById("btnBranchShow").addEventListener("click", () => {
-  const programmeId = document.getElementById("branchProgramme").value;
-  console.log("Show clicked for programmeId:", programmeId);
 
-  fetch(`/api/branch/list?programmeId=${programmeId}`)
-    .then(res => res.json())
-    .then(data => {
-      console.log("Branches returned:", data); // debug
-
-      const tbody = document.querySelector("#branchTable123 tbody");
-      tbody.innerHTML = "";
-
-      data.forEach((row, i) => {
-        tbody.innerHTML += `
-          <tr>
-            <td>${i + 1}</td>
-            <td>${row.programme_name}</td>
-            <td>${row.branch_name}</td>
-            <td>
-              <button onclick="editBranch(${row.id}, ${row.programme_id}, '${row.branch_name}')">Edit</button>
-            </td>
-            <td>
-              <button onclick="deleteBranch(${row.id})">Delete</button>
-            </td>
-          </tr>
-        `;
-      });
-    });
-});
 
 
 
