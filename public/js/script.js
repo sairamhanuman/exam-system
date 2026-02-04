@@ -208,11 +208,13 @@ let editBranchId = null;
 
 
 function openBranch() {
+  console.log("openBranch called"); // 👈 add this
   hideAllScreens();
   document.getElementById("branchMaster").style.display = "block";
   loadProgrammeDropdown();
   loadBranches();
 }
+
 
 
 
