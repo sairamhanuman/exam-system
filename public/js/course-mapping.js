@@ -112,22 +112,52 @@ function loadRegulations() {
 }
 
 function loadCourses() {
-  course.innerHTML = `<option value="">Select Course</option>`;
+  const programmeId = document.getElementById("courseprogramme").value;
+  const branchId = document.getElementById("coursebranch").value;
+  const semesterId = document.getElementById("coursesemester").value;
+  const regulationId = document.getElementById("courseregulation").value;
+  const courseSelect = document.getElementById("course");
 
+  console.log("Filtering courses for Programme ID:", programmeId);
+  console.log("Filtering courses for Branch ID:", branchId);
+  console.log("Filtering courses for Semester ID:", semesterId);
+  console.log("Filtering courses for Regulation ID:", regulationId);
+
+  courseSelect.innerHTML = `<option value="">Select Course</option>`; // Reset dropdown
+
+  if (!programmeId || !branchId || !semesterId || !regulationId) {
+    console.warn("All dropdowns are required to load courses.");
+    return;
+  }
+
+  // Filter course data based on selected values
   const filtered = courseData.filter(c =>
-    c.programme_id == courseprogramme.value &&
-    c.branch_id == coursebranch.value &&
-    c.semester_id == coursesemester.value &&
-    c.regulation_id == courseregulation.value
+    c.programme_id == programmeId &&
+    c.branch_id == branchId &&
+    c.semester_id == semesterId &&
+    c.regulation_id == regulationId
   );
 
+  console.log("Filtered Courses:", filtered);
+
+  // Populate the course dropdown with the filtered course data
+  if (filtered.length === 0) {
+    console.warn("No courses found for the selected filters.");
+    return;
+  }
+
   filtered.forEach(c => {
-    course.innerHTML += `
+    courseSelect.innerHTML += `
       <option value="${c.id}">
         ${c.course_code} - ${c.course_name}
-      </option>`;
+      </option>
+    `;
   });
+
+  console.log("✅ Course dropdown options loaded:", courseSelect.innerHTML);
 }
+
+
 async function loadExtras() {
   const res = await fetch("/api/course-mapping/extras");
   const data = await res.json();
@@ -170,12 +200,11 @@ function reinitializeDropdownListeners() {
   console.log("✅ Dropdown event listeners reinitialized.");
 }
 
-// Initialize all dropdown listeners after dynamic content loads
-script.onload = () => {
-  if (typeof loadFilters === "function") loadFilters();
-  if (typeof loadExtras === "function") loadExtras();
-  reinitializeDropdownListeners();
-};
+document.addEventListener("DOMContentLoaded", () => {
+  initCourseMapping();
+  loadExtras();
+});
+
 
 // Execute initialization on page load
 document.addEventListener("DOMContentLoaded", initCourseMapping);
