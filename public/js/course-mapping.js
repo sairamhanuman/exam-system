@@ -29,6 +29,12 @@ async function loadFilters() {
 
 function loadProgrammes() {
   const programmeSelect = document.getElementById("programme");
+
+  if (!programmeSelect) {
+    console.error("Programme dropdown not found in the DOM.");
+    return;
+  }
+
   programmeSelect.innerHTML = `<option value="">Select Programme</option>`;
 
   const programmes = [...new Map(
@@ -38,17 +44,23 @@ function loadProgrammes() {
   programmes.forEach(([id, name]) => {
     programmeSelect.innerHTML += `<option value="${id}">${name}</option>`;
   });
+
+  console.log("✅ Programme dropdown options loaded:", programmeSelect.innerHTML);
 }
 
 function loadBranches() {
-  const programmeId = document.getElementById("programme").value;
+  const programmeId = document.getElementById("programme")?.value;
   const branchSelect = document.getElementById("branch");
+
+  if (!programmeId) {
+    console.warn("No programme selected. Cannot load branches.");
+    branchSelect.innerHTML = `<option value="">Select Branch</option>`;
+    return;
+  }
+
   branchSelect.innerHTML = `<option value="">Select Branch</option>`;
 
-  const branches = filterData.filter(
-    f => f.programme_id == programmeId
-  );
-
+  const branches = filterData.filter(f => f.programme_id == programmeId);
   const uniqueBranches = [...new Map(
     branches.map(b => [b.branch_id, b.branch_name])
   )];
@@ -56,8 +68,41 @@ function loadBranches() {
   uniqueBranches.forEach(([id, name]) => {
     branchSelect.innerHTML += `<option value="${id}">${name}</option>`;
   });
+
+  console.log("✅ Branch dropdown options loaded:", branchSelect.innerHTML);
 }
 
+function reinitializeDropdownListeners() {
+  const programme = document.getElementById("programme");
+  if (programme) {
+    programme.addEventListener("change", loadBranches);
+  } else {
+    console.error("Programme dropdown not found.");
+  }
+
+  const branch = document.getElementById("branch");
+  if (branch) {
+    branch.addEventListener("change", loadSemesters);
+  } else {
+    console.error("Branch dropdown not found.");
+  }
+
+  const semester = document.getElementById("semester");
+  if (semester) {
+    semester.addEventListener("change", loadRegulations);
+  } else {
+    console.error("Semester dropdown not found.");
+  }
+
+  const regulation = document.getElementById("regulation");
+  if (regulation) {
+    regulation.addEventListener("change", loadCourses);
+  } else {
+    console.error("Regulation dropdown not found.");
+  }
+
+  console.log("✅ Dropdown event listeners reinitialized.");
+}
 function loadSemesters() {
   const programmeId = document.getElementById("programme").value;
   const branchId = document.getElementById("branch").value;
