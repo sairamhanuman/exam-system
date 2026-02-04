@@ -25,9 +25,14 @@ router.post("/add", async (req, res) => {
 /* ======================
    LIST BRANCHES
 ====================== */
+/* ======================
+   LIST BRANCHES
+   Optional filter by programme
+====================== */
 router.get("/list", async (req, res) => {
   try {
-    const [rows] = await db.query(`
+    const { programmeId } = req.query; // GET /api/branch/list?programmeId=1
+    let sql = `
       SELECT
         b.id,
         b.programme_id,
@@ -36,16 +41,24 @@ router.get("/list", async (req, res) => {
       FROM branch_master b
       LEFT JOIN programme_master p
         ON b.programme_id = p.id
-      WHERE b.status = 1
-      ORDER BY b.id
-    `);
+    `;
+    const params = [];
 
+    if (programmeId) {
+      sql += " WHERE b.programme_id = ?";
+      params.push(programmeId);
+    }
+
+    sql += " ORDER BY b.id";
+
+    const [rows] = await db.query(sql, params);
     res.json(rows);
   } catch (err) {
     console.error("Branch list error:", err);
     res.json([]);
   }
 });
+
 
 
 /* ======================
@@ -76,26 +89,5 @@ router.put("/update/:id", async (req, res) => {
 });
 
 
-router.get("/list", async (req, res) => {
-  try {
-    const [rows] = await db.query(`
-      SELECT
-        b.id,
-        b.programme_id,
-        b.branch_name,
-        COALESCE(p.programme_name, '❌ Missing Programme') AS programme_name
-      FROM branch_master b
-      LEFT JOIN programme_master p
-        ON b.programme_id = p.id
-      WHERE b.status = 1
-      ORDER BY b.id
-    `);
-
-    res.json(rows);
-  } catch (err) {
-    console.error("Branch list error:", err);
-    res.json([]);
-  }
-});
 
 module.exports = router;
