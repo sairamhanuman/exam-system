@@ -264,50 +264,41 @@ function saveBranch() {
 }
 
 /* ================= LOAD BRANCH TABLE ================= */
-function loadBranches(programmeId = "") {
-  console.log("loadBranches called with programmeId =", programmeId);
-
+function loadBranches(programmeId = null) {
   fetch("/api/branch/list")
     .then(res => res.json())
     .then(data => {
       const tbody = document.querySelector("#branchTable tbody");
-
       if (!tbody) {
         console.error("branchTable tbody NOT FOUND");
         return;
       }
-
       tbody.innerHTML = "";
 
-      // Filter if programmeId is provided
-      const filtered = programmeId
-        ? data.filter(row => row.programme_id == programmeId)
-        : data;
+      // Filter by programmeId if provided
+      if (programmeId) {
+        data = data.filter(row => row.programme_id == programmeId);
+      }
 
-      filtered.forEach((row, i) => {
-        const tr = document.createElement("tr");
-
-        tr.innerHTML = `
-          <td>${i + 1}</td>
-          <td>${row.programme_name}</td>
-          <td>${row.branch_name}</td>
-          <td><button class="editBtn">Edit</button></td>
-          <td><button class="delBtn">Delete</button></td>
+      data.forEach((row, i) => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${i + 1}</td>
+            <td>${row.programme_name}</td>
+            <td>${row.branch_name}</td>
+            <td>
+              <button onclick="editBranch(${row.id}, ${row.programme_id}, '${row.branch_name}')">Edit</button>
+            </td>
+            <td>
+              <button onclick="deleteBranch(${row.id})">Delete</button>
+            </td>
+          </tr>
         `;
-
-        // Attach event listeners safely
-        tr.querySelector(".editBtn").addEventListener("click", () => {
-          editBranch(row.id, row.programme_id, row.branch_name);
-        });
-
-        tr.querySelector(".delBtn").addEventListener("click", () => {
-          deleteBranch(row.id);
-        });
-
-        tbody.appendChild(tr);
       });
     });
 }
+
+
 
 document.getElementById("btnShowBranches").addEventListener("click", () => {
   const programmeId = document.getElementById("branchProgramme").value;
@@ -318,7 +309,6 @@ document.getElementById("btnShowBranches").addEventListener("click", () => {
   console.log("Show clicked for programmeId:", programmeId);
   loadBranches(programmeId);
 });
-
 
 
 
