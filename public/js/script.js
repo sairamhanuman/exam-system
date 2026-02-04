@@ -264,9 +264,8 @@ function saveBranch() {
 }
 
 /* ================= LOAD BRANCH TABLE ================= */
-
-function loadBranches() {
-  console.log("loadBranches called");
+function loadBranches(programmeId = "") {
+  console.log("loadBranches called with programmeId =", programmeId);
 
   fetch("/api/branch/list")
     .then(res => res.json())
@@ -280,7 +279,12 @@ function loadBranches() {
 
       tbody.innerHTML = "";
 
-      data.forEach((row, i) => {
+      // Filter if programmeId is provided
+      const filtered = programmeId
+        ? data.filter(row => row.programme_id == programmeId)
+        : data;
+
+      filtered.forEach((row, i) => {
         const tr = document.createElement("tr");
 
         tr.innerHTML = `
@@ -291,7 +295,7 @@ function loadBranches() {
           <td><button class="delBtn">Delete</button></td>
         `;
 
-        // Attach event listeners
+        // Attach event listeners safely
         tr.querySelector(".editBtn").addEventListener("click", () => {
           editBranch(row.id, row.programme_id, row.branch_name);
         });
@@ -304,6 +308,16 @@ function loadBranches() {
       });
     });
 }
+
+document.getElementById("btnShowBranches").addEventListener("click", () => {
+  const programmeId = document.getElementById("branchProgramme").value;
+  if (!programmeId) {
+    alert("Please select a programme first");
+    return;
+  }
+  loadBranches(programmeId);
+});
+
 
 
 /* ================= EDIT BRANCH ================= */
