@@ -315,8 +315,10 @@ document.getElementById("btnShowBranches").addEventListener("click", () => {
     alert("Please select a programme first");
     return;
   }
+  console.log("Show clicked for programmeId:", programmeId);
   loadBranches(programmeId);
 });
+
 
 
 

@@ -75,4 +75,27 @@ router.put("/update/:id", async (req, res) => {
   }
 });
 
+
+router.get("/list", async (req, res) => {
+  try {
+    const [rows] = await db.query(`
+      SELECT
+        b.id,
+        b.programme_id,
+        b.branch_name,
+        COALESCE(p.programme_name, '❌ Missing Programme') AS programme_name
+      FROM branch_master b
+      LEFT JOIN programme_master p
+        ON b.programme_id = p.id
+      WHERE b.status = 1
+      ORDER BY b.id
+    `);
+
+    res.json(rows);
+  } catch (err) {
+    console.error("Branch list error:", err);
+    res.json([]);
+  }
+});
+
 module.exports = router;
