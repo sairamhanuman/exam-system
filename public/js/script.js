@@ -281,22 +281,30 @@ function loadBranches() {
       tbody.innerHTML = "";
 
       data.forEach((row, i) => {
-        tbody.innerHTML += `
-          <tr>
-            <td>${i + 1}</td>
-            <td>${row.programme_name}</td>
-            <td>${row.branch_name}</td>
-            <td>
-              <button onclick="editBranch(${row.id}, ${row.programme_id}, '${row.branch_name}')">Edit</button>
-            </td>
-            <td>
-              <button onclick="deleteBranch(${row.id})">Delete</button>
-            </td>
-          </tr>
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td>${i + 1}</td>
+          <td>${row.programme_name}</td>
+          <td>${row.branch_name}</td>
+          <td><button class="editBtn">Edit</button></td>
+          <td><button class="delBtn">Delete</button></td>
         `;
+
+        // Attach event listeners
+        tr.querySelector(".editBtn").addEventListener("click", () => {
+          editBranch(row.id, row.programme_id, row.branch_name);
+        });
+
+        tr.querySelector(".delBtn").addEventListener("click", () => {
+          deleteBranch(row.id);
+        });
+
+        tbody.appendChild(tr);
       });
     });
 }
+
 
 /* ================= EDIT BRANCH ================= */
 
