@@ -268,9 +268,9 @@ function loadBranches(programmeId = null) {
   fetch("/api/branch/list")
     .then(res => res.json())
     .then(data => {
-      const tbody = document.querySelector("#branchTable tbody");
+      const tbody = document.querySelector("#branchTable123 tbody");
       if (!tbody) {
-        console.error("branchTable tbody NOT FOUND");
+        console.error("branchTable123 tbody NOT FOUND");
         return;
       }
       tbody.innerHTML = "";
