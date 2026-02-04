@@ -1,4 +1,8 @@
 
+function el(id) {
+  return document.getElementById(id);
+}
+
 // 🛠 Function to Reinitialize Listeners for Master Buttons
 function reinitializeMasterButtons() {
   // Example: Programme Master Button
@@ -47,14 +51,14 @@ function openCourseMappingPage() {
   fetch("/course-mapping.html")
     .then((res) => res.text())
     .then((html) => {
-      const container = el("rightContent");
+      const container = document.getElementById("rightContent");
       if (!container) {
         console.error("openCourseMappingPage: #rightContent not found!");
         return;
       }
 
-      // Create 'externalContent' container if it does not exist
-      let external = el("externalContent");
+      // Create 'externalContent' container if it doesn't exist
+      let external = document.getElementById("externalContent");
       if (!external) {
         external = document.createElement("div");
         external.id = "externalContent";
@@ -65,24 +69,30 @@ function openCourseMappingPage() {
       external.innerHTML = html;
       external.style.display = "block";
 
-      // Dynamically load course-mapping.js
+      // Remove old script, if it exists
+      const oldScript = document.getElementById("courseMappingJS");
+      if (oldScript) oldScript.remove();
+
+      // Dynamically load course-mapping.js script
       const script = document.createElement("script");
       script.src = "/js/course-mapping.js";
       script.id = "courseMappingJS";
 
-      // When script loads, initialize course mapping
+      // Reinitialize functionality for Course Mapping
       script.onload = () => {
         if (typeof loadFilters === "function") loadFilters();
         if (typeof loadExtras === "function") loadExtras();
       };
+
       document.body.appendChild(script);
 
-      // ✅ Reinitialize Master Buttons to restore functionality
+      // Reinitialize event listeners for master buttons
       reinitializeMasterButtons();
     })
-    .catch((err) => console.error("Failed to load course-mapping.html:", err));
+    .catch((err) =>
+      console.error("Failed to load course-mapping.html:", err)
+    );
 }
-
 
 function openPreExam() {
   hideAllScreens();
