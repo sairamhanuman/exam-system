@@ -1,12 +1,36 @@
-function hideAllScreens() {
-  const screens = document.querySelectorAll('.screen');
-  screens.forEach(screen => (screen.style.display = 'none'));
+
+// 🛠 Function to Reinitialize Listeners for Master Buttons
+function reinitializeMasterButtons() {
+  // Example: Programme Master Button
+  const programmeButton = document.querySelector('[onclick="openPage(this,\'programme\')"]');
+  if (programmeButton) {
+    programmeButton.onclick = () => openPage(programmeButton, 'programme');
+  }
+
+  // Example: Batch Master Button
+  const batchButton = document.querySelector('[onclick="openPage(this,\'batch\')"]');
+  if (batchButton) {
+    batchButton.onclick = () => openPage(batchButton, 'batch');
+  }
+
+  // Example: Branch Master Button
+  const branchButton = document.querySelector('[onclick="openPage(this,\'branch\')"]');
+  if (branchButton) {
+    branchButton.onclick = () => openPage(branchButton, 'branch');
+  }
+
+  // Repeat for other Master Buttons...
+  console.log('✅ Master Button event listeners reinitialized.');
 }
+
+
 
 function hideAllScreens() {
   const screens = document.querySelectorAll('.screen');
   screens.forEach(screen => (screen.style.display = 'none'));
 }
+
+
 
 window.onload = () => {
   hideAllScreens();
@@ -21,31 +45,43 @@ window.onload = () => {
 
 function openCourseMappingPage() {
   fetch("/course-mapping.html")
-    .then(res => res.text())
-    .then(html => {
-      const container = document.getElementById("rightContent");
-      container.innerHTML = html;
+    .then((res) => res.text())
+    .then((html) => {
+      const container = el("rightContent");
+      if (!container) {
+        console.error("openCourseMappingPage: #rightContent not found!");
+        return;
+      }
 
-      // remove old script if exists
-      const old = document.getElementById("courseMappingJS");
-      if (old) old.remove();
+      // Create 'externalContent' container if it does not exist
+      let external = el("externalContent");
+      if (!external) {
+        external = document.createElement("div");
+        external.id = "externalContent";
+        container.appendChild(external);
+      }
 
-      // load JS AFTER HTML
+      // Replace externalContent with HTML content
+      external.innerHTML = html;
+      external.style.display = "block";
+
+      // Dynamically load course-mapping.js
       const script = document.createElement("script");
       script.src = "/js/course-mapping.js";
       script.id = "courseMappingJS";
 
+      // When script loads, initialize course mapping
       script.onload = () => {
-        // ✅ SAFE PLACE
-        loadFilters();   // your existing function
-        loadExtras();    // ✅ THIS WILL WORK NOW
+        if (typeof loadFilters === "function") loadFilters();
+        if (typeof loadExtras === "function") loadExtras();
       };
-
       document.body.appendChild(script);
-    });
+
+      // ✅ Reinitialize Master Buttons to restore functionality
+      reinitializeMasterButtons();
+    })
+    .catch((err) => console.error("Failed to load course-mapping.html:", err));
 }
-
-
 
 
 function openPreExam() {
