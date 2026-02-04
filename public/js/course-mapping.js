@@ -51,23 +51,42 @@ function loadBranches() {
 
 
 function loadSemesters() {
-  const programmeId = courseprogramme.value;
-  const branchId = coursebranch.value;
-  coursesemester.innerHTML = `<option value="">Select Semester</option>`;
+  const programmeId = document.getElementById("courseprogramme").value;
+  const branchId = document.getElementById("coursebranch").value;
+  const semesterSelect = document.getElementById("coursesemester");
+
+  console.log("Programme ID:", programmeId);
+  console.log("Branch ID:", branchId);
+
+  semesterSelect.innerHTML = `<option value="">Select Semester</option>`;
+
+  if (!programmeId || !branchId) {
+    console.warn("Cannot load semesters without Programme and Branch selection.");
+    return; // Quit function if prerequisites are not met
+  }
 
   const semesters = filterData.filter(f =>
-    f.programme_id == programmeId &&
-    f.branch_id == branchId
+    f.programme_id == programmeId && f.branch_id == branchId
   );
+
+  console.log("Filtered Semesters:", semesters);
+
+  if (semesters.length === 0) {
+    console.warn("No semesters found for the selected Programme and Branch.");
+    return;
+  }
 
   const uniqueSem = [...new Map(
     semesters.map(s => [s.semester_id, s.semester_name])
   )];
 
   uniqueSem.forEach(([id, name]) => {
-    semester.innerHTML += `<option value="${id}">${name}</option>`;
+    semesterSelect.innerHTML += `<option value="${id}">${name}</option>`;
   });
+
+  console.log("✅ Semester dropdown options loaded:", semesterSelect.innerHTML);
 }
+
 
 function loadRegulations() {
   const regulationSelect = document.getElementById("courseregulation");
@@ -96,10 +115,10 @@ function loadCourses() {
   course.innerHTML = `<option value="">Select Course</option>`;
 
   const filtered = courseData.filter(c =>
-    c.programme_id == programme.value &&
-    c.branch_id == branch.value &&
-    c.semester_id == semester.value &&
-    c.regulation_id == regulation.value
+    c.programme_id == courseprogramme.value &&
+    c.branch_id == coursebranch.value &&
+    c.semester_id == coursesemester.value &&
+    c.regulation_id == courseregulation.value
   );
 
   filtered.forEach(c => {
@@ -128,22 +147,22 @@ function fill(id, arr, label) {
 
 // Reinitialize dropdown event listeners
 function reinitializeDropdownListeners() {
-  const programme = document.getElementById("programme");
+  const programme = document.getElementById("courseprogramme");
   if (programme) {
     programme.onchange = loadBranches;
   }
 
-  const branch = document.getElementById("branch");
+  const branch = document.getElementById("coursebranch");
   if (branch) {
     branch.onchange = loadSemesters;
   }
 
-  const semester = document.getElementById("semester");
+  const semester = document.getElementById("coursesemester");
   if (semester) {
     semester.onchange = loadRegulations;
   }
 
-  const regulation = document.getElementById("regulation");
+  const regulation = document.getElementById("courseregulation");
   if (regulation) {
     regulation.onchange = loadCourses;
   }
