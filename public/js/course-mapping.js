@@ -1,8 +1,10 @@
 let filterData = [];
 let courseData = [];
+let editId = null;
 
 async function initCourseMapping() {
   await loadFilters();
+  await loadExtras();
 }
 
 async function loadFilters() {
@@ -14,7 +16,6 @@ async function loadFilters() {
 
   loadProgrammes();
 }
-
 
 function loadProgrammes() {
   const programmeSelect = document.getElementById("courseprogramme");
@@ -28,7 +29,6 @@ function loadProgrammes() {
     programmeSelect.innerHTML += `<option value="${id}">${name}</option>`;
   });
 }
-
 
 function loadBranches() {
   const programmeId = document.getElementById("courseprogramme").value;
@@ -49,27 +49,21 @@ function loadBranches() {
   });
 }
 
-
 function loadSemesters() {
   const programmeId = document.getElementById("courseprogramme").value;
   const branchId = document.getElementById("coursebranch").value;
   const semesterSelect = document.getElementById("coursesemester");
 
-  console.log("Programme ID:", programmeId);
-  console.log("Branch ID:", branchId);
-
   semesterSelect.innerHTML = `<option value="">Select Semester</option>`;
 
   if (!programmeId || !branchId) {
     console.warn("Cannot load semesters without Programme and Branch selection.");
-    return; // Quit function if prerequisites are not met
+    return;
   }
 
   const semesters = filterData.filter(f =>
     f.programme_id == programmeId && f.branch_id == branchId
   );
-
-  console.log("Filtered Semesters:", semesters);
 
   if (semesters.length === 0) {
     console.warn("No semesters found for the selected Programme and Branch.");
@@ -83,14 +77,11 @@ function loadSemesters() {
   uniqueSem.forEach(([id, name]) => {
     semesterSelect.innerHTML += `<option value="${id}">${name}</option>`;
   });
-
-  console.log("✅ Semester dropdown options loaded:", semesterSelect.innerHTML);
 }
-
 
 function loadRegulations() {
   const regulationSelect = document.getElementById("courseregulation");
-  if (!regulationSelect) return; // 🛡️ safety
+  if (!regulationSelect) return;
 
   regulationSelect.innerHTML = '<option value="">Select Regulation</option>';
 
@@ -118,19 +109,13 @@ function loadCourses() {
   const regulationId = document.getElementById("courseregulation").value;
   const courseSelect = document.getElementById("mappingcourse");
 
-  console.log("Filtering courses for Programme ID:", programmeId);
-  console.log("Filtering courses for Branch ID:", branchId);
-  console.log("Filtering courses for Semester ID:", semesterId);
-  console.log("Filtering courses for Regulation ID:", regulationId);
-
-  courseSelect.innerHTML = `<option value="">Select Course</option>`; // Reset dropdown
+  courseSelect.innerHTML = `<option value="">Select Course</option>`;
 
   if (!programmeId || !branchId || !semesterId || !regulationId) {
     console.warn("All dropdowns are required to load courses.");
     return;
   }
 
-  // Filter course data based on selected values
   const filtered = courseData.filter(c =>
     c.programme_id == programmeId &&
     c.branch_id == branchId &&
@@ -138,9 +123,6 @@ function loadCourses() {
     c.regulation_id == regulationId
   );
 
-  console.log("Filtered Courses:", filtered);
-
-  // Populate the course dropdown with the filtered course data
   if (filtered.length === 0) {
     console.warn("No courses found for the selected filters.");
     return;
@@ -153,10 +135,7 @@ function loadCourses() {
       </option>
     `;
   });
-
-  console.log("✅ Course dropdown options loaded:", courseSelect.innerHTML);
 }
-
 
 async function loadExtras() {
   const res = await fetch("/api/course-mapping/extras");
@@ -175,7 +154,6 @@ function fill(id, arr, label) {
   });
 }
 
-// Reinitialize dropdown event listeners
 function reinitializeDropdownListeners() {
   const programme = document.getElementById("courseprogramme");
   if (programme) {
@@ -202,19 +180,15 @@ function reinitializeDropdownListeners() {
 
 document.addEventListener("DOMContentLoaded", () => {
   initCourseMapping();
-  loadExtras();
+  reinitializeDropdownListeners();
 });
 
-
-// Execute initialization on page load
-document.addEventListener("DOMContentLoaded", initCourseMapping);
-
-
+// ✅ FIXED: saveMapping with correct IDs
 async function saveMapping() {
   const payload = {
-    batch_id: cm_batch.value,
-    section_id: cm_section.value,
-    staff_id: cm_faculty.value
+    batch_id: document.getElementById("cm_batch").value,
+    section_id: document.getElementById("cm_section").value,
+    staff_id: document.getElementById("cm_faculty").value
   };
 
   let url = "/api/course-mapping/save";
@@ -225,11 +199,11 @@ async function saveMapping() {
     method = "PUT";
   } else {
     Object.assign(payload, {
-      programme_id: programme.value,
-      branch_id: branch.value,
-      semester_id: semester.value,
-      regulation_id: regulation.value,
-      course_id: course.value
+      programme_id: document.getElementById("courseprogramme").value,
+      branch_id: document.getElementById("coursebranch").value,
+      semester_id: document.getElementById("coursesemester").value,
+      regulation_id: document.getElementById("courseregulation").value,
+      course_id: document.getElementById("mappingcourse").value
     });
   }
 
@@ -248,12 +222,13 @@ async function saveMapping() {
   loadMappingTable();
 }
 
+// ✅ FIXED: loadMappingTable with correct IDs
 async function loadMappingTable() {
   const params = new URLSearchParams({
-    programme_id: programme.value,
-    branch_id: branch.value,
-    semester_id: semester.value,
-    regulation_id: regulation.value
+    programme_id: document.getElementById("courseprogramme").value,
+    branch_id: document.getElementById("coursebranch").value,
+    semester_id: document.getElementById("coursesemester").value,
+    regulation_id: document.getElementById("courseregulation").value
   });
 
   const res = await fetch(`/api/course-mapping/list?${params}`);
@@ -274,24 +249,15 @@ async function loadMappingTable() {
         <td>${row.course_name}</td>
         <td>${row.batch_name}</td>
         <td>${row.section_name}</td>
-       <td>${row.faculty_name}</td>
-
+        <td>${row.faculty_name}</td>
         <td>
-         <button onclick="editMapping(${row.id})">✏️</button>
-<button onclick="deleteMapping(${row.id})">❌</button>
-
+          <button onclick="editMapping(${row.id})">✏️</button>
+          <button onclick="deleteMapping(${row.id})">❌</button>
         </td>
       </tr>
     `;
   });
 }
-document.addEventListener("DOMContentLoaded", () => {
-  initCourseMapping();
-  loadExtras();
-});
-
-
-let editId = null;
 
 async function editMapping(id) {
   const res = await fetch(`/api/course-mapping/get/${id}`);
@@ -299,7 +265,6 @@ async function editMapping(id) {
 
   editId = id;
 
-  // Only editable fields
   document.getElementById("cm_batch").value = data.batch_id;
   document.getElementById("cm_section").value = data.section_id;
   document.getElementById("cm_faculty").value = data.staff_id;
