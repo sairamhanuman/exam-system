@@ -109,99 +109,34 @@ function toggleCourseSubmenu() {
 
 /* ================= OPEN PROGRAMME MASTER ================= */
 function openProgramme() {
-  hideAllScreens();
-  document.getElementById("programmeMaster").style.display = "block";
-  loadProgrammes();
-}
+  fetch("/programme.html")
+    .then(res => res.text())
+    .then(html => {
+      const container = document.getElementById("rightContent");
+      container.innerHTML = html;
 
-/* ================= SAVE PROGRAMME ================= */
-let editProgrammeId = null;
-function saveProgramme() {
-  const name = document.getElementById("programmeName").value.trim();
+      // remove old script if exists
+      const old = document.getElementById("programmeJS");
+      if (old) old.remove();
 
-  if (!name) {
-    alert("Enter programme name");
-    return;
-  }
+      // load JS AFTER HTML
+      const script = document.createElement("script");
+      script.src = "/js/programme.js";
+      script.id = "programmeJS";
 
-  if (editProgrammeId === null) {
+      script.onload = () => {
+        // Load programmes after script is ready
+        if (typeof loadProgrammes === 'function') {
+          loadProgrammes();
+        }
+      };
 
-    fetch("/api/programme/add", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ programme_name: name })
+      document.body.appendChild(script);
     })
-    .then(res => res.json())
-    .then(() => {
-      document.getElementById("programmeName").value = "";
-      loadProgrammes();
+    .catch(err => {
+      console.error("Error loading programme page:", err);
+      alert("Error loading programme page");
     });
-
-  } else {
-
-    fetch("/api/programme/update/" + editProgrammeId, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ programme_name: name })
-    })
-    .then(res => res.json())
-    .then(() => {
-      editProgrammeId = null;
-      document.getElementById("programmeName").value = "";
-      loadProgrammes();
-    });
-  }
-}
-
-
-/* ================= LOAD PROGRAMME LIST ================= */
-function loadProgrammes() {
-  fetch("/api/programme/list")
-    .then(res => res.json())
-    .then(data => {
-      const tbody = document.querySelector("#programmeTable tbody");
-      tbody.innerHTML = "";
-
-      data.forEach((row, i) => {
-        tbody.innerHTML += `
-          <tr>
-            <td>${i + 1}</td>
-            <td>${row.programme_name}</td>
-            <td>
-              <button class="btn purple"
-                onclick="editProgramme(${row.id}, '${row.programme_name}')">
-                Edit
-              </button>
-            </td>
-            <td>
-              <button class="btn red"
-                onclick="deleteProgramme(${row.id})">
-                Delete
-              </button>
-            </td>
-          </tr>
-        `;
-      });
-    });
-}
-
-/* ================= EDIT PROGRAMME LIST ================= */
-function editProgramme(id, name) {
-  editProgrammeId = id;
-  document.getElementById("programmeName").value = name;
-}
-/* ================= DELETE PROGRAMME LIST ================= */
-function deleteProgramme(id) {
-
-  if (!confirm("Are you sure to permanently delete?")) return;
-
-  fetch(`/api/programme/${id}`, {
-    method: "DELETE"
-  })
-  .then(res => res.json())
-  .then(() => {
-    loadProgrammes();
-  });
 }
 
 /* ================= OPEN BRANCH MASTER ================= */
