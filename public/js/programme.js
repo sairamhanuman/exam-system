@@ -53,12 +53,18 @@ function loadProgrammes() {
 
       data.forEach((item, i) => {
         const tr = document.createElement("tr");
+        
+        // Escape the programme name for safe use in onclick attribute
+        const escapedName = item.programme_name
+          .replace(/\\/g, "\\\\")  // escape backslashes first
+          .replace(/'/g, "\\'");   // then escape single quotes
+        
         tr.innerHTML = `
           <td>${i + 1}</td>
           <td>${item.programme_name}</td>
           <td>
             <button class="btn purple"
-              onclick="editProgramme(${item.id}, '${item.programme_name.replace(/'/g, "\\'")}')">
+              onclick="editProgramme(${item.id}, '${escapedName}')">
               Edit
             </button>
           </td>
