@@ -24,7 +24,6 @@ function saveProgramme() {
     .then(res => res.json())
     .then(data => {
       if (data.success) {
-        alert("Saved successfully");
         document.getElementById("programmeName").value = "";
         editProgrammeId = null;
         loadProgrammes();
@@ -57,8 +56,18 @@ function loadProgrammes() {
         tr.innerHTML = `
           <td>${i + 1}</td>
           <td>${item.programme_name}</td>
-          <td><button onclick="editProgramme(${item.id}, '${item.programme_name}')">Edit</button></td>
-          <td><button onclick="deleteProgramme(${item.id})">Delete</button></td>
+          <td>
+            <button class="btn purple"
+              onclick="editProgramme(${item.id}, '${item.programme_name.replace(/'/g, "\\'")}')">
+              Edit
+            </button>
+          </td>
+          <td>
+            <button class="btn red"
+              onclick="deleteProgramme(${item.id})">
+              Delete
+            </button>
+          </td>
         `;
         tbody.appendChild(tr);
       });
@@ -81,7 +90,6 @@ function deleteProgramme(id) {
     .then(res => res.json())
     .then(data => {
       if (data.success) {
-        alert("Deleted successfully");
         loadProgrammes();
       } else {
         alert(data.message || "Error deleting");
