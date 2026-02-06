@@ -88,20 +88,3 @@ function deleteProgramme(id) {
       }
     });
 }
-
-/* ================= LOAD PROGRAMME DROPDOWN ================= */
-function loadProgrammeDropdown() {
-  fetch("/api/programme/list")
-    .then(res => res.json())
-    .then(data => {
-      const sel = document.getElementById("branchProgramme");
-      sel.innerHTML = "<option value=''>Select Programme</option>";
-
-      data.forEach(item => {
-        const opt = document.createElement("option");
-        opt.value = item.id;
-        opt.textContent = item.programme_name;
-        sel.appendChild(opt);
-      });
-    });
-}
